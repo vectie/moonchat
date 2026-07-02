@@ -1,0 +1,53 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "vectie/moonchat"
+
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/json",
+}
+
+// Values
+pub fn moonsuite_product_accepted_output_path(book_id? : String) -> String
+
+pub fn moonsuite_product_accepted_output_path_for_workspace_root(String, book_id? : String) -> String
+
+pub fn moonsuite_product_cache_path() -> String
+
+pub fn moonsuite_product_cache_path_for_workspace_root(String) -> String
+
+pub fn moonsuite_product_home(book_id? : String) -> MoonChatMoonSuiteProductHome
+
+pub fn moonsuite_product_home_for_workspace_root(String, book_id? : String) -> MoonChatMoonSuiteProductHome
+
+pub fn moonsuite_product_id() -> String
+
+pub fn moonsuite_product_service_path() -> String
+
+pub fn moonsuite_product_service_path_for_workspace_root(String) -> String
+
+pub fn moonsuite_product_state_path() -> String
+
+pub fn moonsuite_product_state_path_for_workspace_root(String) -> String
+
+pub fn moonsuite_product_tmp_path() -> String
+
+pub fn moonsuite_product_tmp_path_for_workspace_root(String) -> String
+
+pub fn product_name() -> String
+
+// Errors
+
+// Types and methods
+pub(all) struct MoonChatMoonSuiteProductHome {
+  product_id : String
+  state_path : String
+  service_path : String
+  cache_path : String
+  tmp_path : String
+  accepted_output_path : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+// Type aliases
+
+// Traits
+

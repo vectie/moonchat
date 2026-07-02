@@ -1,0 +1,9 @@
+import {
+  "vectie/moonchat",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+}
+
+options(
+  "is-main": true,
+)
