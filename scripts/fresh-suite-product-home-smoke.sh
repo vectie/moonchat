@@ -17,6 +17,7 @@ trap cleanup EXIT
 book_id="idea-room"
 book_root="$suite_root/books/$book_id"
 layout_json="$suite_root/layout.json"
+inferred_layout_json="$suite_root/layout-inferred.json"
 
 mkdir -p "$suite_root/.moonsuite" "$suite_root/.tmp" "$book_root"
 
@@ -40,6 +41,7 @@ assert_absent_text() {
 
 cd "$repo_root"
 "$moon_bin" run cmd/main --target native -- layout "$book_root" "$book_id" > "$layout_json"
+"$moon_bin" run cmd/main --target native -- layout "$book_root" > "$inferred_layout_json"
 
 assert_contains "$layout_json" "\"product_id\": \"moonchat\""
 assert_contains "$layout_json" "\"state_path\": \"$suite_root/.moonsuite/products/moonchat\""
@@ -49,5 +51,9 @@ assert_contains "$layout_json" "\"tmp_path\": \"$suite_root/.tmp/products/moonch
 assert_contains "$layout_json" "\"accepted_output_path\": \"$suite_root/books/$book_id/outputs/moonchat\""
 assert_absent_text "$layout_json" "$book_root/.moonsuite/products/moonchat"
 assert_absent_text "$layout_json" "$suite_root/.moonchat"
+assert_contains "$inferred_layout_json" "\"state_path\": \"$suite_root/.moonsuite/products/moonchat\""
+assert_contains "$inferred_layout_json" "\"tmp_path\": \"$suite_root/.tmp/products/moonchat\""
+assert_contains "$inferred_layout_json" "\"accepted_output_path\": \"$suite_root/books/$book_id/outputs/moonchat\""
+assert_absent_text "$inferred_layout_json" "$book_root/.moonsuite/products/moonchat"
 
 echo "MoonChat fresh-suite product-home smoke passed on $suite_root"
