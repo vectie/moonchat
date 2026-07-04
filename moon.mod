@@ -24,5 +24,5 @@ keywords = [ ]
 description = ""
 
 import {
-  "vectie/moonlib@0.1.7",
+  "vectie/moonlib@0.1.8",
 }
