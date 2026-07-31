@@ -1,0 +1,67 @@
+{
+  "id": "moonchat",
+  "version": "0.1.0",
+  "display_name": "MoonChat Portable Conversation Review",
+  "product_id": "moonchat",
+  "kind": "PlatformPack",
+  "required_runtime_extensions": ["moonflow"],
+  "book_templates": [],
+  "schemas": [
+    {
+      "id": "conversation-review-bundle",
+      "version": "1.0.0",
+      "path": "schemas/conversation-review-bundle.schema.json"
+    },
+    {
+      "id": "conversation-review-record",
+      "version": "1.0.0",
+      "path": "schemas/conversation-review-record.schema.json"
+    }
+  ],
+  "tools": [
+    {
+      "id": "conversation.review.record",
+      "owner_product": "moonchat",
+      "input_schema_id": "conversation-review-bundle",
+      "output_schema_id": "conversation-review-record",
+      "authority": "WorkspaceMutation",
+      "idempotent": true,
+      "evidence_outputs": [
+        ".moonsuite/products/moonchat/reviews",
+        ".moonsuite/products/moonchat/idempotency"
+      ],
+      "review_required": true
+    }
+  ],
+  "workflows": [
+    {
+      "id": "portable-conversation-review",
+      "version": "1.0.0",
+      "path": "workflows/portable-conversation-review.md"
+    }
+  ],
+  "skills": [],
+  "policies": [
+    {
+      "id": "conversation-review-authority",
+      "version": "1.0.0",
+      "path": "policies/conversation-review-authority.md"
+    }
+  ],
+  "provider_ports": [
+    {
+      "id": "moonflow-review-adapter",
+      "version": "1.0.0",
+      "path": "providers/moonflow-review-adapter.port.md"
+    }
+  ],
+  "schedules": [],
+  "app_entrypoints": [],
+  "migrations": [],
+  "evaluations": [],
+  "uninstall_contract": {
+    "id": "moonchat-user-review-preservation",
+    "version": "1.0.0",
+    "path": "UNINSTALL.md"
+  }
+}

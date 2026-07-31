@@ -15,7 +15,7 @@ version = "0.1.0"
 
 readme = "README.mbt.md"
 
-repository = ""
+repository = "https://github.com/vectie/moonchat"
 
 license = "Apache-2.0"
 
@@ -24,5 +24,7 @@ keywords = [ ]
 description = ""
 
 import {
+  "moonbitlang/async@0.20.2",
+  "moonbitlang/x@0.4.46",
   "vectie/moonlib@0.1.8",
 }

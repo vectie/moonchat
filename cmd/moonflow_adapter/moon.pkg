@@ -1,0 +1,11 @@
+import {
+  "moonbitlang/async",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/core/string",
+  "vectie/moonchat/flow_adapter",
+}
+
+supported_targets = "native"
+
+pkgtype(kind: "executable")

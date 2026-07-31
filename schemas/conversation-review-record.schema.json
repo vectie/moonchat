@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "moonchat/conversation-review-record@1.0.0",
+  "title": "MoonChat conversation review record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id",
+    "operation_ref",
+    "input_schema_ref",
+    "output_schema_ref",
+    "review_id",
+    "source_artifact_ref",
+    "source_digest",
+    "source_revision_id",
+    "previous_bundle_ref",
+    "previous_bundle_digest",
+    "conversation",
+    "participants",
+    "entries",
+    "required_decisions",
+    "decision_receipts",
+    "review_status",
+    "accepted",
+    "claim_class",
+    "missing_decision_ids",
+    "rejected_decision_ids",
+    "journal_evidence",
+    "recorded_at"
+  ],
+  "properties": {
+    "contract_id": {
+      "const": "moonchat.conversation-review-record.v1"
+    },
+    "operation_ref": {
+      "const": "moonchat/conversation.review.record@0.1.0"
+    },
+    "input_schema_ref": {
+      "const": "moonchat/conversation-review-bundle@1.0.0"
+    },
+    "output_schema_ref": {
+      "const": "moonchat/conversation-review-record@1.0.0"
+    },
+    "review_id": {
+      "$ref": "conversation-review-bundle.schema.json#/$defs/stableId"
+    },
+    "source_artifact_ref": {
+      "$ref": "conversation-review-bundle.schema.json#/$defs/artifactRef"
+    },
+    "source_digest": {
+      "$ref": "conversation-review-bundle.schema.json#/$defs/digest"
+    },
+    "source_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "previous_bundle_ref": {
+      "type": "string"
+    },
+    "previous_bundle_digest": {
+      "type": "string"
+    },
+    "conversation": {
+      "$ref": "conversation-review-bundle.schema.json#/$defs/conversationBinding"
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "conversation-review-bundle.schema.json#/$defs/participant"
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "conversation-review-bundle.schema.json#/$defs/reviewEntry"
+      }
+    },
+    "required_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "conversation-review-bundle.schema.json#/$defs/requiredDecision"
+      }
+    },
+    "decision_receipts": {
+      "type": "array",
+      "items": {
+        "$ref": "conversation-review-bundle.schema.json#/$defs/decisionReceipt"
+      }
+    },
+    "review_status": {
+      "enum": [
+        "pending_review",
+        "accepted",
+        "rejected"
+      ]
+    },
+    "accepted": {
+      "type": "boolean"
+    },
+    "claim_class": {
+      "enum": [
+        "research-evidence",
+        "accepted-knowledge"
+      ]
+    },
+    "missing_decision_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "conversation-review-bundle.schema.json#/$defs/stableId"
+      }
+    },
+    "rejected_decision_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "conversation-review-bundle.schema.json#/$defs/stableId"
+      }
+    },
+    "journal_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "artifact_ref",
+          "digest"
+        ],
+        "properties": {
+          "artifact_ref": {
+            "$ref": "conversation-review-bundle.schema.json#/$defs/artifactRef"
+          },
+          "digest": {
+            "$ref": "conversation-review-bundle.schema.json#/$defs/digest"
+          }
+        }
+      }
+    },
+    "recorded_at": {
+      "$ref": "conversation-review-bundle.schema.json#/$defs/timestamp"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "review_status": {
+            "const": "accepted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "accepted": {
+            "const": true
+          },
+          "claim_class": {
+            "const": "accepted-knowledge"
+          },
+          "missing_decision_ids": {
+            "maxItems": 0
+          },
+          "rejected_decision_ids": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "accepted": {
+            "const": false
+          },
+          "claim_class": {
+            "const": "research-evidence"
+          }
+        }
+      }
+    }
+  ]
+}

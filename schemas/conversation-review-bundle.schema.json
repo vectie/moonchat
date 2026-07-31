@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "moonchat/conversation-review-bundle@1.0.0",
+  "title": "MoonChat conversation review bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id",
+    "review_id",
+    "source_artifact_ref",
+    "source_digest",
+    "source_revision_id",
+    "previous_bundle_ref",
+    "previous_bundle_digest",
+    "conversation",
+    "participants",
+    "entries",
+    "required_decisions",
+    "decision_receipts",
+    "recorded_at"
+  ],
+  "properties": {
+    "contract_id": {
+      "const": "moonchat.conversation-review-bundle.v1"
+    },
+    "review_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "source_artifact_ref": {
+      "$ref": "#/$defs/artifactRef"
+    },
+    "source_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "source_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "previous_bundle_ref": {
+      "type": "string"
+    },
+    "previous_bundle_digest": {
+      "type": "string"
+    },
+    "conversation": {
+      "$ref": "#/$defs/conversationBinding"
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/participant"
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/reviewEntry"
+      }
+    },
+    "required_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/requiredDecision"
+      }
+    },
+    "decision_receipts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/decisionReceipt"
+      }
+    },
+    "recorded_at": {
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "previous_bundle_ref": {
+            "const": ""
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "previous_bundle_digest": {
+            "const": ""
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "previous_bundle_ref": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "previous_bundle_digest": {
+            "$ref": "#/$defs/digest"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]+$",
+      "minLength": 1
+    },
+    "artifactRef": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?/).+$",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "conversationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_id",
+        "protocol",
+        "product_id",
+        "conversation_id"
+      ],
+      "properties": {
+        "contract_id": {
+          "const": "moonsuite-conversation.v1"
+        },
+        "protocol": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conversation_id": {
+          "$ref": "#/$defs/stableId"
+        }
+      }
+    },
+    "participant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "participant_id",
+        "display_name",
+        "participant_kind"
+      ],
+      "properties": {
+        "participant_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "participant_kind": {
+          "enum": [
+            "human",
+            "agent"
+          ]
+        }
+      }
+    },
+    "turnIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "turn_id",
+        "client_turn_id",
+        "command_id"
+      ],
+      "properties": {
+        "turn_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "client_turn_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "command_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "artifactRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifactRef"
+      }
+    },
+    "reviewEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_id",
+        "entry_kind",
+        "author_participant_id",
+        "turn",
+        "body",
+        "evidence_refs"
+      ],
+      "properties": {
+        "entry_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "entry_kind": {
+          "enum": [
+            "question",
+            "objection",
+            "proposal"
+          ]
+        },
+        "author_participant_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "turn": {
+          "$ref": "#/$defs/turnIdentity"
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/artifactRefs"
+        }
+      }
+    },
+    "requiredDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_id",
+        "subject_entry_id",
+        "reviewer_participant_id",
+        "prompt"
+      ],
+      "properties": {
+        "decision_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "subject_entry_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "reviewer_participant_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "decisionReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "decision_id",
+        "reviewer_participant_id",
+        "reviewer_name",
+        "decision",
+        "rationale",
+        "source_digest",
+        "decided_at",
+        "evidence_refs"
+      ],
+      "properties": {
+        "receipt_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "decision_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "reviewer_participant_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "reviewer_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "reject",
+            "defer"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "decided_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/artifactRefs"
+        }
+      }
+    }
+  }
+}

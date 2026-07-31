@@ -1,0 +1,16 @@
+{
+  "contract_id": "moonflow.adapter-declaration.v1",
+  "adapter_id": "moonchat-review-v1",
+  "product_id": "moonchat",
+  "pack_id": "moonchat",
+  "pack_version": "0.1.0",
+  "protocol": "moonflow.adapter.v2",
+  "operations": [
+    {
+      "operation_id": "conversation.review.record",
+      "claim_ceiling": "accepted-knowledge",
+      "supports_cancel": false,
+      "supports_reconcile": true
+    }
+  ]
+}

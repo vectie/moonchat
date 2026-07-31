@@ -1,0 +1,159 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "vectie/moonchat/review"
+
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/json",
+}
+
+// Values
+pub fn bundle_contract_id() -> String
+
+pub fn bundle_issues(ConversationReviewBundle, String) -> Array[String]
+
+pub fn claim_class(ConversationReviewBundle) -> String
+
+pub fn conversation_contract_id() -> String
+
+pub fn conversation_identity_fields() -> Array[String]
+
+pub fn decode_review_bundle(Json) -> ConversationReviewBundle raise
+
+pub fn decode_review_record(Json) -> ConversationReviewRecord raise
+
+pub fn event_contract_id() -> String
+
+pub fn input_schema_ref() -> String
+
+pub fn missing_decision_ids(ConversationReviewBundle) -> Array[String]
+
+pub fn operation_ref() -> String
+
+pub fn output_schema_ref() -> String
+
+pub fn project_review_record(ConversationReviewBundle, String, Array[ReviewEvidence]) -> ConversationReviewRecord raise
+
+pub fn record_contract_id() -> String
+
+pub fn rejected_decision_ids(ConversationReviewBundle) -> Array[String]
+
+pub fn review_events(ConversationReviewBundle, String) -> Array[ConversationReviewEvent] raise
+
+pub fn review_status(ConversationReviewBundle) -> String
+
+// Errors
+
+// Types and methods
+pub(all) struct ConversationBinding {
+  contract_id : String
+  protocol : String
+  product_id : String
+  conversation_id : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct ConversationReviewBundle {
+  contract_id : String
+  review_id : String
+  source_artifact_ref : String
+  source_digest : String
+  source_revision_id : String
+  previous_bundle_ref : String
+  previous_bundle_digest : String
+  conversation : ConversationBinding
+  participants : Array[ReviewParticipant]
+  entries : Array[ReviewEntry]
+  required_decisions : Array[RequiredDecision]
+  decision_receipts : Array[HumanDecisionReceipt]
+  recorded_at : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct ConversationReviewEvent {
+  contract_id : String
+  review_id : String
+  sequence : Int
+  event_id : String
+  event_kind : String
+  actor_participant_id : String
+  turn_id : String
+  client_turn_id : String
+  command_id : String
+  subject_id : String
+  decision : String
+  body : String
+  source_digest : String
+  recorded_at : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct ConversationReviewRecord {
+  contract_id : String
+  operation_ref : String
+  input_schema_ref : String
+  output_schema_ref : String
+  review_id : String
+  source_artifact_ref : String
+  source_digest : String
+  source_revision_id : String
+  previous_bundle_ref : String
+  previous_bundle_digest : String
+  conversation : ConversationBinding
+  participants : Array[ReviewParticipant]
+  entries : Array[ReviewEntry]
+  required_decisions : Array[RequiredDecision]
+  decision_receipts : Array[HumanDecisionReceipt]
+  review_status : String
+  accepted : Bool
+  claim_class : String
+  missing_decision_ids : Array[String]
+  rejected_decision_ids : Array[String]
+  journal_evidence : Array[ReviewEvidence]
+  recorded_at : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct ConversationTurnIdentity {
+  turn_id : String
+  client_turn_id : String
+  command_id : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct HumanDecisionReceipt {
+  receipt_id : String
+  decision_id : String
+  reviewer_participant_id : String
+  reviewer_name : String
+  decision : String
+  rationale : String
+  source_digest : String
+  decided_at : String
+  evidence_refs : Array[String]
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct RequiredDecision {
+  decision_id : String
+  subject_entry_id : String
+  reviewer_participant_id : String
+  prompt : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct ReviewEntry {
+  entry_id : String
+  entry_kind : String
+  author_participant_id : String
+  turn : ConversationTurnIdentity
+  body : String
+  evidence_refs : Array[String]
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct ReviewEvidence {
+  artifact_ref : String
+  digest : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct ReviewParticipant {
+  participant_id : String
+  display_name : String
+  participant_kind : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+// Type aliases
+
+// Traits
