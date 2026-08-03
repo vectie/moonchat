@@ -78,6 +78,13 @@ test "MoonLib turn identity and objections survive a pending projection" {
   assert_eq(@review.claim_class(bundle), "research-evidence")
   let events = @review.review_events(bundle, digest('a'))
   assert_true(events.any(event => event.event_id == "entry-objection-thermal"))
+  assert_true(
+    events.any(event => {
+      event.event_id == "review-projected" &&
+      event.body.contains("A named-human decision is still needed") &&
+      event.body.contains("thermal-go-no-go")
+    }),
+  )
   let record = @review.project_review_record(bundle, digest('a'), [])
   assert_eq(record.review_status, "pending_review")
   assert_false(record.accepted)
@@ -128,6 +135,38 @@ test "all named human approvals promote only the review record" {
   assert_true(record.accepted)
   assert_eq(record.claim_class, "accepted-knowledge")
   assert_eq(record.entries[1].entry_kind, "objection")
+  let events = @review.review_events(bundle, digest('a'))
+  assert_true(
+    events.any(event => {
+      event.event_id == "review-projected" &&
+      event.body.contains("All named reviewers approved this exact version")
+    }),
+  )
+}
+
+///|
+test "a rejected version points the consumer to immutable recovery" {
+  let bundle = pending_bundle()
+  bundle.decision_receipts.push({
+    receipt_id: "receipt-human-reject",
+    decision_id: "thermal-go-no-go",
+    reviewer_participant_id: "mission-owner",
+    reviewer_name: "Lin Mei",
+    decision: "reject",
+    rationale: "The calibration bounds are not sufficient.",
+    source_digest: digest('a'),
+    decided_at: "2026-07-31T02:10:00Z",
+    evidence_refs: ["evidence/thermal-acceptance.json"],
+  })
+  let events = @review.review_events(bundle, digest('a'))
+  assert_true(
+    events.any(event => {
+      event.event_id == "review-projected" &&
+      event.body.contains("A named reviewer rejected this version") &&
+      event.body.contains("thermal-go-no-go") &&
+      event.body.contains("create a new version")
+    }),
+  )
 }
 
 ///|

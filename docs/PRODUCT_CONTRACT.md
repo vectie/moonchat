@@ -1,6 +1,6 @@
 # MoonChat product contract
 
-Class: portable review-contract pack and library
+Class: library/functionality
 Maturity: native v1 capability; consumer wiring remains product-owned
 Last reviewed: 2026-07-31
 
@@ -35,6 +35,11 @@ does not call any of them and does not need its own Rabbita application.
 | MoonBook closure/import consumption | intended integration |
 | Standalone chat application | excluded |
 | Agent or model runtime | excluded |
+
+Conformance: **L1 structured** as a portable callable review capability.
+MoonChat has no false standalone L2 application claim: its ordinary-user
+journey is projected by the producing and receiving applications and must be
+qualified there.
 
 ## Canonical identities
 

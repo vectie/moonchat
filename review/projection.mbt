@@ -95,7 +95,7 @@ pub fn review_events(
     command_id: "",
     subject_id: bundle.review_id,
     decision: review_status(bundle),
-    body: "Review projection preserves every entry, requirement, and receipt.",
+    body: review_outcome_message(bundle),
     source_digest: bundle.source_digest,
     recorded_at: bundle.recorded_at,
   })

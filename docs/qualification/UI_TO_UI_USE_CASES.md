@@ -2,8 +2,8 @@
 
 Last reviewed: 2026-07-31
 
-MoonChat intentionally has no standalone application entrypoint. It is a
-portable review-contract pack, not a second chat UI or agent runtime. Operators
+MoonChat intentionally has no standalone application entrypoint. It is
+portable review functionality, not a second chat UI or agent runtime. Operators
 see its input in MoonFind's existing Rabbita research-review panel and see the
 accepted deliverable in MoonBook's existing Rabbita Bookkeeper console.
 MoonClaw remains the only agent runtime and MoonFlow remains the generic
