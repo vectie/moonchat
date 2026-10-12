@@ -1,0 +1,39 @@
+{
+  "review_id": "sarif-pilot",
+  "conversation_id": "sarif-pilot-room",
+  "source_artifact_ref": "examples/review-sarif/source.md",
+  "source_revision_id": "r1",
+  "recorded_at": "2026-10-10T17:00:00Z",
+  "participants": [
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operator",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "scan-agent",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    }
+  ],
+  "items": [
+    {
+      "key": "pilot",
+      "kind": "proposal",
+      "author": "editor",
+      "body": "Release the pilot after the open findings have been discussed.",
+      "evidence_refs": [],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is this pilot scope ready?"
+        }
+      ]
+    }
+  ]
+}

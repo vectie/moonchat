@@ -1,0 +1,25 @@
+{
+  "review_id": "billing-review",
+  "conversation_id": "billing-room",
+  "source_artifact_ref": "examples/review-junit/source.md",
+  "source_revision_id": "snapshot-1",
+  "recorded_at": "2026-10-11T00:00:00Z",
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "items": []
+}

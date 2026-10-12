@@ -1,0 +1,25 @@
+{
+  "format": "moonchat.review-source-locations.v1",
+  "review_id": "cafe-release-review",
+  "source_digest": "sha256:6fa3b32405be3fa1960d89b2196e8bee6ccb6567ea3f0846ed540de5eaae7b9b",
+  "locations": [
+    {
+      "entry_id": "matching-proposal",
+      "start_line": 5,
+      "end_line": 7,
+      "quote": "## Proposed change\nShip Unicode-normalized matching for café and cafe queries.\nThe literal example <search query=\"café\"> must remain text in this packet."
+    },
+    {
+      "entry_id": "rollback-objection",
+      "start_line": 14,
+      "end_line": 16,
+      "quote": "## Open issue\nThe named rollback owner and rehearsal date are not yet recorded.\nApproval of the query examples does not resolve that objection."
+    },
+    {
+      "entry_id": "rollback-objection",
+      "start_line": 11,
+      "end_line": 12,
+      "quote": "2. Ask the release reviewer whether the evidence supports rollout.\n3. Keep rollback available until the monitored window closes."
+    }
+  ]
+}

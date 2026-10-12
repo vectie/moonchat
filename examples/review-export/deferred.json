@@ -1,0 +1,67 @@
+{
+  "contract_id": "moonchat.conversation-review-bundle.v1",
+  "review_id": "release-review",
+  "source_artifact_ref": "examples/review-export/source.md",
+  "source_digest": "sha256:d090cceea7b11d01416a320b07eadeaa9c4247695ee9fa754d6f6f0acc8324d4",
+  "source_revision_id": "revision-1",
+  "previous_bundle_ref": "",
+  "previous_bundle_digest": "",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moontown.collaboration-review.v1",
+    "product_id": "moontown",
+    "conversation_id": "release-room"
+  },
+  "participants": [
+    {
+      "participant_id": "fixture-agent",
+      "display_name": "Fixture collaborator",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "fixture-human",
+      "display_name": "Fixture reviewer",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "release-proposal",
+      "entry_kind": "proposal",
+      "author_participant_id": "fixture-agent",
+      "turn": {
+        "turn_id": "turn-1",
+        "client_turn_id": "client-1",
+        "command_id": "command-1"
+      },
+      "body": "Ship the café search fix. 🌙\nCheck the literal example:\n```\nquery = café\n```",
+      "evidence_refs": [
+        "evidence/unicode-test.txt"
+      ]
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "release-decision",
+      "subject_entry_id": "release-proposal",
+      "reviewer_participant_id": "fixture-human",
+      "prompt": "Is this exact release source ready to hand off?"
+    }
+  ],
+  "decision_receipts": [
+    {
+      "receipt_id": "fixture-deferred",
+      "decision_id": "release-decision",
+      "reviewer_participant_id": "fixture-human",
+      "reviewer_name": "Fixture reviewer",
+      "decision": "defer",
+      "rationale": "Synthetic example only; no real review authority.\nOutcome: defer",
+      "source_digest": "sha256:d090cceea7b11d01416a320b07eadeaa9c4247695ee9fa754d6f6f0acc8324d4",
+      "decided_at": "2026-10-08T12:05:00Z",
+      "evidence_refs": [
+        "evidence/unicode-test.txt"
+      ]
+    }
+  ],
+  "recorded_at": "2026-10-08T12:00:00Z"
+}

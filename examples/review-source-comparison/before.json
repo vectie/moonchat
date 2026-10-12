@@ -1,0 +1,92 @@
+{
+  "contract_id": "moonchat.conversation-review-bundle.v1",
+  "review_id": "cafe-pilot-sheet",
+  "source_artifact_ref": "pilot/source.md",
+  "source_digest": "sha256:7e76dcb166cb34c67508861ca35c04d49be79d9ee3c10d1bcde3765e7dfeaabe",
+  "source_revision_id": "pilot-r1",
+  "previous_bundle_ref": "",
+  "previous_bundle_digest": "",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moonchat.review-agenda.v1",
+    "product_id": "moonchat",
+    "conversation_id": "cafe-pilot-review"
+  },
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "entry-launch",
+      "entry_kind": "proposal",
+      "author_participant_id": "assistant",
+      "turn": {
+        "turn_id": "turn-launch",
+        "client_turn_id": "client-launch",
+        "command_id": "command-launch"
+      },
+      "body": "Ship the café search fix to the pilot group on Monday.",
+      "evidence_refs": []
+    },
+    {
+      "entry_id": "entry-rollback",
+      "entry_kind": "objection",
+      "author_participant_id": "assistant",
+      "turn": {
+        "turn_id": "turn-rollback",
+        "client_turn_id": "client-rollback",
+        "command_id": "command-rollback"
+      },
+      "body": "The source does not name a rollback owner.",
+      "evidence_refs": []
+    },
+    {
+      "entry_id": "entry-support",
+      "entry_kind": "question",
+      "author_participant_id": "editor",
+      "turn": {
+        "turn_id": "turn-support",
+        "client_turn_id": "client-support",
+        "command_id": "command-support"
+      },
+      "body": "Where should support collect failed searches?",
+      "evidence_refs": []
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "decision-6-launch-editor",
+      "subject_entry_id": "entry-launch",
+      "reviewer_participant_id": "editor",
+      "prompt": "Is the release wording ready?"
+    },
+    {
+      "decision_id": "decision-6-launch-ops",
+      "subject_entry_id": "entry-launch",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is the pilot rollout ready?"
+    },
+    {
+      "decision_id": "decision-8-rollback-ops",
+      "subject_entry_id": "entry-rollback",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is rollback ownership adequately covered?"
+    }
+  ],
+  "decision_receipts": [],
+  "recorded_at": "2026-10-08T21:00:00Z"
+}

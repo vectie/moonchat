@@ -1,0 +1,44 @@
+{
+  "review_id": "launch-document",
+  "conversation_id": "launch-review",
+  "source_artifact_ref": "examples/review-docx/launch.docx",
+  "source_revision_id": "draft-1",
+  "recorded_at": "2026-10-10T10:00:00Z",
+  "participants": [
+    {
+      "participant_id": "curator",
+      "display_name": "Jules",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Ren",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "support",
+      "display_name": "Mina",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "notes",
+      "display_name": "Notes agent",
+      "participant_kind": "agent"
+    }
+  ],
+  "items": [
+    {
+      "key": "rollout",
+      "kind": "proposal",
+      "author": "curator",
+      "body": "Review the attached launch document.",
+      "evidence_refs": [],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is this draft ready?"
+        }
+      ]
+    }
+  ]
+}

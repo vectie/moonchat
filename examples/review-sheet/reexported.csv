@@ -1,0 +1,8 @@
+key,kind,author,body,evidence_ref,reviewer,prompt
+"support","question","editor","Who will triage the pilot queue, and when?","pilot/support-notes.md","",""
+"launch","proposal","assistant","Ship the café search fix to the pilot group on Monday.
+Cap the pilot at 25 users; show the ""send feedback"" link.","pilot/wording.md","editor","Is the pilot wording clear?"
+"launch","proposal","assistant","Ship the café search fix to the pilot group on Monday.
+Cap the pilot at 25 users; show the ""send feedback"" link.","pilot/capacity.md","ops","Is a 25-user pilot manageable?"
+"rollback","objection","ops","Name the on-call rollback owner before inviting pilot users.","pilot/rollback.md","ops","Is a rollback owner available for the first hour?"
+"capacity","objection","editor","The support team has only one person available for the first hour.","","ops","Can the pilot fit the support capacity?"

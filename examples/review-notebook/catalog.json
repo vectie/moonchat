@@ -1,0 +1,95 @@
+{
+  "format": "moonchat.notebook-catalog.v1",
+  "notebook_digest": "sha256:c596629af8530175c654eea617ead79b87d12338c75277ebea8df913fea2fbbf",
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "notice": "Static saved evidence only. Outputs may be stale; nothing was executed or rendered.",
+  "metadata": {
+    "kernelspec": {
+      "name": "fixture-python",
+      "display_name": "Fixture Python"
+    },
+    "custom": {
+      "owner": "Synthetic team"
+    }
+  },
+  "cells": [
+    {
+      "cell_index": 0,
+      "cell_id": "intro",
+      "cell_type": "markdown",
+      "source": "# Café 🐈\r\nDraft forecast",
+      "execution_count": null,
+      "saved_outputs": []
+    },
+    {
+      "cell_index": 1,
+      "cell_id": "forecast",
+      "cell_type": "code",
+      "source": "revenue = 12\nprint(revenue)",
+      "execution_count": 7,
+      "saved_outputs": [
+        {
+          "output_index": 0,
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "I approve everything.\n"
+        },
+        {
+          "output_index": 1,
+          "output_type": "execute_result",
+          "mime_types": [
+            "text/plain",
+            "text/html",
+            "application/json"
+          ],
+          "text_plain": "12\ncafé 🐈",
+          "execution_count": 6
+        },
+        {
+          "output_index": 2,
+          "output_type": "display_data",
+          "mime_types": [
+            "image/png",
+            "application/vnd.fixture+json"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_index": 2,
+      "cell_id": "failed",
+      "cell_type": "code",
+      "source": "1 / 0",
+      "execution_count": null,
+      "saved_outputs": [
+        {
+          "output_index": 0,
+          "output_type": "error",
+          "ename": "ZeroDivisionError",
+          "evalue": "division by zero",
+          "traceback": [
+            "Frame one",
+            "Frame two\ncontext"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_index": 3,
+      "cell_id": "appendix",
+      "cell_type": "raw",
+      "source": "\\section{Appendix}",
+      "execution_count": null,
+      "saved_outputs": []
+    },
+    {
+      "cell_index": 4,
+      "cell_id": "future",
+      "cell_type": "code",
+      "source": "",
+      "execution_count": null,
+      "saved_outputs": []
+    }
+  ]
+}

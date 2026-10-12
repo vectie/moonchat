@@ -1,0 +1,6 @@
+key,kind,author,body,evidence_ref,reviewer,prompt
+"launch","proposal","assistant","Ship the café search fix to the pilot group on Monday.","pilot/rollout-checklist.md","editor","Is the release wording ready?"
+"launch","proposal","assistant","Ship the café search fix to the pilot group on Monday.","pilot/support-notes.md","ops","Is the staged rollout staffed for Monday?"
+"rollback","objection","assistant","The rollback owner and backup still need names.","","ops","Is rollback ownership adequately covered?"
+"support","question","editor","Where should support collect failed searches?","","",""
+"coverage","objection","ops","The Tuesday backup shift is uncovered.","pilot/staffing.md","ops","Is backup coverage sufficient?"

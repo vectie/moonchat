@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="release" tests="6" failures="99">
+    <testcase classname="Billing" name="invoice" time="0.3"><failure message="old rounding concern">Expected 12, got 10</failure><system-out>retained original fixture</system-out></testcase>
+    <testcase classname="Backups" name="restore"><skipped message="service fixture unavailable"/></testcase>
+    <testcase classname="Billing" name="retired-check"><error type="SetupError">Missing fixture</error></testcase>
+    <testcase classname="Smoke" name="start"/>
+    <testsuite name="retry"><testcase classname="Retry" name="repeat"><failure>first attempt</failure></testcase><testcase classname="Retry" name="repeat"/></testsuite>
+  </testsuite>
+</testsuites>

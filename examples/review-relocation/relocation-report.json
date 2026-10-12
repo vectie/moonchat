@@ -1,0 +1,74 @@
+{
+  "format": "moonchat.review-source-relocation.v1",
+  "source_artifact_ref": "artifacts/pilot-plan.md",
+  "previous_review_id": "pilot-source-relocation",
+  "previous_source_revision_id": "pilot-1",
+  "previous_source_digest": "sha256:b80ade3ccf34c57a4eee9e934e16e6052ef2f81f19e101df204819a4bb3609f6",
+  "next_review_id": "pilot-source-relocation",
+  "next_source_revision_id": "pilot-2",
+  "next_source_digest": "sha256:32f17b434c3acbc1d9afa9033ed901afe1edcca3acb1e1d07b7e023e5e643a49",
+  "mapped_count": 1,
+  "unresolved_count": 2,
+  "results": [
+    {
+      "original": {
+        "entry_id": "matching-proposal",
+        "start_line": 3,
+        "end_line": 5,
+        "quote": "## Traffic\nKeep traffic at 10%.\nAsk the named reviewer before expansion."
+      },
+      "status": "relocated",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "start_line": 6,
+          "end_line": 8
+        }
+      ]
+    },
+    {
+      "original": {
+        "entry_id": "rollback-objection",
+        "start_line": 7,
+        "end_line": 9,
+        "quote": "## Rollback\nOwner: Jules.\nRehearse before expansion."
+      },
+      "status": "quote-not-found",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "original": {
+        "entry_id": "coverage-question",
+        "start_line": 12,
+        "end_line": 12,
+        "quote": "Add bilingual coverage."
+      },
+      "status": "ambiguous",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "start_line": 15,
+          "end_line": 15
+        },
+        {
+          "start_line": 18,
+          "end_line": 18
+        }
+      ]
+    }
+  ],
+  "suggested_locations": {
+    "format": "moonchat.review-source-locations.v1",
+    "review_id": "pilot-source-relocation",
+    "source_digest": "sha256:32f17b434c3acbc1d9afa9033ed901afe1edcca3acb1e1d07b7e023e5e643a49",
+    "locations": [
+      {
+        "entry_id": "matching-proposal",
+        "start_line": 6,
+        "end_line": 8,
+        "quote": "## Traffic\nKeep traffic at 10%.\nAsk the named reviewer before expansion."
+      }
+    ]
+  }
+}

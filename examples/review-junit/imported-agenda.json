@@ -1,0 +1,56 @@
+{
+  "review_id": "billing-review",
+  "conversation_id": "billing-room",
+  "source_artifact_ref": "examples/review-junit/source.md",
+  "source_revision_id": "snapshot-1",
+  "recorded_at": "2026-10-11T00:00:00Z",
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "items": [
+    {
+      "key": "invoice-total",
+      "kind": "objection",
+      "author": "editor",
+      "body": "Resolve the wrong total.\n\nJUnit report evidence (unverified test-run claims, not a human decision):\n{\n  \"source_artifact_ref\": \"examples/review-junit/source.md\",\n  \"source_revision_id\": \"snapshot-1\",\n  \"source_digest\": \"sha256:f477a1b63e8987cc5996dc8e6da30e3ed02452a1d99252bc8e0d946fd2e4ad43\",\n  \"report_ref\": \"examples/review-junit/results.xml\",\n  \"report_digest\": \"sha256:94975aec3e1d4ba64810c6a9f5f5192edaa3d46ddc61b5c3fa9abb43a7f1d496\",\n  \"case\": {\n    \"index\": 0,\n    \"suites\": [\n      \"billing\"\n    ],\n    \"name\": \"invoice\",\n    \"classname\": \"Billing\",\n    \"file\": \"\",\n    \"line\": \"\",\n    \"time_reported\": \"\",\n    \"status\": \"failure\",\n    \"signals\": [\n      {\n        \"kind\": \"failure\",\n        \"type\": \"AssertionError\",\n        \"message\": \"total differs\",\n        \"text\": \"Expected 12, got 10\"\n      }\n    ],\n    \"system_out\": [\n      \"customer fixture only\"\n    ],\n    \"system_err\": []\n  }\n}",
+      "evidence_refs": [
+        "examples/review-junit/results.xml"
+      ],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "What should happen before release?"
+        }
+      ]
+    },
+    {
+      "key": "backup-gap",
+      "kind": "question",
+      "author": "editor",
+      "body": "Decide how to cover the skipped check.\n\nJUnit report evidence (unverified test-run claims, not a human decision):\n{\n  \"source_artifact_ref\": \"examples/review-junit/source.md\",\n  \"source_revision_id\": \"snapshot-1\",\n  \"source_digest\": \"sha256:f477a1b63e8987cc5996dc8e6da30e3ed02452a1d99252bc8e0d946fd2e4ad43\",\n  \"report_ref\": \"examples/review-junit/results.xml\",\n  \"report_digest\": \"sha256:94975aec3e1d4ba64810c6a9f5f5192edaa3d46ddc61b5c3fa9abb43a7f1d496\",\n  \"case\": {\n    \"index\": 2,\n    \"suites\": [\n      \"billing\",\n      \"recovery\"\n    ],\n    \"name\": \"backup\",\n    \"classname\": \"\",\n    \"file\": \"\",\n    \"line\": \"\",\n    \"time_reported\": \"\",\n    \"status\": \"skipped\",\n    \"signals\": [\n      {\n        \"kind\": \"skipped\",\n        \"type\": \"\",\n        \"message\": \"requires local service\",\n        \"text\": \"\"\n      }\n    ],\n    \"system_out\": [],\n    \"system_err\": []\n  }\n}",
+      "evidence_refs": [
+        "examples/review-junit/results.xml"
+      ],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "What should happen before release?"
+        }
+      ]
+    }
+  ]
+}

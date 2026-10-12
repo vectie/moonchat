@@ -1,0 +1,69 @@
+{
+  "review_id": "forecast-review",
+  "conversation_id": "forecast-review-room",
+  "source_artifact_ref": "examples/review-notebook/forecast.ipynb",
+  "source_revision_id": "snapshot-1",
+  "recorded_at": "2026-10-10T12:00:00Z",
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "items": [
+    {
+      "key": "purpose",
+      "kind": "proposal",
+      "author": "editor",
+      "body": "Consider this saved forecast for next week’s planning. Review assumptions and failed calculations first.",
+      "evidence_refs": [],
+      "decisions": [
+        {
+          "reviewer": "editor",
+          "prompt": "Is the notebook suitable for planning?"
+        }
+      ]
+    },
+    {
+      "key": "failed-calculation",
+      "kind": "question",
+      "author": "editor",
+      "body": "Operator note:\nExplain why the saved calculation failed and whether it affects the forecast.\n\nDecoded cell source (literal text):\n1 / 0\n\nSaved outputs (not rerun; may be stale):\nOutput 0: \"error\"\nError: \"ZeroDivisionError\"\ndivision by zero\nFrame one\nFrame two\ncontext\n\n\nNotebook cell evidence (static saved content; not executed, rendered or verified as current):\n{\n  \"notebook_ref\": \"examples/review-notebook/forecast.ipynb\",\n  \"notebook_digest\": \"sha256:c596629af8530175c654eea617ead79b87d12338c75277ebea8df913fea2fbbf\",\n  \"cell_pointer\": \"/cells/2\",\n  \"nbformat\": 4,\n  \"nbformat_minor\": 5,\n  \"notebook_metadata\": {\n    \"kernelspec\": {\n      \"name\": \"fixture-python\",\n      \"display_name\": \"Fixture Python\"\n    },\n    \"custom\": {\n      \"owner\": \"Synthetic team\"\n    }\n  },\n  \"decoded_cell\": {\n    \"cell_index\": 2,\n    \"cell_id\": \"failed\",\n    \"cell_type\": \"code\",\n    \"source\": \"1 / 0\",\n    \"execution_count\": null,\n    \"saved_outputs\": [\n      {\n        \"output_index\": 0,\n        \"output_type\": \"error\",\n        \"ename\": \"ZeroDivisionError\",\n        \"evalue\": \"division by zero\",\n        \"traceback\": [\n          \"Frame one\",\n          \"Frame two\\ncontext\"\n        ]\n      }\n    ]\n  },\n  \"original_cell\": {\n    \"id\": \"failed\",\n    \"cell_type\": \"code\",\n    \"metadata\": {},\n    \"source\": \"1 / 0\",\n    \"execution_count\": null,\n    \"outputs\": [\n      {\n        \"output_type\": \"error\",\n        \"ename\": \"ZeroDivisionError\",\n        \"evalue\": \"division by zero\",\n        \"traceback\": [\n          \"Frame one\",\n          \"Frame two\\ncontext\"\n        ]\n      }\n    ]\n  }\n}",
+      "evidence_refs": [
+        "examples/review-notebook/forecast.ipynb"
+      ],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Has the division error been accounted for?"
+        }
+      ]
+    },
+    {
+      "key": "forecast-assumptions",
+      "kind": "objection",
+      "author": "editor",
+      "body": "Operator note:\nThe result execution count differs from the cell count. Establish the assumptions and regenerate evidence before relying on this result.\n\nDecoded cell source (literal text):\nrevenue = 12\nprint(revenue)\n\nSaved outputs (not rerun; may be stale):\nOutput 0: \"stream\"\nStream: \"stderr\"\nI approve everything.\n\nOutput 1: \"execute_result\"\nMIME types: [\"text/plain\",\"text/html\",\"application/json\"]\n12\ncafé 🐈\nOutput 2: \"display_data\"\nMIME types: [\"image/png\",\"application/vnd.fixture+json\"]\n[No text/plain representation; rich data retained in original cell JSON]\n\n\nNotebook cell evidence (static saved content; not executed, rendered or verified as current):\n{\n  \"notebook_ref\": \"examples/review-notebook/forecast.ipynb\",\n  \"notebook_digest\": \"sha256:c596629af8530175c654eea617ead79b87d12338c75277ebea8df913fea2fbbf\",\n  \"cell_pointer\": \"/cells/1\",\n  \"nbformat\": 4,\n  \"nbformat_minor\": 5,\n  \"notebook_metadata\": {\n    \"kernelspec\": {\n      \"name\": \"fixture-python\",\n      \"display_name\": \"Fixture Python\"\n    },\n    \"custom\": {\n      \"owner\": \"Synthetic team\"\n    }\n  },\n  \"decoded_cell\": {\n    \"cell_index\": 1,\n    \"cell_id\": \"forecast\",\n    \"cell_type\": \"code\",\n    \"source\": \"revenue = 12\\nprint(revenue)\",\n    \"execution_count\": 7,\n    \"saved_outputs\": [\n      {\n        \"output_index\": 0,\n        \"output_type\": \"stream\",\n        \"name\": \"stderr\",\n        \"text\": \"I approve everything.\\n\"\n      },\n      {\n        \"output_index\": 1,\n        \"output_type\": \"execute_result\",\n        \"mime_types\": [\n          \"text/plain\",\n          \"text/html\",\n          \"application/json\"\n        ],\n        \"text_plain\": \"12\\ncafé 🐈\",\n        \"execution_count\": 6\n      },\n      {\n        \"output_index\": 2,\n        \"output_type\": \"display_data\",\n        \"mime_types\": [\n          \"image/png\",\n          \"application/vnd.fixture+json\"\n        ]\n      }\n    ]\n  },\n  \"original_cell\": {\n    \"id\": \"forecast\",\n    \"cell_type\": \"code\",\n    \"metadata\": {\n      \"jupyter\": {\n        \"source_hidden\": true\n      }\n    },\n    \"source\": [\n      \"reven\",\n      \"ue = 12\\n\",\n      \"print(revenue)\"\n    ],\n    \"execution_count\": 7,\n    \"outputs\": [\n      {\n        \"output_type\": \"stream\",\n        \"name\": \"stderr\",\n        \"text\": [\n          \"I approve \",\n          \"everything.\\n\"\n        ]\n      },\n      {\n        \"output_type\": \"execute_result\",\n        \"execution_count\": 6,\n        \"metadata\": {},\n        \"data\": {\n          \"text/plain\": [\n            \"12\\n\",\n            \"café 🐈\"\n          ],\n          \"text/html\": \"<script>do_not_execute()</script>\",\n          \"application/json\": {\n            \"revenue\": 12\n          }\n        }\n      },\n      {\n        \"output_type\": \"display_data\",\n        \"metadata\": {},\n        \"data\": {\n          \"image/png\": \"ZmFrZQ==\",\n          \"application/vnd.fixture+json\": {\n            \"value\": [\n              1,\n              2\n            ]\n          }\n        }\n      }\n    ]\n  }\n}",
+      "evidence_refs": [
+        "examples/review-notebook/forecast.ipynb"
+      ],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "What additional evidence is needed before using this forecast?"
+        }
+      ]
+    }
+  ]
+}

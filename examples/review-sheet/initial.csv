@@ -1,0 +1,5 @@
+key,kind,author,body,evidence_ref,reviewer,prompt
+"launch","proposal","assistant","Ship the café search fix to the pilot group on Monday.","","editor","Is the release wording ready?"
+"launch","proposal","assistant","Ship the café search fix to the pilot group on Monday.","","ops","Is the pilot rollout ready?"
+"rollback","objection","assistant","The source does not name a rollback owner.","","ops","Is rollback ownership adequately covered?"
+"support","question","editor","Where should support collect failed searches?","","",""

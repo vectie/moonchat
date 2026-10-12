@@ -1,0 +1,93 @@
+{
+  "format": "moonchat.review-revision.v1",
+  "base_bundle_digest": "sha256:0e0d7a67fd40069a471f45e9d33fee7c2dbc2dfabb9a8734958c2d89d6317816",
+  "review_id": "pilot-source-relocation",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moontown.collaboration-review.v1",
+    "product_id": "moontown",
+    "conversation_id": "pilot-relocation-room"
+  },
+  "source_artifact_ref": "artifacts/pilot-plan.md",
+  "source_revision_id": "pilot-1",
+  "recorded_at": "2026-10-09T12:00:00Z",
+  "participants": [
+    {
+      "participant_id": "fixture-author",
+      "display_name": "Fixture review author",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "fixture-release",
+      "display_name": "Fixture release reviewer",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "fixture-operations",
+      "display_name": "Fixture operations reviewer",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "matching-proposal",
+      "entry_kind": "proposal",
+      "author_participant_id": "fixture-author",
+      "turn": {
+        "turn_id": "host-turn-31",
+        "client_turn_id": "local-turn-31",
+        "command_id": "draft-command-31"
+      },
+      "body": "Keep the pilot traffic limit and expansion question together when preparing the next review.",
+      "evidence_refs": [
+        "evidence/query-fixtures.txt"
+      ]
+    },
+    {
+      "entry_id": "rollback-objection",
+      "entry_kind": "objection",
+      "author_participant_id": "fixture-author",
+      "turn": {
+        "turn_id": "host-turn-32",
+        "client_turn_id": "local-turn-32",
+        "command_id": "draft-command-32"
+      },
+      "body": "The rollback owner and rehearsal need an explicit review. Keep this objection visible.",
+      "evidence_refs": [
+        "evidence/rollback-rehearsal.txt"
+      ]
+    },
+    {
+      "entry_id": "coverage-question",
+      "entry_kind": "question",
+      "author_participant_id": "fixture-author",
+      "turn": {
+        "turn_id": "host-turn-33",
+        "client_turn_id": "local-turn-33",
+        "command_id": "draft-command-33"
+      },
+      "body": "Which bilingual coverage work belongs in the current pilot? 🌙",
+      "evidence_refs": []
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "approve-query-evidence",
+      "subject_entry_id": "matching-proposal",
+      "reviewer_participant_id": "fixture-release",
+      "prompt": "Do the synthetic query examples support the proposed matching behavior?"
+    },
+    {
+      "decision_id": "resolve-rollback-owner",
+      "subject_entry_id": "rollback-objection",
+      "reviewer_participant_id": "fixture-operations",
+      "prompt": "Is a rollback owner named for this exact candidate?"
+    },
+    {
+      "decision_id": "resolve-rehearsal-date",
+      "subject_entry_id": "rollback-objection",
+      "reviewer_participant_id": "fixture-operations",
+      "prompt": "Has the rollback rehearsal date been agreed?"
+    }
+  ]
+}

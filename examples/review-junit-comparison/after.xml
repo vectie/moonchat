@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="release" tests="7" failures="0">
+    <testcase classname="Backups" name="restore"><failure message="checksum mismatch">Restored file hash differs</failure><system-err>comparison fixture only</system-err></testcase>
+    <testcase classname="Billing" name="invoice" time="0.2"/>
+    <testcase classname="Smoke" name="start"/>
+    <testsuite name="retry"><testcase classname="Retry" name="repeat"/><testcase classname="Retry" name="repeat"><error type="Timeout">second attempt</error></testcase></testsuite>
+    <testcase classname="Billing" name="refund"><error type="FixtureError">Refund fixtures unavailable</error></testcase>
+  </testsuite>
+</testsuites>

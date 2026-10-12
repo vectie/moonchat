@@ -1,0 +1,6 @@
+key,kind,author,body,evidence_ref,reviewer,prompt
+"launch","proposal","assistant","Skip the pilot and release to every team.","pilot/rollout-checklist.md","editor","May we announce general availability?"
+"launch","proposal","assistant","Skip the pilot and release to every team.","pilot/support-notes.md","ops","Is the staged rollout staffed for Monday?"
+"rollback","objection","assistant","The rollback owner and backup still need names.","","ops","Is rollback ownership adequately covered?"
+"support","question","editor","Where should support collect failed searches?","","",""
+"coverage","objection","ops","The Tuesday backup shift is uncovered.","pilot/staffing.md","ops","Is backup coverage sufficient?"

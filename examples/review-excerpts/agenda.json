@@ -1,0 +1,21 @@
+{
+  "review_id": "cafe-pilot-excerpts",
+  "conversation_id": "cafe-pilot-review",
+  "source_artifact_ref": "examples/review-excerpts/source.md",
+  "source_revision_id": "r1",
+  "recorded_at": "2026-10-08T12:00:00Z",
+  "participants": [
+    {"participant_id": "editor", "display_name": "Synthetic review editor", "participant_kind": "human"},
+    {"participant_id": "ops", "display_name": "Synthetic operations reviewer", "participant_kind": "human"}
+  ],
+  "items": [
+    {
+      "key": "pilot-scope",
+      "kind": "proposal",
+      "author": "editor",
+      "body": "Expand the café search pilot to 25 stores on Monday.",
+      "evidence_refs": [],
+      "decisions": [{"reviewer": "ops", "prompt": "Is the proposed pilot scope ready?"}]
+    }
+  ]
+}

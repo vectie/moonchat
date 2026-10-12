@@ -1,0 +1,62 @@
+{
+  "contract_id": "moonchat.junit-comparison-selection.v1",
+  "source_digest": "sha256:c6f22fc30fe1fab9d904910546bd2e0cdad9d2a3aa56ce0e8ffc6af73a463bdd",
+  "before_report_digest": "sha256:ac675064d4d15c5497c3b3bfe07add2cc2a5ff62d49f22a02b46fb7bd24f6039",
+  "after_report_digest": "sha256:cbbf04211ffe2a99fb31cba00d05cb99636b3a860df96cbb390b73bca57a3206",
+  "before_report_ref": "examples/review-junit-comparison/before.xml",
+  "after_report_ref": "examples/review-junit-comparison/after.xml",
+  "rows": [
+    {
+      "index": 1,
+      "key": "backup-change",
+      "kind": "objection",
+      "author": "editor",
+      "note": "The backup result changed from skipped to a reported failure.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "What additional recovery evidence is needed before release?"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "key": "absent-check",
+      "kind": "objection",
+      "author": "editor",
+      "note": "The old setup error is absent from the later report; its concern remains open.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Why is this case no longer listed, and should it be rerun?"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "key": "ambiguous-retry",
+      "kind": "objection",
+      "author": "editor",
+      "note": "Repeated case identities cannot be paired into before/after attempts.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Can the runner provide stable attempt IDs or unambiguous case names?"
+        }
+      ]
+    },
+    {
+      "index": 0,
+      "key": "invoice-evidence",
+      "kind": "objection",
+      "author": "editor",
+      "note": "The later report has no invoice failure signal; this is not proof of a pass.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is the retained evidence sufficient to revisit the rounding concern?"
+        }
+      ]
+    }
+  ]
+}

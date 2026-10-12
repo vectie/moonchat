@@ -1,0 +1,32 @@
+{
+  "format": "moonchat.review-notebook.v1",
+  "notebook_digest": "sha256:c596629af8530175c654eea617ead79b87d12338c75277ebea8df913fea2fbbf",
+  "cells": [
+    {
+      "cell_index": 2,
+      "key": "failed-calculation",
+      "kind": "question",
+      "author": "editor",
+      "note": "Explain why the saved calculation failed and whether it affects the forecast.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Has the division error been accounted for?"
+        }
+      ]
+    },
+    {
+      "cell_index": 1,
+      "key": "forecast-assumptions",
+      "kind": "objection",
+      "author": "editor",
+      "note": "The result execution count differs from the cell count. Establish the assumptions and regenerate evidence before relying on this result.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is there enough evidence to rely on the forecast?"
+        }
+      ]
+    }
+  ]
+}

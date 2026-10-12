@@ -1,0 +1,34 @@
+{
+  "contract_id": "moonchat.junit-selection.v1",
+  "source_digest": "sha256:f477a1b63e8987cc5996dc8e6da30e3ed02452a1d99252bc8e0d946fd2e4ad43",
+  "report_digest": "sha256:94975aec3e1d4ba64810c6a9f5f5192edaa3d46ddc61b5c3fa9abb43a7f1d496",
+  "report_ref": "examples/review-junit/results.xml",
+  "cases": [
+    {
+      "index": 0,
+      "key": "invoice-total",
+      "kind": "objection",
+      "author": "editor",
+      "note": "Resolve the wrong total.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "What should happen before release?"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "key": "backup-gap",
+      "kind": "question",
+      "author": "editor",
+      "note": "Decide how to cover the skipped check.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "What should happen before release?"
+        }
+      ]
+    }
+  ]
+}

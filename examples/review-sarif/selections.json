@@ -1,0 +1,30 @@
+{
+  "format": "moonchat.review-sarif.v1",
+  "export_ref": "examples/review-sarif/results.sarif",
+  "export_digest": "sha256:a6f0286fc6da285ef68e48ba69dfe71b5f63601a81867981f668dbf79ebd8139",
+  "findings": [
+    {
+      "run_index": 1,
+      "result_index": 0,
+      "key": "owner",
+      "kind": "question",
+      "author": "editor",
+      "note": "Ask operations to name an owner.",
+      "decisions": []
+    },
+    {
+      "run_index": 0,
+      "result_index": 0,
+      "key": "fallback",
+      "kind": "objection",
+      "author": "editor",
+      "note": "Discuss the analyzer warning even though the analyzer records a suppression.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is the fallback concern resolved for this release?"
+        }
+      ]
+    }
+  ]
+}

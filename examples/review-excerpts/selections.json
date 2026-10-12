@@ -1,0 +1,25 @@
+{
+  "format": "moonchat.review-excerpts.v1",
+  "transcript_ref": "examples/review-excerpts/transcript.txt",
+  "transcript_digest": "sha256:8a871d37a20cfea3b6b7ccb8741642d11bb7e29c6cb5458ec6fa30cc597bd11f",
+  "excerpts": [
+    {
+      "key": "rehearsal-blockers",
+      "kind": "objection",
+      "author": "editor",
+      "note": "Resolve accent-insensitive search and name a rollback owner before expanding the pilot.",
+      "start_line": 3,
+      "end_line": 4,
+      "decisions": [{"reviewer": "ops", "prompt": "Have these two rehearsal concerns been addressed for the 25-store pilot?"}]
+    },
+    {
+      "key": "support-routing",
+      "kind": "question",
+      "author": "editor",
+      "note": "Clarify the support route for stores without log access. The observer's quoted enthusiasm does not answer this question or record approval.",
+      "start_line": 6,
+      "end_line": 7,
+      "decisions": []
+    }
+  ]
+}

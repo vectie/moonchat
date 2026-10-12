@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>MoonChat review packet: forecast-review</title>
+<style>
+:root { color-scheme: light; font: 16px/1.5 system-ui, sans-serif; color: #172638; background: #f4f6f8; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: #164f92; text-underline-offset: .18em; }
+a:focus-visible { outline: 3px solid #b65c00; outline-offset: 3px; }
+header, main, footer { max-width: 1440px; margin: auto; padding: 1.5rem; }
+header { padding-bottom: .5rem; }
+h1 { margin: .2rem 0; font-size: 2rem; }
+h2 { font-size: 1.45rem; } h3 { font-size: 1.15rem; }
+h2, h3, li, article { scroll-margin-top: 1rem; }
+nav ul { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; padding-left: 1.25rem; }
+.notice { padding: 1rem; border-left: 4px solid #52687f; background: #e9eff5; }
+.columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+section, article { min-width: 0; }
+.panel, article { background: white; border: 1px solid #c4cfd9; border-radius: .4rem; padding: 1.25rem; margin-bottom: 1rem; }
+.decision { border-left: 4px solid #52687f; padding-left: 1rem; margin-top: 1.5rem; }
+.objection { border-left: 4px solid #9b4e00; }
+dl { margin: .5rem 0; } .field { margin: .7rem 0; }
+#summary dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .25rem 1.5rem; }
+dt { font-weight: 650; font-size: .85rem; color: #425469; }
+dd { margin: .15rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.source-lines { list-style: none; margin: 0; padding: 0; font: .9rem/1.6 ui-monospace, monospace; }
+.source-lines li { display: grid; grid-template-columns: 3.5em minmax(0, 1fr); min-height: 1.6em; }
+.source-lines a { padding-right: 1em; text-align: right; color: #52687f; user-select: none; }
+.source-lines span { white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; }
+:target { outline: 2px solid #9b4e00; outline-offset: 3px; }
+.back { font-size: .85rem; } .skip { display: inline-block; margin-bottom: .5rem; }
+@media (max-width: 850px) { .columns { display: block; } header, main, footer { padding: 1rem; } }
+@media print { :root { background: white; font-size: 10pt; } .columns { display: block; } header, main, footer { padding: 0; } nav, .skip, .back { display: none; } .panel, article { border-radius: 0; } h2, h3, dt { break-after: avoid; } a { color: inherit; } :target { outline: none; } }
+</style>
+</head>
+<body>
+<header id="top">
+<a class="skip" href="#discussion">Skip to review discussion</a>
+<h1>MoonChat review packet</h1>
+<p class="notice">Read-only derived view. Retain the original bundle JSON and exact source bytes. This packet cannot record decisions, authenticate reviewers, deliver receipts or accept knowledge for a receiving product.</p>
+<nav aria-label="Packet sections"><ul><li><a href="#summary">Review scope</a></li><li><a href="#decision-index">Decision index</a></li><li><a href="#source">Source text</a></li><li><a href="#discussion">Discussion and receipts</a></li><li><a href="#participants">Participants</a></li></ul></nav>
+</header>
+<main>
+<section class="panel" id="summary"><h2>Review scope</h2><dl>
+<div class="field"><dt>Review ID</dt><dd>forecast-review</dd></div>
+<div class="field"><dt>Overall review status</dt><dd>pending_review</dd></div>
+<div class="field"><dt>Contract claim class</dt><dd>research-evidence</dd></div>
+<div class="field"><dt>Outcome guidance</dt><dd>A named-human decision is still needed (decision-7-purpose-editor, decision-18-failed-calculation-ops, decision-20-forecast-assumptions-ops). Return to the producing application to complete it.</dd></div>
+<div class="field"><dt>Source artifact</dt><dd>examples/review-notebook/forecast.ipynb</dd></div>
+<div class="field"><dt>Source revision</dt><dd>snapshot-1</dd></div>
+<div class="field"><dt>Source SHA-256</dt><dd>sha256:c596629af8530175c654eea617ead79b87d12338c75277ebea8df913fea2fbbf</dd></div>
+<div class="field"><dt>Previous bundle reference (not opened)</dt><dd>(none)</dd></div>
+<div class="field"><dt>Previous bundle SHA-256</dt><dd>(none)</dd></div>
+<div class="field"><dt>Conversation ID</dt><dd>forecast-review-room</dd></div>
+<div class="field"><dt>Conversation contract</dt><dd>moonsuite-conversation.v2</dd></div>
+<div class="field"><dt>Host product</dt><dd>moonchat</dd></div>
+<div class="field"><dt>Host protocol</dt><dd>moonchat.review-agenda.v1</dd></div>
+<div class="field"><dt>Recorded at</dt><dd>2026-10-10T12:00:00Z</dd></div>
+<div class="field"><dt>Missing or deferred decisions</dt><dd>decision-7-purpose-editor
+decision-18-failed-calculation-ops
+decision-20-forecast-assumptions-ops</dd></div>
+<div class="field"><dt>Rejected decisions</dt><dd>(none)</dd></div>
+</dl><p>3 discussion entries; 3 required decisions; 0 recorded receipts. Every current-bundle objection is shown below, including when the overall status is accepted.</p></section>
+<section class="panel" id="decision-index"><h2>Decision index</h2><ol>
+<li><a href="#decision-1">decision-7-purpose-editor — Fixture editor (editor)</a>: pending</li>
+<li><a href="#decision-2">decision-18-failed-calculation-ops — Fixture operations lead (ops)</a>: pending</li>
+<li><a href="#decision-3">decision-20-forecast-assumptions-ops — Fixture operations lead (ops)</a>: pending</li>
+</ol><h3>Discussion index</h3><ol>
+<li><a href="#entry-1">proposal: entry-purpose</a></li>
+<li><a href="#entry-2">question: entry-failed-calculation</a></li>
+<li><a href="#entry-3">objection: entry-forecast-assumptions</a></li>
+</ol></section>
+<div class="columns">
+<section class="panel" id="source"><h2>Source text</h2>
+<p>The digest above covers all 2414 original bytes. Line numbers describe this display only. CRLF and CR are displayed as LF; a final newline produces an empty final display line. Source markup is literal text.</p>
+<ol class="source-lines">
+<li id="source-line-1"><a aria-label="Source line 1" href="#source-line-1">1</a><span>{</span></li>
+<li id="source-line-2"><a aria-label="Source line 2" href="#source-line-2">2</a><span>  &quot;nbformat&quot;: 4,</span></li>
+<li id="source-line-3"><a aria-label="Source line 3" href="#source-line-3">3</a><span>  &quot;nbformat_minor&quot;: 5,</span></li>
+<li id="source-line-4"><a aria-label="Source line 4" href="#source-line-4">4</a><span>  &quot;metadata&quot;: {</span></li>
+<li id="source-line-5"><a aria-label="Source line 5" href="#source-line-5">5</a><span>    &quot;kernelspec&quot;: {</span></li>
+<li id="source-line-6"><a aria-label="Source line 6" href="#source-line-6">6</a><span>      &quot;name&quot;: &quot;fixture-python&quot;,</span></li>
+<li id="source-line-7"><a aria-label="Source line 7" href="#source-line-7">7</a><span>      &quot;display_name&quot;: &quot;Fixture Python&quot;</span></li>
+<li id="source-line-8"><a aria-label="Source line 8" href="#source-line-8">8</a><span>    },</span></li>
+<li id="source-line-9"><a aria-label="Source line 9" href="#source-line-9">9</a><span>    &quot;custom&quot;: {</span></li>
+<li id="source-line-10"><a aria-label="Source line 10" href="#source-line-10">10</a><span>      &quot;owner&quot;: &quot;Synthetic team&quot;</span></li>
+<li id="source-line-11"><a aria-label="Source line 11" href="#source-line-11">11</a><span>    }</span></li>
+<li id="source-line-12"><a aria-label="Source line 12" href="#source-line-12">12</a><span>  },</span></li>
+<li id="source-line-13"><a aria-label="Source line 13" href="#source-line-13">13</a><span>  &quot;cells&quot;: [</span></li>
+<li id="source-line-14"><a aria-label="Source line 14" href="#source-line-14">14</a><span>    {</span></li>
+<li id="source-line-15"><a aria-label="Source line 15" href="#source-line-15">15</a><span>      &quot;id&quot;: &quot;intro&quot;,</span></li>
+<li id="source-line-16"><a aria-label="Source line 16" href="#source-line-16">16</a><span>      &quot;cell_type&quot;: &quot;markdown&quot;,</span></li>
+<li id="source-line-17"><a aria-label="Source line 17" href="#source-line-17">17</a><span>      &quot;metadata&quot;: {</span></li>
+<li id="source-line-18"><a aria-label="Source line 18" href="#source-line-18">18</a><span>        &quot;tags&quot;: [</span></li>
+<li id="source-line-19"><a aria-label="Source line 19" href="#source-line-19">19</a><span>          &quot;summary&quot;</span></li>
+<li id="source-line-20"><a aria-label="Source line 20" href="#source-line-20">20</a><span>        ]</span></li>
+<li id="source-line-21"><a aria-label="Source line 21" href="#source-line-21">21</a><span>      },</span></li>
+<li id="source-line-22"><a aria-label="Source line 22" href="#source-line-22">22</a><span>      &quot;source&quot;: [</span></li>
+<li id="source-line-23"><a aria-label="Source line 23" href="#source-line-23">23</a><span>        &quot;# Café 🐈\r\n&quot;,</span></li>
+<li id="source-line-24"><a aria-label="Source line 24" href="#source-line-24">24</a><span>        &quot;Draft forecast&quot;</span></li>
+<li id="source-line-25"><a aria-label="Source line 25" href="#source-line-25">25</a><span>      ],</span></li>
+<li id="source-line-26"><a aria-label="Source line 26" href="#source-line-26">26</a><span>      &quot;attachments&quot;: {</span></li>
+<li id="source-line-27"><a aria-label="Source line 27" href="#source-line-27">27</a><span>        &quot;chart.png&quot;: {</span></li>
+<li id="source-line-28"><a aria-label="Source line 28" href="#source-line-28">28</a><span>          &quot;image/png&quot;: &quot;ZmFrZQ==&quot;</span></li>
+<li id="source-line-29"><a aria-label="Source line 29" href="#source-line-29">29</a><span>        }</span></li>
+<li id="source-line-30"><a aria-label="Source line 30" href="#source-line-30">30</a><span>      }</span></li>
+<li id="source-line-31"><a aria-label="Source line 31" href="#source-line-31">31</a><span>    },</span></li>
+<li id="source-line-32"><a aria-label="Source line 32" href="#source-line-32">32</a><span>    {</span></li>
+<li id="source-line-33"><a aria-label="Source line 33" href="#source-line-33">33</a><span>      &quot;id&quot;: &quot;forecast&quot;,</span></li>
+<li id="source-line-34"><a aria-label="Source line 34" href="#source-line-34">34</a><span>      &quot;cell_type&quot;: &quot;code&quot;,</span></li>
+<li id="source-line-35"><a aria-label="Source line 35" href="#source-line-35">35</a><span>      &quot;metadata&quot;: {</span></li>
+<li id="source-line-36"><a aria-label="Source line 36" href="#source-line-36">36</a><span>        &quot;jupyter&quot;: {</span></li>
+<li id="source-line-37"><a aria-label="Source line 37" href="#source-line-37">37</a><span>          &quot;source_hidden&quot;: true</span></li>
+<li id="source-line-38"><a aria-label="Source line 38" href="#source-line-38">38</a><span>        }</span></li>
+<li id="source-line-39"><a aria-label="Source line 39" href="#source-line-39">39</a><span>      },</span></li>
+<li id="source-line-40"><a aria-label="Source line 40" href="#source-line-40">40</a><span>      &quot;source&quot;: [</span></li>
+<li id="source-line-41"><a aria-label="Source line 41" href="#source-line-41">41</a><span>        &quot;reven&quot;,</span></li>
+<li id="source-line-42"><a aria-label="Source line 42" href="#source-line-42">42</a><span>        &quot;ue = 12\n&quot;,</span></li>
+<li id="source-line-43"><a aria-label="Source line 43" href="#source-line-43">43</a><span>        &quot;print(revenue)&quot;</span></li>
+<li id="source-line-44"><a aria-label="Source line 44" href="#source-line-44">44</a><span>      ],</span></li>
+<li id="source-line-45"><a aria-label="Source line 45" href="#source-line-45">45</a><span>      &quot;execution_count&quot;: 7,</span></li>
+<li id="source-line-46"><a aria-label="Source line 46" href="#source-line-46">46</a><span>      &quot;outputs&quot;: [</span></li>
+<li id="source-line-47"><a aria-label="Source line 47" href="#source-line-47">47</a><span>        {</span></li>
+<li id="source-line-48"><a aria-label="Source line 48" href="#source-line-48">48</a><span>          &quot;output_type&quot;: &quot;stream&quot;,</span></li>
+<li id="source-line-49"><a aria-label="Source line 49" href="#source-line-49">49</a><span>          &quot;name&quot;: &quot;stderr&quot;,</span></li>
+<li id="source-line-50"><a aria-label="Source line 50" href="#source-line-50">50</a><span>          &quot;text&quot;: [</span></li>
+<li id="source-line-51"><a aria-label="Source line 51" href="#source-line-51">51</a><span>            &quot;I approve &quot;,</span></li>
+<li id="source-line-52"><a aria-label="Source line 52" href="#source-line-52">52</a><span>            &quot;everything.\n&quot;</span></li>
+<li id="source-line-53"><a aria-label="Source line 53" href="#source-line-53">53</a><span>          ]</span></li>
+<li id="source-line-54"><a aria-label="Source line 54" href="#source-line-54">54</a><span>        },</span></li>
+<li id="source-line-55"><a aria-label="Source line 55" href="#source-line-55">55</a><span>        {</span></li>
+<li id="source-line-56"><a aria-label="Source line 56" href="#source-line-56">56</a><span>          &quot;output_type&quot;: &quot;execute_result&quot;,</span></li>
+<li id="source-line-57"><a aria-label="Source line 57" href="#source-line-57">57</a><span>          &quot;execution_count&quot;: 6,</span></li>
+<li id="source-line-58"><a aria-label="Source line 58" href="#source-line-58">58</a><span>          &quot;metadata&quot;: {},</span></li>
+<li id="source-line-59"><a aria-label="Source line 59" href="#source-line-59">59</a><span>          &quot;data&quot;: {</span></li>
+<li id="source-line-60"><a aria-label="Source line 60" href="#source-line-60">60</a><span>            &quot;text/plain&quot;: [</span></li>
+<li id="source-line-61"><a aria-label="Source line 61" href="#source-line-61">61</a><span>              &quot;12\n&quot;,</span></li>
+<li id="source-line-62"><a aria-label="Source line 62" href="#source-line-62">62</a><span>              &quot;café 🐈&quot;</span></li>
+<li id="source-line-63"><a aria-label="Source line 63" href="#source-line-63">63</a><span>            ],</span></li>
+<li id="source-line-64"><a aria-label="Source line 64" href="#source-line-64">64</a><span>            &quot;text/html&quot;: &quot;&lt;script&gt;do_not_execute()&lt;/script&gt;&quot;,</span></li>
+<li id="source-line-65"><a aria-label="Source line 65" href="#source-line-65">65</a><span>            &quot;application/json&quot;: {</span></li>
+<li id="source-line-66"><a aria-label="Source line 66" href="#source-line-66">66</a><span>              &quot;revenue&quot;: 12</span></li>
+<li id="source-line-67"><a aria-label="Source line 67" href="#source-line-67">67</a><span>            }</span></li>
+<li id="source-line-68"><a aria-label="Source line 68" href="#source-line-68">68</a><span>          }</span></li>
+<li id="source-line-69"><a aria-label="Source line 69" href="#source-line-69">69</a><span>        },</span></li>
+<li id="source-line-70"><a aria-label="Source line 70" href="#source-line-70">70</a><span>        {</span></li>
+<li id="source-line-71"><a aria-label="Source line 71" href="#source-line-71">71</a><span>          &quot;output_type&quot;: &quot;display_data&quot;,</span></li>
+<li id="source-line-72"><a aria-label="Source line 72" href="#source-line-72">72</a><span>          &quot;metadata&quot;: {},</span></li>
+<li id="source-line-73"><a aria-label="Source line 73" href="#source-line-73">73</a><span>          &quot;data&quot;: {</span></li>
+<li id="source-line-74"><a aria-label="Source line 74" href="#source-line-74">74</a><span>            &quot;image/png&quot;: &quot;ZmFrZQ==&quot;,</span></li>
+<li id="source-line-75"><a aria-label="Source line 75" href="#source-line-75">75</a><span>            &quot;application/vnd.fixture+json&quot;: {</span></li>
+<li id="source-line-76"><a aria-label="Source line 76" href="#source-line-76">76</a><span>              &quot;value&quot;: [</span></li>
+<li id="source-line-77"><a aria-label="Source line 77" href="#source-line-77">77</a><span>                1,</span></li>
+<li id="source-line-78"><a aria-label="Source line 78" href="#source-line-78">78</a><span>                2</span></li>
+<li id="source-line-79"><a aria-label="Source line 79" href="#source-line-79">79</a><span>              ]</span></li>
+<li id="source-line-80"><a aria-label="Source line 80" href="#source-line-80">80</a><span>            }</span></li>
+<li id="source-line-81"><a aria-label="Source line 81" href="#source-line-81">81</a><span>          }</span></li>
+<li id="source-line-82"><a aria-label="Source line 82" href="#source-line-82">82</a><span>        }</span></li>
+<li id="source-line-83"><a aria-label="Source line 83" href="#source-line-83">83</a><span>      ]</span></li>
+<li id="source-line-84"><a aria-label="Source line 84" href="#source-line-84">84</a><span>    },</span></li>
+<li id="source-line-85"><a aria-label="Source line 85" href="#source-line-85">85</a><span>    {</span></li>
+<li id="source-line-86"><a aria-label="Source line 86" href="#source-line-86">86</a><span>      &quot;id&quot;: &quot;failed&quot;,</span></li>
+<li id="source-line-87"><a aria-label="Source line 87" href="#source-line-87">87</a><span>      &quot;cell_type&quot;: &quot;code&quot;,</span></li>
+<li id="source-line-88"><a aria-label="Source line 88" href="#source-line-88">88</a><span>      &quot;metadata&quot;: {},</span></li>
+<li id="source-line-89"><a aria-label="Source line 89" href="#source-line-89">89</a><span>      &quot;source&quot;: &quot;1 / 0&quot;,</span></li>
+<li id="source-line-90"><a aria-label="Source line 90" href="#source-line-90">90</a><span>      &quot;execution_count&quot;: null,</span></li>
+<li id="source-line-91"><a aria-label="Source line 91" href="#source-line-91">91</a><span>      &quot;outputs&quot;: [</span></li>
+<li id="source-line-92"><a aria-label="Source line 92" href="#source-line-92">92</a><span>        {</span></li>
+<li id="source-line-93"><a aria-label="Source line 93" href="#source-line-93">93</a><span>          &quot;output_type&quot;: &quot;error&quot;,</span></li>
+<li id="source-line-94"><a aria-label="Source line 94" href="#source-line-94">94</a><span>          &quot;ename&quot;: &quot;ZeroDivisionError&quot;,</span></li>
+<li id="source-line-95"><a aria-label="Source line 95" href="#source-line-95">95</a><span>          &quot;evalue&quot;: &quot;division by zero&quot;,</span></li>
+<li id="source-line-96"><a aria-label="Source line 96" href="#source-line-96">96</a><span>          &quot;traceback&quot;: [</span></li>
+<li id="source-line-97"><a aria-label="Source line 97" href="#source-line-97">97</a><span>            &quot;Frame one&quot;,</span></li>
+<li id="source-line-98"><a aria-label="Source line 98" href="#source-line-98">98</a><span>            &quot;Frame two\ncontext&quot;</span></li>
+<li id="source-line-99"><a aria-label="Source line 99" href="#source-line-99">99</a><span>          ]</span></li>
+<li id="source-line-100"><a aria-label="Source line 100" href="#source-line-100">100</a><span>        }</span></li>
+<li id="source-line-101"><a aria-label="Source line 101" href="#source-line-101">101</a><span>      ]</span></li>
+<li id="source-line-102"><a aria-label="Source line 102" href="#source-line-102">102</a><span>    },</span></li>
+<li id="source-line-103"><a aria-label="Source line 103" href="#source-line-103">103</a><span>    {</span></li>
+<li id="source-line-104"><a aria-label="Source line 104" href="#source-line-104">104</a><span>      &quot;id&quot;: &quot;appendix&quot;,</span></li>
+<li id="source-line-105"><a aria-label="Source line 105" href="#source-line-105">105</a><span>      &quot;cell_type&quot;: &quot;raw&quot;,</span></li>
+<li id="source-line-106"><a aria-label="Source line 106" href="#source-line-106">106</a><span>      &quot;metadata&quot;: {</span></li>
+<li id="source-line-107"><a aria-label="Source line 107" href="#source-line-107">107</a><span>        &quot;format&quot;: &quot;text/latex&quot;</span></li>
+<li id="source-line-108"><a aria-label="Source line 108" href="#source-line-108">108</a><span>      },</span></li>
+<li id="source-line-109"><a aria-label="Source line 109" href="#source-line-109">109</a><span>      &quot;source&quot;: &quot;\\section{Appendix}&quot;</span></li>
+<li id="source-line-110"><a aria-label="Source line 110" href="#source-line-110">110</a><span>    },</span></li>
+<li id="source-line-111"><a aria-label="Source line 111" href="#source-line-111">111</a><span>    {</span></li>
+<li id="source-line-112"><a aria-label="Source line 112" href="#source-line-112">112</a><span>      &quot;id&quot;: &quot;future&quot;,</span></li>
+<li id="source-line-113"><a aria-label="Source line 113" href="#source-line-113">113</a><span>      &quot;cell_type&quot;: &quot;code&quot;,</span></li>
+<li id="source-line-114"><a aria-label="Source line 114" href="#source-line-114">114</a><span>      &quot;metadata&quot;: {},</span></li>
+<li id="source-line-115"><a aria-label="Source line 115" href="#source-line-115">115</a><span>      &quot;source&quot;: [],</span></li>
+<li id="source-line-116"><a aria-label="Source line 116" href="#source-line-116">116</a><span>      &quot;execution_count&quot;: null,</span></li>
+<li id="source-line-117"><a aria-label="Source line 117" href="#source-line-117">117</a><span>      &quot;outputs&quot;: []</span></li>
+<li id="source-line-118"><a aria-label="Source line 118" href="#source-line-118">118</a><span>    }</span></li>
+<li id="source-line-119"><a aria-label="Source line 119" href="#source-line-119">119</a><span>  ]</span></li>
+<li id="source-line-120"><a aria-label="Source line 120" href="#source-line-120">120</a><span>}</span></li>
+<li id="source-line-121"><a aria-label="Source line 121" href="#source-line-121">121</a><span></span></li>
+</ol></section>
+<section id="discussion"><h2>Discussion and receipts</h2>
+<article id="entry-1"><h3>proposal: entry-purpose</h3><dl>
+<div class="field"><dt>Author</dt><dd>Fixture editor (editor)</dd></div>
+<div class="field"><dt>Discussion text</dt><dd>Consider this saved forecast for next week’s planning. Review assumptions and failed calculations first.</dd></div>
+<div class="field"><dt>Evidence references (not opened)</dt><dd>(none)</dd></div>
+<div class="field"><dt>Turn ID</dt><dd>turn-purpose</dd></div>
+<div class="field"><dt>Client turn ID</dt><dd>client-purpose</dd></div>
+<div class="field"><dt>Command ID</dt><dd>command-purpose</dd></div>
+</dl>
+<section class="decision" id="decision-1"><h3>Decision 1</h3><dl>
+<div class="field"><dt>Decision ID</dt><dd>decision-7-purpose-editor</dd></div>
+<div class="field"><dt>Named reviewer</dt><dd>Fixture editor (editor)</dd></div>
+<div class="field"><dt>Prompt</dt><dd>Is the notebook suitable for planning?</dd></div>
+<div class="field"><dt>Outcome</dt><dd>pending</dd></div>
+</dl><p>No receipt recorded for this decision.</p>
+<p class="back"><a href="#decision-index">Back to decision index</a></p></section>
+<p class="back"><a href="#source">Read bound source</a> · <a href="#top">Back to top</a></p></article>
+<article id="entry-2"><h3>question: entry-failed-calculation</h3><dl>
+<div class="field"><dt>Author</dt><dd>Fixture editor (editor)</dd></div>
+<div class="field"><dt>Discussion text</dt><dd>Operator note:
+Explain why the saved calculation failed and whether it affects the forecast.
+
+Decoded cell source (literal text):
+1 / 0
+
+Saved outputs (not rerun; may be stale):
+Output 0: &quot;error&quot;
+Error: &quot;ZeroDivisionError&quot;
+division by zero
+Frame one
+Frame two
+context
+
+
+Notebook cell evidence (static saved content; not executed, rendered or verified as current):
+{
+  &quot;notebook_ref&quot;: &quot;examples/review-notebook/forecast.ipynb&quot;,
+  &quot;notebook_digest&quot;: &quot;sha256:c596629af8530175c654eea617ead79b87d12338c75277ebea8df913fea2fbbf&quot;,
+  &quot;cell_pointer&quot;: &quot;/cells/2&quot;,
+  &quot;nbformat&quot;: 4,
+  &quot;nbformat_minor&quot;: 5,
+  &quot;notebook_metadata&quot;: {
+    &quot;kernelspec&quot;: {
+      &quot;name&quot;: &quot;fixture-python&quot;,
+      &quot;display_name&quot;: &quot;Fixture Python&quot;
+    },
+    &quot;custom&quot;: {
+      &quot;owner&quot;: &quot;Synthetic team&quot;
+    }
+  },
+  &quot;decoded_cell&quot;: {
+    &quot;cell_index&quot;: 2,
+    &quot;cell_id&quot;: &quot;failed&quot;,
+    &quot;cell_type&quot;: &quot;code&quot;,
+    &quot;source&quot;: &quot;1 / 0&quot;,
+    &quot;execution_count&quot;: null,
+    &quot;saved_outputs&quot;: [
+      {
+        &quot;output_index&quot;: 0,
+        &quot;output_type&quot;: &quot;error&quot;,
+        &quot;ename&quot;: &quot;ZeroDivisionError&quot;,
+        &quot;evalue&quot;: &quot;division by zero&quot;,
+        &quot;traceback&quot;: [
+          &quot;Frame one&quot;,
+          &quot;Frame two\ncontext&quot;
+        ]
+      }
+    ]
+  },
+  &quot;original_cell&quot;: {
+    &quot;id&quot;: &quot;failed&quot;,
+    &quot;cell_type&quot;: &quot;code&quot;,
+    &quot;metadata&quot;: {},
+    &quot;source&quot;: &quot;1 / 0&quot;,
+    &quot;execution_count&quot;: null,
+    &quot;outputs&quot;: [
+      {
+        &quot;output_type&quot;: &quot;error&quot;,
+        &quot;ename&quot;: &quot;ZeroDivisionError&quot;,
+        &quot;evalue&quot;: &quot;division by zero&quot;,
+        &quot;traceback&quot;: [
+          &quot;Frame one&quot;,
+          &quot;Frame two\ncontext&quot;
+        ]
+      }
+    ]
+  }
+}</dd></div>
+<div class="field"><dt>Evidence references (not opened)</dt><dd>examples/review-notebook/forecast.ipynb</dd></div>
+<div class="field"><dt>Turn ID</dt><dd>turn-failed-calculation</dd></div>
+<div class="field"><dt>Client turn ID</dt><dd>client-failed-calculation</dd></div>
+<div class="field"><dt>Command ID</dt><dd>command-failed-calculation</dd></div>
+</dl>
+<section class="decision" id="decision-2"><h3>Decision 2</h3><dl>
+<div class="field"><dt>Decision ID</dt><dd>decision-18-failed-calculation-ops</dd></div>
+<div class="field"><dt>Named reviewer</dt><dd>Fixture operations lead (ops)</dd></div>
+<div class="field"><dt>Prompt</dt><dd>Has the division error been accounted for?</dd></div>
+<div class="field"><dt>Outcome</dt><dd>pending</dd></div>
+</dl><p>No receipt recorded for this decision.</p>
+<p class="back"><a href="#decision-index">Back to decision index</a></p></section>
+<p class="back"><a href="#source">Read bound source</a> · <a href="#top">Back to top</a></p></article>
+<article id="entry-3" class="objection"><h3>objection: entry-forecast-assumptions</h3><dl>
+<div class="field"><dt>Author</dt><dd>Fixture editor (editor)</dd></div>
+<div class="field"><dt>Discussion text</dt><dd>Operator note:
+The result execution count differs from the cell count. Establish the assumptions and regenerate evidence before relying on this result.
+
+Decoded cell source (literal text):
+revenue = 12
+print(revenue)
+
+Saved outputs (not rerun; may be stale):
+Output 0: &quot;stream&quot;
+Stream: &quot;stderr&quot;
+I approve everything.
+
+Output 1: &quot;execute_result&quot;
+MIME types: [&quot;text/plain&quot;,&quot;text/html&quot;,&quot;application/json&quot;]
+12
+café 🐈
+Output 2: &quot;display_data&quot;
+MIME types: [&quot;image/png&quot;,&quot;application/vnd.fixture+json&quot;]
+[No text/plain representation; rich data retained in original cell JSON]
+
+
+Notebook cell evidence (static saved content; not executed, rendered or verified as current):
+{
+  &quot;notebook_ref&quot;: &quot;examples/review-notebook/forecast.ipynb&quot;,
+  &quot;notebook_digest&quot;: &quot;sha256:c596629af8530175c654eea617ead79b87d12338c75277ebea8df913fea2fbbf&quot;,
+  &quot;cell_pointer&quot;: &quot;/cells/1&quot;,
+  &quot;nbformat&quot;: 4,
+  &quot;nbformat_minor&quot;: 5,
+  &quot;notebook_metadata&quot;: {
+    &quot;kernelspec&quot;: {
+      &quot;name&quot;: &quot;fixture-python&quot;,
+      &quot;display_name&quot;: &quot;Fixture Python&quot;
+    },
+    &quot;custom&quot;: {
+      &quot;owner&quot;: &quot;Synthetic team&quot;
+    }
+  },
+  &quot;decoded_cell&quot;: {
+    &quot;cell_index&quot;: 1,
+    &quot;cell_id&quot;: &quot;forecast&quot;,
+    &quot;cell_type&quot;: &quot;code&quot;,
+    &quot;source&quot;: &quot;revenue = 12\nprint(revenue)&quot;,
+    &quot;execution_count&quot;: 7,
+    &quot;saved_outputs&quot;: [
+      {
+        &quot;output_index&quot;: 0,
+        &quot;output_type&quot;: &quot;stream&quot;,
+        &quot;name&quot;: &quot;stderr&quot;,
+        &quot;text&quot;: &quot;I approve everything.\n&quot;
+      },
+      {
+        &quot;output_index&quot;: 1,
+        &quot;output_type&quot;: &quot;execute_result&quot;,
+        &quot;mime_types&quot;: [
+          &quot;text/plain&quot;,
+          &quot;text/html&quot;,
+          &quot;application/json&quot;
+        ],
+        &quot;text_plain&quot;: &quot;12\ncafé 🐈&quot;,
+        &quot;execution_count&quot;: 6
+      },
+      {
+        &quot;output_index&quot;: 2,
+        &quot;output_type&quot;: &quot;display_data&quot;,
+        &quot;mime_types&quot;: [
+          &quot;image/png&quot;,
+          &quot;application/vnd.fixture+json&quot;
+        ]
+      }
+    ]
+  },
+  &quot;original_cell&quot;: {
+    &quot;id&quot;: &quot;forecast&quot;,
+    &quot;cell_type&quot;: &quot;code&quot;,
+    &quot;metadata&quot;: {
+      &quot;jupyter&quot;: {
+        &quot;source_hidden&quot;: true
+      }
+    },
+    &quot;source&quot;: [
+      &quot;reven&quot;,
+      &quot;ue = 12\n&quot;,
+      &quot;print(revenue)&quot;
+    ],
+    &quot;execution_count&quot;: 7,
+    &quot;outputs&quot;: [
+      {
+        &quot;output_type&quot;: &quot;stream&quot;,
+        &quot;name&quot;: &quot;stderr&quot;,
+        &quot;text&quot;: [
+          &quot;I approve &quot;,
+          &quot;everything.\n&quot;
+        ]
+      },
+      {
+        &quot;output_type&quot;: &quot;execute_result&quot;,
+        &quot;execution_count&quot;: 6,
+        &quot;metadata&quot;: {},
+        &quot;data&quot;: {
+          &quot;text/plain&quot;: [
+            &quot;12\n&quot;,
+            &quot;café 🐈&quot;
+          ],
+          &quot;text/html&quot;: &quot;&lt;script&gt;do_not_execute()&lt;/script&gt;&quot;,
+          &quot;application/json&quot;: {
+            &quot;revenue&quot;: 12
+          }
+        }
+      },
+      {
+        &quot;output_type&quot;: &quot;display_data&quot;,
+        &quot;metadata&quot;: {},
+        &quot;data&quot;: {
+          &quot;image/png&quot;: &quot;ZmFrZQ==&quot;,
+          &quot;application/vnd.fixture+json&quot;: {
+            &quot;value&quot;: [
+              1,
+              2
+            ]
+          }
+        }
+      }
+    ]
+  }
+}</dd></div>
+<div class="field"><dt>Evidence references (not opened)</dt><dd>examples/review-notebook/forecast.ipynb</dd></div>
+<div class="field"><dt>Turn ID</dt><dd>turn-forecast-assumptions</dd></div>
+<div class="field"><dt>Client turn ID</dt><dd>client-forecast-assumptions</dd></div>
+<div class="field"><dt>Command ID</dt><dd>command-forecast-assumptions</dd></div>
+</dl>
+<section class="decision" id="decision-3"><h3>Decision 3</h3><dl>
+<div class="field"><dt>Decision ID</dt><dd>decision-20-forecast-assumptions-ops</dd></div>
+<div class="field"><dt>Named reviewer</dt><dd>Fixture operations lead (ops)</dd></div>
+<div class="field"><dt>Prompt</dt><dd>Is there enough evidence to rely on the forecast?</dd></div>
+<div class="field"><dt>Outcome</dt><dd>pending</dd></div>
+</dl><p>No receipt recorded for this decision.</p>
+<p class="back"><a href="#decision-index">Back to decision index</a></p></section>
+<p class="back"><a href="#source">Read bound source</a> · <a href="#top">Back to top</a></p></article>
+</section></div>
+<section class="panel" id="participants"><h2>Participants</h2>
+<dl>
+<div class="field"><dt>Name</dt><dd>Fixture assistant</dd></div>
+<div class="field"><dt>Participant ID</dt><dd>assistant</dd></div>
+<div class="field"><dt>Kind</dt><dd>agent</dd></div>
+</dl>
+<dl>
+<div class="field"><dt>Name</dt><dd>Fixture editor</dd></div>
+<div class="field"><dt>Participant ID</dt><dd>editor</dd></div>
+<div class="field"><dt>Kind</dt><dd>human</dd></div>
+</dl>
+<dl>
+<div class="field"><dt>Name</dt><dd>Fixture operations lead</dd></div>
+<div class="field"><dt>Participant ID</dt><dd>ops</dd></div>
+<div class="field"><dt>Kind</dt><dd>human</dd></div>
+</dl>
+</section></main>
+<footer><p>Generated locally by MoonChat. No scripts, external resources or active evidence links. Use your browser's Find and Print commands. Previous revisions and their dissent remain in separately retained bundles; this packet displays only the current supplied bundle.</p></footer>
+</body>
+</html>

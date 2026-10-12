@@ -4,7 +4,7 @@ Contract: `moonchat.portable-conversation-review.v1`
 
 1. A producer exports a `moonchat/conversation-review-bundle@1.0.0`.
 2. The bundle binds one immutable source artifact and digest, the MoonLib
-   `moonsuite-conversation.v1` identity, participants and exact turn IDs.
+   `moonsuite-conversation.v2` identity, participants and exact turn IDs.
 3. Questions, objections and proposals are recorded as separate entries.
    Every objection must be named by a required human decision.
 4. MoonChat validates the source digest, preserves the bundle as immutable

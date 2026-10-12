@@ -1,0 +1,39 @@
+{
+  "review_id": "forecast-review",
+  "conversation_id": "forecast-review-room",
+  "source_artifact_ref": "examples/review-notebook/forecast.ipynb",
+  "source_revision_id": "snapshot-1",
+  "recorded_at": "2026-10-10T12:00:00Z",
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "items": [
+    {
+      "key": "purpose",
+      "kind": "proposal",
+      "author": "editor",
+      "body": "Consider this saved forecast for next week’s planning. Review assumptions and failed calculations first.",
+      "evidence_refs": [],
+      "decisions": [
+        {
+          "reviewer": "editor",
+          "prompt": "Is the notebook suitable for planning?"
+        }
+      ]
+    }
+  ]
+}

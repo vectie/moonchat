@@ -11,7 +11,21 @@ pub fn bundle_contract_id() -> String
 
 pub fn bundle_issues(ConversationReviewBundle, String) -> Array[String]
 
+pub fn catalog_github_review_comments(Bytes) -> String raise
+
+pub fn catalog_json_review(Bytes) -> String raise
+
+pub fn catalog_notebook_review(Bytes) -> String raise
+
+pub fn catalog_review_transcript(Bytes) -> String raise
+
+pub fn catalog_sarif_review(Bytes) -> String raise
+
 pub fn claim_class(ConversationReviewBundle) -> String
+
+pub fn compile_review_agenda(ReviewAgenda, Bytes) -> ConversationReviewBundle raise
+
+pub fn compile_review_revision(ReviewRevisionDraft, Bytes, previous_bundle_text~ : String, previous_source_bytes~ : Bytes, previous_bundle_ref~ : String) -> ConversationReviewBundle raise
 
 pub fn conversation_contract_id() -> String
 
@@ -21,9 +35,39 @@ pub fn decode_review_bundle(Json) -> ConversationReviewBundle raise
 
 pub fn decode_review_record(Json) -> ConversationReviewRecord raise
 
+pub fn draft_required_decision(decision_id~ : String, subject_entry_id~ : String, reviewer~ : ReviewParticipant, prompt~ : String) -> RequiredDecision raise
+
+pub fn draft_review_bundle(review_id~ : String, source_artifact_ref~ : String, source_bytes~ : Bytes, source_revision_id~ : String, conversation~ : ConversationBinding, participants~ : Array[ReviewParticipant], entries~ : Array[ReviewEntry], required_decisions~ : Array[RequiredDecision], recorded_at~ : String) -> ConversationReviewBundle raise
+
+pub fn draft_review_entry(String, entry_id~ : String, author_participant_id~ : String, turn~ : ConversationTurnIdentity, body~ : String, evidence_refs? : Array[String]) -> ReviewEntry raise
+
 pub fn event_contract_id() -> String
 
+pub fn explore_review(ConversationReviewBundle, Bytes, text? : String, kind? : String, reviewer? : String, outcome? : String) -> String raise
+
+pub fn export_review_comparison(ConversationReviewBundle, Bytes, ConversationReviewBundle, Bytes, source_context? : Int) -> String raise
+
+pub fn export_review_html(ConversationReviewBundle, Bytes, locations? : ReviewSourceLocations) -> String raise
+
+pub fn export_review_markdown(ConversationReviewBundle, Bytes) -> String raise
+
+pub fn export_review_sheet(ReviewAgenda, Bytes) -> String raise
+
+pub fn import_github_review_comments(ReviewAgenda, GitHubReviewImportPlan, Bytes, Bytes) -> ReviewAgenda raise
+
+pub fn import_json_review(ReviewAgenda, JsonReviewImportPlan, Bytes) -> ReviewAgenda raise
+
+pub fn import_notebook_review(ReviewAgenda, NotebookReviewImportPlan, Bytes) -> ReviewAgenda raise
+
+pub fn import_review_excerpts(ReviewAgenda, ReviewExcerptPlan, Bytes, Bytes) -> ReviewAgenda raise
+
+pub fn import_review_sheet(ReviewAgenda, Bytes, Bytes) -> ReviewAgenda raise
+
+pub fn import_sarif_review(ReviewAgenda, SarifReviewImportPlan, Bytes, Bytes) -> ReviewAgenda raise
+
 pub fn input_schema_ref() -> String
+
+pub fn merge_review_sheets(ReviewAgenda, Bytes, Bytes, Bytes) -> ReviewSheetMerge raise
 
 pub fn missing_decision_ids(ConversationReviewBundle) -> Array[String]
 
@@ -31,15 +75,45 @@ pub fn operation_ref() -> String
 
 pub fn output_schema_ref() -> String
 
+pub fn parse_github_review_import_plan(String) -> GitHubReviewImportPlan raise
+
+pub fn parse_json_review_import_plan(String) -> JsonReviewImportPlan raise
+
+pub fn parse_notebook_review_import_plan(String) -> NotebookReviewImportPlan raise
+
+pub fn parse_review_agenda(String) -> ReviewAgenda raise
+
+pub fn parse_review_excerpt_plan(String) -> ReviewExcerptPlan raise
+
+pub fn parse_review_revision(String) -> ReviewRevisionDraft raise
+
+pub fn parse_review_source_locations(String) -> ReviewSourceLocations raise
+
+pub fn parse_sarif_review_import_plan(String) -> SarifReviewImportPlan raise
+
+pub fn prepare_review_revision(String, Bytes) -> ReviewRevisionDraft raise
+
 pub fn project_review_record(ConversationReviewBundle, String, Array[ReviewEvidence]) -> ConversationReviewRecord raise
 
 pub fn record_contract_id() -> String
 
+pub fn refresh_github_review_comments(ReviewAgenda, GitHubReviewImportPlan, Bytes, GitHubReviewImportPlan, Bytes, Bytes) -> GitHubReviewRefresh raise
+
+pub fn reimport_review_bundle(String, Bytes) -> ConversationReviewBundle raise
+
 pub fn rejected_decision_ids(ConversationReviewBundle) -> Array[String]
+
+pub fn relocate_review_source_locations(ConversationReviewBundle, Bytes, ReviewSourceLocations, ConversationReviewBundle, Bytes) -> ReviewSourceRelocation raise
 
 pub fn review_events(ConversationReviewBundle, String) -> Array[ConversationReviewEvent] raise
 
+pub fn review_source_digest(Bytes) -> String
+
 pub fn review_status(ConversationReviewBundle) -> String
+
+pub fn serialize_review_bundle(ConversationReviewBundle, String) -> String raise
+
+pub fn supersede_review_bundle(String, previous_bundle_ref~ : String, previous_source_bytes~ : Bytes, next_bundle~ : ConversationReviewBundle, next_source_bytes~ : Bytes) -> ConversationReviewBundle raise
 
 // Errors
 
@@ -115,6 +189,42 @@ pub(all) struct ConversationTurnIdentity {
   command_id : String
 } derive(Eq, ToJson, @debug.Debug, @json.FromJson)
 
+pub(all) struct GitHubReviewAuthor {
+  login : String
+  participant_id : String
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct GitHubReviewImportPlan {
+  format : String
+  export_ref : String
+  export_digest : String
+  authors : Array[GitHubReviewAuthor]
+  threads : Array[GitHubReviewThread]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct GitHubReviewRefresh {
+  format : String
+  review_id : String
+  source_digest : String
+  previous_export_ref : String
+  previous_export_digest : String
+  next_export_ref : String
+  next_export_digest : String
+  added_comment_ids : Array[String]
+  changed_comment_ids : Array[String]
+  conflicts : Array[ReviewSheetConflict]
+  merged_agenda : ReviewAgenda?
+} derive(Eq)
+pub impl ToJson for GitHubReviewRefresh
+
+pub(all) struct GitHubReviewThread {
+  root_comment_id : String
+  key : String
+  kind : String
+  note : String
+  decisions : Array[ReviewAgendaDecision]
+} derive(Eq, ToJson, @json.FromJson)
+
 pub(all) struct HumanDecisionReceipt {
   receipt_id : String
   decision_id : String
@@ -127,12 +237,66 @@ pub(all) struct HumanDecisionReceipt {
   evidence_refs : Array[String]
 } derive(Eq, ToJson, @debug.Debug, @json.FromJson)
 
+pub(all) struct JsonReviewImportPlan {
+  format : String
+  source_digest : String
+  selections : Array[JsonReviewSelection]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct JsonReviewSelection {
+  pointer : String
+  key : String
+  kind : String
+  author : String
+  note : String
+  decisions : Array[ReviewAgendaDecision]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct NotebookReviewImportPlan {
+  format : String
+  notebook_digest : String
+  cells : Array[NotebookReviewSelection]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct NotebookReviewSelection {
+  cell_index : Int
+  key : String
+  kind : String
+  author : String
+  note : String
+  decisions : Array[ReviewAgendaDecision]
+} derive(Eq, ToJson, @json.FromJson)
+
 pub(all) struct RequiredDecision {
   decision_id : String
   subject_entry_id : String
   reviewer_participant_id : String
   prompt : String
 } derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+
+pub(all) struct ReviewAgenda {
+  review_id : String
+  conversation_id : String
+  source_artifact_ref : String
+  source_revision_id : String
+  recorded_at : String
+  participants : Array[ReviewParticipant]
+  items : Array[ReviewAgendaItem]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct ReviewAgendaDecision {
+  reviewer : String
+  prompt : String
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct ReviewAgendaItem {
+  key : String
+  kind : String
+  author : String
+  body : String
+  evidence_refs : Array[String]
+  decisions : Array[ReviewAgendaDecision]
+} derive(Eq, ToJson, @json.FromJson)
 
 pub(all) struct ReviewEntry {
   entry_id : String
@@ -148,13 +312,116 @@ pub(all) struct ReviewEvidence {
   digest : String
 } derive(Eq, ToJson, @debug.Debug, @json.FromJson)
 
+pub(all) struct ReviewExcerptPlan {
+  format : String
+  transcript_ref : String
+  transcript_digest : String
+  excerpts : Array[ReviewExcerptSelection]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct ReviewExcerptSelection {
+  key : String
+  kind : String
+  author : String
+  note : String
+  start_line : Int
+  end_line : Int
+  decisions : Array[ReviewAgendaDecision]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct ReviewLocationCandidate {
+  start_line : Int
+  end_line : Int
+} derive(Eq, ToJson)
+
+pub(all) struct ReviewLocationRelocation {
+  original : ReviewSourceLocation
+  status : String
+  candidate_count : Int
+  candidates : Array[ReviewLocationCandidate]
+} derive(Eq, ToJson)
+
 pub(all) struct ReviewParticipant {
   participant_id : String
   display_name : String
   participant_kind : String
 } derive(Eq, ToJson, @debug.Debug, @json.FromJson)
 
+pub(all) struct ReviewRevisionDraft {
+  format : String
+  base_bundle_digest : String
+  review_id : String
+  conversation : ConversationBinding
+  source_artifact_ref : String
+  source_revision_id : String
+  recorded_at : String
+  participants : Array[ReviewParticipant]
+  entries : Array[ReviewEntry]
+  required_decisions : Array[RequiredDecision]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct ReviewSheetConflict {
+  item_key : String
+  field : String
+  base : Json
+  left : Json
+  right : Json
+} derive(Eq, ToJson)
+
+pub(all) struct ReviewSheetMerge {
+  format : String
+  conflicts : Array[ReviewSheetConflict]
+  merged_agenda : ReviewAgenda?
+} derive(Eq)
+pub impl ToJson for ReviewSheetMerge
+
+pub(all) struct ReviewSourceLocation {
+  entry_id : String
+  start_line : Int
+  end_line : Int
+  quote : String
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct ReviewSourceLocations {
+  format : String
+  review_id : String
+  source_digest : String
+  locations : Array[ReviewSourceLocation]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct ReviewSourceRelocation {
+  format : String
+  source_artifact_ref : String
+  previous_review_id : String
+  previous_source_revision_id : String
+  previous_source_digest : String
+  next_review_id : String
+  next_source_revision_id : String
+  next_source_digest : String
+  mapped_count : Int
+  unresolved_count : Int
+  results : Array[ReviewLocationRelocation]
+  suggested_locations : ReviewSourceLocations
+} derive(Eq, ToJson)
+pub fn ReviewSourceRelocation::to_markdown(Self) -> String
+
+pub(all) struct SarifReviewImportPlan {
+  format : String
+  export_ref : String
+  export_digest : String
+  findings : Array[SarifReviewSelection]
+} derive(Eq, ToJson, @json.FromJson)
+
+pub(all) struct SarifReviewSelection {
+  run_index : Int
+  result_index : Int
+  key : String
+  kind : String
+  author : String
+  note : String
+  decisions : Array[ReviewAgendaDecision]
+} derive(Eq, ToJson, @json.FromJson)
+
 // Type aliases
 
 // Traits
-

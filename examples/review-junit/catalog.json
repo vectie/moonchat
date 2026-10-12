@@ -1,0 +1,92 @@
+{
+  "contract_id": "moonchat.junit-catalog.v1",
+  "report_digest": "sha256:94975aec3e1d4ba64810c6a9f5f5192edaa3d46ddc61b5c3fa9abb43a7f1d496",
+  "cases": [
+    {
+      "index": 0,
+      "suites": [
+        "billing"
+      ],
+      "name": "invoice",
+      "classname": "Billing",
+      "file": "",
+      "line": "",
+      "time_reported": "",
+      "status": "failure",
+      "signals": [
+        {
+          "kind": "failure",
+          "type": "AssertionError",
+          "message": "total differs",
+          "text": "Expected 12, got 10"
+        }
+      ],
+      "system_out": [
+        "customer fixture only"
+      ],
+      "system_err": []
+    },
+    {
+      "index": 1,
+      "suites": [
+        "billing",
+        "recovery"
+      ],
+      "name": "invoice",
+      "classname": "Billing",
+      "file": "",
+      "line": "",
+      "time_reported": "",
+      "status": "error",
+      "signals": [
+        {
+          "kind": "error",
+          "type": "Timeout",
+          "message": "",
+          "text": "connection not ready"
+        }
+      ],
+      "system_out": [],
+      "system_err": []
+    },
+    {
+      "index": 2,
+      "suites": [
+        "billing",
+        "recovery"
+      ],
+      "name": "backup",
+      "classname": "",
+      "file": "",
+      "line": "",
+      "time_reported": "",
+      "status": "skipped",
+      "signals": [
+        {
+          "kind": "skipped",
+          "type": "",
+          "message": "requires local service",
+          "text": ""
+        }
+      ],
+      "system_out": [],
+      "system_err": []
+    },
+    {
+      "index": 3,
+      "suites": [
+        "billing",
+        "recovery"
+      ],
+      "name": "format",
+      "classname": "",
+      "file": "",
+      "line": "",
+      "time_reported": "",
+      "status": "no-failure-reported",
+      "signals": [],
+      "system_out": [],
+      "system_err": []
+    }
+  ]
+}

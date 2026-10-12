@@ -1,0 +1,20 @@
+{
+  "format": "moonchat.review-sheet-merge.v1",
+  "conflicts": [
+    {
+      "item_key": "launch",
+      "field": "body",
+      "base": "Ship the café search fix to the pilot group on Monday.",
+      "left": "Stage the café search fix for ten pilot teams.\nKeep the \"rollback\" owner on call.",
+      "right": "Skip the pilot and release to every team."
+    },
+    {
+      "item_key": "launch",
+      "field": "decision:editor",
+      "base": "Is the release wording ready?",
+      "left": "Does the announcement state the pilot limit clearly?",
+      "right": "May we announce general availability?"
+    }
+  ],
+  "merged_agenda": null
+}

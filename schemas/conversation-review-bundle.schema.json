@@ -135,7 +135,7 @@
       ],
       "properties": {
         "contract_id": {
-          "const": "moonsuite-conversation.v1"
+          "const": "moonsuite-conversation.v2"
         },
         "protocol": {
           "type": "string",

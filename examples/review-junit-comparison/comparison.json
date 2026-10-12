@@ -1,0 +1,372 @@
+{
+  "contract_id": "moonchat.junit-comparison.v1",
+  "before_report_digest": "sha256:ac675064d4d15c5497c3b3bfe07add2cc2a5ff62d49f22a02b46fb7bd24f6039",
+  "after_report_digest": "sha256:cbbf04211ffe2a99fb31cba00d05cb99636b3a860df96cbb390b73bca57a3206",
+  "matching_rule": "exact suite path, classname and nonblank name; unique on each present side",
+  "qualification": "Unverified report claims. Before/after are caller labels, not verified execution order. Names suggest correspondence, not test identity. Absence is not resolution; no-failure-reported is not a proven pass. No decisions or receipts are created.",
+  "before_case_count": 6,
+  "after_case_count": 6,
+  "row_count": 6,
+  "counts": {
+    "added": 1,
+    "absent": 1,
+    "changed": 2,
+    "unchanged": 1,
+    "ambiguous": 1
+  },
+  "rows": [
+    {
+      "index": 0,
+      "identity": {
+        "suites": [
+          "release"
+        ],
+        "classname": "Billing",
+        "name": "invoice"
+      },
+      "presence": "both",
+      "change": "changed",
+      "outcome_change": "failure-or-error-no-longer-reported",
+      "changed_fields": [
+        "time_reported",
+        "status",
+        "signals",
+        "system_out"
+      ],
+      "before_cases": [
+        {
+          "index": 0,
+          "suites": [
+            "release"
+          ],
+          "name": "invoice",
+          "classname": "Billing",
+          "file": "",
+          "line": "",
+          "time_reported": "0.3",
+          "status": "failure",
+          "signals": [
+            {
+              "kind": "failure",
+              "type": "",
+              "message": "old rounding concern",
+              "text": "Expected 12, got 10"
+            }
+          ],
+          "system_out": [
+            "retained original fixture"
+          ],
+          "system_err": []
+        }
+      ],
+      "after_cases": [
+        {
+          "index": 1,
+          "suites": [
+            "release"
+          ],
+          "name": "invoice",
+          "classname": "Billing",
+          "file": "",
+          "line": "",
+          "time_reported": "0.2",
+          "status": "no-failure-reported",
+          "signals": [],
+          "system_out": [],
+          "system_err": []
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "identity": {
+        "suites": [
+          "release"
+        ],
+        "classname": "Backups",
+        "name": "restore"
+      },
+      "presence": "both",
+      "change": "changed",
+      "outcome_change": "new-failure-or-error-reported",
+      "changed_fields": [
+        "status",
+        "signals",
+        "system_err"
+      ],
+      "before_cases": [
+        {
+          "index": 1,
+          "suites": [
+            "release"
+          ],
+          "name": "restore",
+          "classname": "Backups",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "skipped",
+          "signals": [
+            {
+              "kind": "skipped",
+              "type": "",
+              "message": "service fixture unavailable",
+              "text": ""
+            }
+          ],
+          "system_out": [],
+          "system_err": []
+        }
+      ],
+      "after_cases": [
+        {
+          "index": 0,
+          "suites": [
+            "release"
+          ],
+          "name": "restore",
+          "classname": "Backups",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "failure",
+          "signals": [
+            {
+              "kind": "failure",
+              "type": "",
+              "message": "checksum mismatch",
+              "text": "Restored file hash differs"
+            }
+          ],
+          "system_out": [],
+          "system_err": [
+            "comparison fixture only"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "identity": {
+        "suites": [
+          "release"
+        ],
+        "classname": "Billing",
+        "name": "retired-check"
+      },
+      "presence": "before-only",
+      "change": "absent",
+      "outcome_change": "not-comparable",
+      "changed_fields": [],
+      "before_cases": [
+        {
+          "index": 2,
+          "suites": [
+            "release"
+          ],
+          "name": "retired-check",
+          "classname": "Billing",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "error",
+          "signals": [
+            {
+              "kind": "error",
+              "type": "SetupError",
+              "message": "",
+              "text": "Missing fixture"
+            }
+          ],
+          "system_out": [],
+          "system_err": []
+        }
+      ],
+      "after_cases": []
+    },
+    {
+      "index": 3,
+      "identity": {
+        "suites": [
+          "release"
+        ],
+        "classname": "Smoke",
+        "name": "start"
+      },
+      "presence": "both",
+      "change": "unchanged",
+      "outcome_change": "same-reported-status",
+      "changed_fields": [],
+      "before_cases": [
+        {
+          "index": 3,
+          "suites": [
+            "release"
+          ],
+          "name": "start",
+          "classname": "Smoke",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "no-failure-reported",
+          "signals": [],
+          "system_out": [],
+          "system_err": []
+        }
+      ],
+      "after_cases": [
+        {
+          "index": 2,
+          "suites": [
+            "release"
+          ],
+          "name": "start",
+          "classname": "Smoke",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "no-failure-reported",
+          "signals": [],
+          "system_out": [],
+          "system_err": []
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "identity": {
+        "suites": [
+          "release",
+          "retry"
+        ],
+        "classname": "Retry",
+        "name": "repeat"
+      },
+      "presence": "both",
+      "change": "ambiguous",
+      "outcome_change": "not-comparable",
+      "changed_fields": [],
+      "before_cases": [
+        {
+          "index": 4,
+          "suites": [
+            "release",
+            "retry"
+          ],
+          "name": "repeat",
+          "classname": "Retry",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "failure",
+          "signals": [
+            {
+              "kind": "failure",
+              "type": "",
+              "message": "",
+              "text": "first attempt"
+            }
+          ],
+          "system_out": [],
+          "system_err": []
+        },
+        {
+          "index": 5,
+          "suites": [
+            "release",
+            "retry"
+          ],
+          "name": "repeat",
+          "classname": "Retry",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "no-failure-reported",
+          "signals": [],
+          "system_out": [],
+          "system_err": []
+        }
+      ],
+      "after_cases": [
+        {
+          "index": 3,
+          "suites": [
+            "release",
+            "retry"
+          ],
+          "name": "repeat",
+          "classname": "Retry",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "no-failure-reported",
+          "signals": [],
+          "system_out": [],
+          "system_err": []
+        },
+        {
+          "index": 4,
+          "suites": [
+            "release",
+            "retry"
+          ],
+          "name": "repeat",
+          "classname": "Retry",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "error",
+          "signals": [
+            {
+              "kind": "error",
+              "type": "Timeout",
+              "message": "",
+              "text": "second attempt"
+            }
+          ],
+          "system_out": [],
+          "system_err": []
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "identity": {
+        "suites": [
+          "release"
+        ],
+        "classname": "Billing",
+        "name": "refund"
+      },
+      "presence": "after-only",
+      "change": "added",
+      "outcome_change": "not-comparable",
+      "changed_fields": [],
+      "before_cases": [],
+      "after_cases": [
+        {
+          "index": 5,
+          "suites": [
+            "release"
+          ],
+          "name": "refund",
+          "classname": "Billing",
+          "file": "",
+          "line": "",
+          "time_reported": "",
+          "status": "error",
+          "signals": [
+            {
+              "kind": "error",
+              "type": "FixtureError",
+              "message": "",
+              "text": "Refund fixtures unavailable"
+            }
+          ],
+          "system_out": [],
+          "system_err": []
+        }
+      ]
+    }
+  ]
+}

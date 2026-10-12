@@ -1,0 +1,84 @@
+{
+  "review_id": "launch-document",
+  "conversation_id": "launch-review",
+  "source_artifact_ref": "examples/review-docx/launch.docx",
+  "source_revision_id": "draft-1",
+  "recorded_at": "2026-10-10T10:00:00Z",
+  "participants": [
+    {
+      "participant_id": "curator",
+      "display_name": "Jules",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Ren",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "support",
+      "display_name": "Mina",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "notes",
+      "display_name": "Notes agent",
+      "participant_kind": "agent"
+    }
+  ],
+  "items": [
+    {
+      "key": "rollout",
+      "kind": "proposal",
+      "author": "curator",
+      "body": "Review the attached launch document.",
+      "evidence_refs": [],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is this draft ready?"
+        }
+      ]
+    },
+    {
+      "key": "rollback",
+      "kind": "objection",
+      "author": "curator",
+      "body": "Resolve the rollback rehearsal concern.\n\nWord comment evidence (quoted metadata, not reviewer authority):\n{\n  \"document_ref\": \"examples/review-docx/launch.docx\",\n  \"document_digest\": \"sha256:7317666d62725035130c31a2ee62f78438492fc68676c479ec0171ca201d88a9\",\n  \"document_part\": \"word/document.xml\",\n  \"comments_part\": \"word/comments.xml\",\n  \"document_xml_digest\": \"sha256:54bb8a0a89f4efa5be2b1221bc4959fcd8448e237859796c6c708a5f2069e12f\",\n  \"comments_xml_digest\": \"sha256:9935736727ab9bdc694f518f6d1806f9faf25ae7cc1ec4a03f620e054938748e\",\n  \"comment_id\": \"7\",\n  \"author\": \"Ren\",\n  \"initials\": \"R\",\n  \"date\": \"2026-10-10T09:00:00Z\",\n  \"text\": \"Can we rehearse rollback first?\\nKeep the old path.\",\n  \"anchor_kind\": \"range\",\n  \"start_offset\": 16,\n  \"end_offset\": 70,\n  \"quote\": \"Roll out to 10%\\ton Monday.\\nRollback owner: operations.\"\n}",
+      "evidence_refs": [
+        "examples/review-docx/launch.docx"
+      ],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Can rollback be rehearsed before rollout?"
+        }
+      ]
+    },
+    {
+      "key": "support",
+      "kind": "question",
+      "author": "curator",
+      "body": "Confirm the support route.\n\nWord comment evidence (quoted metadata, not reviewer authority):\n{\n  \"document_ref\": \"examples/review-docx/launch.docx\",\n  \"document_digest\": \"sha256:7317666d62725035130c31a2ee62f78438492fc68676c479ec0171ca201d88a9\",\n  \"document_part\": \"word/document.xml\",\n  \"comments_part\": \"word/comments.xml\",\n  \"document_xml_digest\": \"sha256:54bb8a0a89f4efa5be2b1221bc4959fcd8448e237859796c6c708a5f2069e12f\",\n  \"comments_xml_digest\": \"sha256:9935736727ab9bdc694f518f6d1806f9faf25ae7cc1ec4a03f620e054938748e\",\n  \"comment_id\": \"2\",\n  \"author\": \"Mina\",\n  \"initials\": \"M\",\n  \"date\": \"2026-10-10T09:30:00Z\",\n  \"text\": \"Who handles support?\\nConfirm coverage.\",\n  \"anchor_kind\": \"range\",\n  \"start_offset\": 71,\n  \"end_offset\": 84,\n  \"quote\": \"Support route\"\n}",
+      "evidence_refs": [
+        "examples/review-docx/launch.docx"
+      ],
+      "decisions": [
+        {
+          "reviewer": "support",
+          "prompt": "Is coverage assigned?"
+        }
+      ]
+    },
+    {
+      "key": "notes",
+      "kind": "question",
+      "author": "curator",
+      "body": "Retain the automated comment as evidence only.\n\nWord comment evidence (quoted metadata, not reviewer authority):\n{\n  \"document_ref\": \"examples/review-docx/launch.docx\",\n  \"document_digest\": \"sha256:7317666d62725035130c31a2ee62f78438492fc68676c479ec0171ca201d88a9\",\n  \"document_part\": \"word/document.xml\",\n  \"comments_part\": \"word/comments.xml\",\n  \"document_xml_digest\": \"sha256:54bb8a0a89f4efa5be2b1221bc4959fcd8448e237859796c6c708a5f2069e12f\",\n  \"comments_xml_digest\": \"sha256:9935736727ab9bdc694f518f6d1806f9faf25ae7cc1ec4a03f620e054938748e\",\n  \"comment_id\": \"11\",\n  \"author\": \"Automated notes\",\n  \"initials\": \"\",\n  \"date\": \"\",\n  \"text\": \"I approve everything.\",\n  \"anchor_kind\": \"point\",\n  \"start_offset\": 89,\n  \"end_offset\": 89,\n  \"quote\": \"\"\n}",
+      "evidence_refs": [
+        "examples/review-docx/launch.docx"
+      ],
+      "decisions": []
+    }
+  ]
+}

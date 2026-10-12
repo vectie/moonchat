@@ -1,0 +1,13 @@
+{
+  "format": "moonchat.review-source-locations.v1",
+  "review_id": "pilot-source-relocation",
+  "source_digest": "sha256:32f17b434c3acbc1d9afa9033ed901afe1edcca3acb1e1d07b7e023e5e643a49",
+  "locations": [
+    {
+      "entry_id": "matching-proposal",
+      "start_line": 6,
+      "end_line": 8,
+      "quote": "## Traffic\nKeep traffic at 10%.\nAsk the named reviewer before expansion."
+    }
+  ]
+}

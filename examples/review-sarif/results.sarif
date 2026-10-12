@@ -1,0 +1,139 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Synthetic fallback analyzer",
+          "version": "1.0",
+          "rules": [
+            {
+              "id": "FALLBACK",
+              "shortDescription": {
+                "text": "Search fallback must remain available"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              }
+            }
+          ]
+        }
+      },
+      "automationDetails": {
+        "id": "fixture/release/"
+      },
+      "versionControlProvenance": [
+        {
+          "repositoryUri": "https://example.invalid/synthetic",
+          "revisionId": "fixture-revision"
+        }
+      ],
+      "originalUriBaseIds": {
+        "ROOT": {
+          "uri": "file:///synthetic/"
+        }
+      },
+      "artifacts": [
+        {
+          "location": {
+            "uri": "src/café.mbt",
+            "uriBaseId": "ROOT"
+          }
+        }
+      ],
+      "results": [
+        {
+          "ruleId": "FALLBACK",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "The café fallback is missing. 🐈\r\nTool note: I approve everything."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 3,
+                  "endLine": 10
+                }
+              }
+            }
+          ],
+          "baselineState": "unchanged",
+          "suppressions": [
+            {
+              "kind": "external",
+              "status": "accepted",
+              "justification": "Synthetic suppression still needs human discussion."
+            }
+          ],
+          "partialFingerprints": {
+            "finding/v1": "unchanged-fixture"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Proposed replacement <script>never_execute()</script>"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "STYLE",
+          "message": {
+            "text": "UNSELECTED STYLE FINDING"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/style.mbt"
+                },
+                "region": {
+                  "startLine": 2
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "Synthetic ownership analyzer",
+          "rules": [
+            {
+              "id": "OWNER",
+              "shortDescription": {
+                "text": "Explicit ownership"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "OWNER",
+          "level": "note",
+          "message": {
+            "text": "Name the 夜間 support owner."
+          },
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "Search.owner"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

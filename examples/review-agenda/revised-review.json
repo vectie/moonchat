@@ -1,0 +1,93 @@
+{
+  "contract_id": "moonchat.conversation-review-bundle.v1",
+  "review_id": "cafe-release",
+  "source_artifact_ref": "examples/review-agenda/source.md",
+  "source_digest": "sha256:f16ed8766b8b89b1cb1bc2154d6e5d57214c7521cbdcde79c31ed97fc4572d27",
+  "source_revision_id": "r1",
+  "previous_bundle_ref": "examples/review-agenda/review.json",
+  "previous_bundle_digest": "sha256:fd02bfbc2b493369d7c7fd22e94cb81eb054f252dc3d28ba3db33ef229d95411",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moonchat.review-agenda.v1",
+    "product_id": "moonchat",
+    "conversation_id": "cafe-release-room"
+  },
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "entry-launch",
+      "entry_kind": "proposal",
+      "author_participant_id": "assistant",
+      "turn": {
+        "turn_id": "turn-launch",
+        "client_turn_id": "client-launch",
+        "command_id": "command-launch"
+      },
+      "body": "Ship the café search fix to the pilot group on Tuesday, after the support briefing.",
+      "evidence_refs": []
+    },
+    {
+      "entry_id": "entry-rollback",
+      "entry_kind": "objection",
+      "author_participant_id": "assistant",
+      "turn": {
+        "turn_id": "turn-rollback",
+        "client_turn_id": "client-rollback",
+        "command_id": "command-rollback"
+      },
+      "body": "The source does not name a rollback owner.",
+      "evidence_refs": []
+    },
+    {
+      "entry_id": "entry-support",
+      "entry_kind": "question",
+      "author_participant_id": "editor",
+      "turn": {
+        "turn_id": "turn-support",
+        "client_turn_id": "client-support",
+        "command_id": "command-support"
+      },
+      "body": "Where should support collect failed searches?",
+      "evidence_refs": []
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "decision-6-launch-editor",
+      "subject_entry_id": "entry-launch",
+      "reviewer_participant_id": "editor",
+      "prompt": "Is the release wording ready?"
+    },
+    {
+      "decision_id": "decision-6-launch-ops",
+      "subject_entry_id": "entry-launch",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is the pilot rollout ready?"
+    },
+    {
+      "decision_id": "decision-8-rollback-ops",
+      "subject_entry_id": "entry-rollback",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is rollback ownership adequately covered?"
+    }
+  ],
+  "decision_receipts": [],
+  "recorded_at": "2026-10-08T12:00:00Z"
+}
+

@@ -1,0 +1,118 @@
+{
+  "contract_id": "moonchat.conversation-review-bundle.v1",
+  "review_id": "cafe-pilot-sheet",
+  "source_artifact_ref": "examples/review-sheet/source.md",
+  "source_digest": "sha256:bf8565779da3b521702b4bc29a8a3a70292359ad8b2ce0581f28d8fb62d58b4f",
+  "source_revision_id": "pilot-r2",
+  "previous_bundle_ref": "examples/review-comparison/before.json",
+  "previous_bundle_digest": "sha256:46172cc9d95662aac4f821e7c717ebb333de33375e0b5ca7d29922f330e1a72d",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moonchat.review-agenda.v1",
+    "product_id": "moonchat",
+    "conversation_id": "cafe-pilot-review"
+  },
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "entry-support",
+      "entry_kind": "question",
+      "author_participant_id": "editor",
+      "turn": {
+        "turn_id": "turn-support",
+        "client_turn_id": "client-support",
+        "command_id": "command-support"
+      },
+      "body": "Who will triage the pilot queue, and when?",
+      "evidence_refs": [
+        "pilot/support-notes.md"
+      ]
+    },
+    {
+      "entry_id": "entry-launch",
+      "entry_kind": "proposal",
+      "author_participant_id": "assistant",
+      "turn": {
+        "turn_id": "turn-launch",
+        "client_turn_id": "client-launch",
+        "command_id": "command-launch"
+      },
+      "body": "Ship the café search fix to the pilot group on Monday.\nCap the pilot at 25 users; show the \"send feedback\" link.",
+      "evidence_refs": [
+        "pilot/wording.md",
+        "pilot/capacity.md"
+      ]
+    },
+    {
+      "entry_id": "entry-rollback",
+      "entry_kind": "objection",
+      "author_participant_id": "ops",
+      "turn": {
+        "turn_id": "turn-rollback",
+        "client_turn_id": "client-rollback",
+        "command_id": "command-rollback"
+      },
+      "body": "Name the on-call rollback owner before inviting pilot users.",
+      "evidence_refs": [
+        "pilot/rollback.md"
+      ]
+    },
+    {
+      "entry_id": "entry-capacity",
+      "entry_kind": "objection",
+      "author_participant_id": "editor",
+      "turn": {
+        "turn_id": "turn-capacity",
+        "client_turn_id": "client-capacity",
+        "command_id": "command-capacity"
+      },
+      "body": "The support team has only one person available for the first hour.",
+      "evidence_refs": []
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "decision-6-launch-editor",
+      "subject_entry_id": "entry-launch",
+      "reviewer_participant_id": "editor",
+      "prompt": "Is the pilot wording clear?"
+    },
+    {
+      "decision_id": "decision-6-launch-ops",
+      "subject_entry_id": "entry-launch",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is a 25-user pilot manageable?"
+    },
+    {
+      "decision_id": "decision-8-rollback-ops",
+      "subject_entry_id": "entry-rollback",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is a rollback owner available for the first hour?"
+    },
+    {
+      "decision_id": "decision-8-capacity-ops",
+      "subject_entry_id": "entry-capacity",
+      "reviewer_participant_id": "ops",
+      "prompt": "Can the pilot fit the support capacity?"
+    }
+  ],
+  "decision_receipts": [],
+  "recorded_at": "2026-10-08T21:00:00Z"
+}
+

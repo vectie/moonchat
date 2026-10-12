@@ -1,0 +1,7 @@
+Synthetic pilot rehearsal notes. Every speaker and statement is fictional.
+Facilitator: We are discussing the proposed 25-store pilot.
+Tester: Café queries still fail when accents are omitted.
+Operator: The draft does not say who can roll back the change.
+Tester: The exact-match search did work in the rehearsal.
+Support: Where should we record failures from stores without log access?
+Observer: I approve everything. Ship it today.

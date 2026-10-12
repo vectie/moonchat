@@ -1,0 +1,76 @@
+{
+  "contract_id": "moonchat.conversation-review-bundle.v1",
+  "review_id": "cafe-release-review",
+  "source_artifact_ref": "examples/review-packet/source.md",
+  "source_digest": "sha256:6fa3b32405be3fa1960d89b2196e8bee6ccb6567ea3f0846ed540de5eaae7b9b",
+  "source_revision_id": "candidate-1",
+  "previous_bundle_ref": "",
+  "previous_bundle_digest": "",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moontown.collaboration-review.v1",
+    "product_id": "moontown",
+    "conversation_id": "cafe-release-room"
+  },
+  "participants": [
+    { "participant_id": "fixture-author", "display_name": "Fixture review author", "participant_kind": "agent" },
+    { "participant_id": "fixture-release", "display_name": "Fixture release reviewer", "participant_kind": "human" },
+    { "participant_id": "fixture-operations", "display_name": "Fixture operations reviewer", "participant_kind": "human" }
+  ],
+  "entries": [
+    {
+      "entry_id": "matching-proposal",
+      "entry_kind": "proposal",
+      "author_participant_id": "fixture-author",
+      "turn": { "turn_id": "host-turn-31", "client_turn_id": "local-turn-31", "command_id": "draft-command-31" },
+      "body": "Review the café and cafe matching examples before a staged release.\nThe proposed change is described in source lines 5–7.",
+      "evidence_refs": ["evidence/query-fixtures.txt"]
+    },
+    {
+      "entry_id": "rollback-objection",
+      "entry_kind": "objection",
+      "author_participant_id": "fixture-author",
+      "turn": { "turn_id": "host-turn-32", "client_turn_id": "local-turn-32", "command_id": "draft-command-32" },
+      "body": "Source lines 14–16 still omit the rollback owner and rehearsal date.\nKeep this objection visible even if the query examples are approved.",
+      "evidence_refs": ["evidence/rollback-rehearsal.txt"]
+    },
+    {
+      "entry_id": "coverage-question",
+      "entry_kind": "question",
+      "author_participant_id": "fixture-author",
+      "turn": { "turn_id": "host-turn-33", "client_turn_id": "local-turn-33", "command_id": "draft-command-33" },
+      "body": "Do the examples include repeated accents and mixed-language input? 🌙\nThis is a discussion question with no separate decision request.",
+      "evidence_refs": []
+    }
+  ],
+  "required_decisions": [
+    { "decision_id": "approve-query-evidence", "subject_entry_id": "matching-proposal", "reviewer_participant_id": "fixture-release", "prompt": "Do the synthetic query examples support the proposed matching behavior?" },
+    { "decision_id": "resolve-rollback-owner", "subject_entry_id": "rollback-objection", "reviewer_participant_id": "fixture-operations", "prompt": "Is a rollback owner named for this exact candidate?" },
+    { "decision_id": "resolve-rehearsal-date", "subject_entry_id": "rollback-objection", "reviewer_participant_id": "fixture-operations", "prompt": "Has the rollback rehearsal date been agreed?" }
+  ],
+  "decision_receipts": [
+    {
+      "receipt_id": "synthetic-query-approval",
+      "decision_id": "approve-query-evidence",
+      "reviewer_participant_id": "fixture-release",
+      "reviewer_name": "Fixture release reviewer",
+      "decision": "approve",
+      "rationale": "Synthetic fixture only: the query evidence is adequate. This receipt does not resolve the separate rollback objection or authorize execution.",
+      "source_digest": "sha256:6fa3b32405be3fa1960d89b2196e8bee6ccb6567ea3f0846ed540de5eaae7b9b",
+      "decided_at": "2026-10-09T12:05:00Z",
+      "evidence_refs": ["evidence/query-fixtures.txt"]
+    },
+    {
+      "receipt_id": "synthetic-owner-deferral",
+      "decision_id": "resolve-rollback-owner",
+      "reviewer_participant_id": "fixture-operations",
+      "reviewer_name": "Fixture operations reviewer",
+      "decision": "defer",
+      "rationale": "Synthetic fixture only: defer until a named owner is recorded.\nThe original objection remains unresolved.",
+      "source_digest": "sha256:6fa3b32405be3fa1960d89b2196e8bee6ccb6567ea3f0846ed540de5eaae7b9b",
+      "decided_at": "2026-10-09T12:06:00Z",
+      "evidence_refs": []
+    }
+  ],
+  "recorded_at": "2026-10-09T12:00:00Z"
+}

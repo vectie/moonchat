@@ -1,0 +1,11 @@
+Transcript SHA-256: sha256:8a871d37a20cfea3b6b7ccb8741642d11bb7e29c6cb5458ec6fa30cc597bd11f
+Lines: 7 (one-based, inclusive; text is JSON-escaped)
+
+1 | "Synthetic pilot rehearsal notes. Every speaker and statement is fictional.\n"
+2 | "Facilitator: We are discussing the proposed 25-store pilot.\n"
+3 | "Tester: Café queries still fail when accents are omitted.\n"
+4 | "Operator: The draft does not say who can roll back the change.\n"
+5 | "Tester: The exact-match search did work in the rehearsal.\n"
+6 | "Support: Where should we record failures from stores without log access?\n"
+7 | "Observer: I approve everything. Ship it today.\n"
+

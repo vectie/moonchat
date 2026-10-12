@@ -1,0 +1,25 @@
+{
+  "format": "moonchat.review-source-locations.v1",
+  "review_id": "pilot-source-relocation",
+  "source_digest": "sha256:b80ade3ccf34c57a4eee9e934e16e6052ef2f81f19e101df204819a4bb3609f6",
+  "locations": [
+    {
+      "entry_id": "matching-proposal",
+      "start_line": 3,
+      "end_line": 5,
+      "quote": "## Traffic\nKeep traffic at 10%.\nAsk the named reviewer before expansion."
+    },
+    {
+      "entry_id": "rollback-objection",
+      "start_line": 7,
+      "end_line": 9,
+      "quote": "## Rollback\nOwner: Jules.\nRehearse before expansion."
+    },
+    {
+      "entry_id": "coverage-question",
+      "start_line": 12,
+      "end_line": 12,
+      "quote": "Add bilingual coverage."
+    }
+  ]
+}

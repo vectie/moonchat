@@ -1,0 +1,84 @@
+{
+  "review_id": "cafe-pilot-sheet",
+  "conversation_id": "cafe-pilot-review",
+  "source_artifact_ref": "examples/review-sheet/source.md",
+  "source_revision_id": "pilot-r2",
+  "recorded_at": "2026-10-08T21:00:00Z",
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "items": [
+    {
+      "key": "support",
+      "kind": "question",
+      "author": "editor",
+      "body": "Who will triage the pilot queue, and when?",
+      "evidence_refs": [
+        "pilot/support-notes.md"
+      ],
+      "decisions": []
+    },
+    {
+      "key": "launch",
+      "kind": "proposal",
+      "author": "assistant",
+      "body": "Ship the café search fix to the pilot group on Monday.\nCap the pilot at 25 users; show the \"send feedback\" link.",
+      "evidence_refs": [
+        "pilot/wording.md",
+        "pilot/capacity.md"
+      ],
+      "decisions": [
+        {
+          "reviewer": "editor",
+          "prompt": "Is the pilot wording clear?"
+        },
+        {
+          "reviewer": "ops",
+          "prompt": "Is a 25-user pilot manageable?"
+        }
+      ]
+    },
+    {
+      "key": "rollback",
+      "kind": "objection",
+      "author": "ops",
+      "body": "Name the on-call rollback owner before inviting pilot users.",
+      "evidence_refs": [
+        "pilot/rollback.md"
+      ],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is a rollback owner available for the first hour?"
+        }
+      ]
+    },
+    {
+      "key": "capacity",
+      "kind": "objection",
+      "author": "editor",
+      "body": "The support team has only one person available for the first hour.",
+      "evidence_refs": [],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Can the pilot fit the support capacity?"
+        }
+      ]
+    }
+  ]
+}

@@ -12,7 +12,7 @@ runtime.
 
 ## Ownership
 
-MoonLib continues to own the base `moonsuite-conversation.v1` contract.
+MoonLib continues to own the base `moonsuite-conversation.v2` contract.
 MoonChat owns only the overlay required to review a source artifact:
 participant and turn bindings, questions, objections, proposals, decision
 requirements, named-human receipts, immutable event evidence and the projected
@@ -29,6 +29,7 @@ does not call any of them and does not need its own Rabbita application.
 | Product identity and suite-layout helpers | available |
 | MoonLib conversation identity consumption | available |
 | Portable review bundle/record v1 | available |
+| Pure source-bound host authoring and exact predecessor supersession | available |
 | Append-only, content-addressed review journal | available |
 | MoonFlow v2 execute/reconcile/health adapter | available |
 | MoonFind stakeholder-review consumption | intended integration |
@@ -68,6 +69,20 @@ Consumer-specific projection remains outside MoonChat:
   operation.
 - MoonBook may use an accepted record as closure evidence, but separately
   decides whether and how to import material into a book.
+- MoonTown may author source-bound collaboration reviews using the pure
+  `review` package. Authoring exports remain pending and cannot create human
+  receipts. The host verifies constituent snapshots, retains prior versions,
+  and presents the review within its existing controls.
+
+The [authoring guide](../review/README.mbt.md) contains an executable example,
+source/authority boundaries and the delivered local-workspace build workflow.
+The authoring API leaves every existing wire contract and schema version intact.
+The static schema's base-conversation constant follows the pinned MoonLib
+runtime (`moonsuite-conversation.v2`). This corrects the obsolete v1 constant;
+it does not change MoonChat's bundle, record, operation or schema version.
+The structural decoder remains unchanged. A legacy v1 binding can still be
+decoded as data, but validation and authoritative projection require the current
+MoonLib binding, as they already did before the authoring API was added.
 
 ## Verification
 

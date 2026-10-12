@@ -1,0 +1,90 @@
+{
+  "review_id": "cafe-parallel-edit",
+  "conversation_id": "cafe-parallel-room",
+  "source_artifact_ref": "examples/review-sheet-merge/source.md",
+  "source_revision_id": "pilot-r1",
+  "recorded_at": "2026-10-10T11:00:00Z",
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "items": [
+    {
+      "key": "support",
+      "kind": "question",
+      "author": "editor",
+      "body": "Where should support collect failed searches?",
+      "evidence_refs": [],
+      "decisions": []
+    },
+    {
+      "key": "launch",
+      "kind": "proposal",
+      "author": "assistant",
+      "body": "Stage the café search fix for ten pilot teams.\nKeep the \"rollback\" owner on call.",
+      "evidence_refs": [
+        "pilot/rollout-checklist.md",
+        "pilot/support-notes.md"
+      ],
+      "decisions": [
+        {
+          "reviewer": "editor",
+          "prompt": "Does the announcement state the pilot limit clearly?"
+        },
+        {
+          "reviewer": "ops",
+          "prompt": "Is the staged rollout staffed for Monday?"
+        }
+      ]
+    },
+    {
+      "key": "rollback",
+      "kind": "objection",
+      "author": "assistant",
+      "body": "The rollback owner and backup still need names.",
+      "evidence_refs": [],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is rollback ownership adequately covered?"
+        }
+      ]
+    },
+    {
+      "key": "pilot-size",
+      "kind": "question",
+      "author": "editor",
+      "body": "Should the second cohort wait for the first-day report?",
+      "evidence_refs": [],
+      "decisions": []
+    },
+    {
+      "key": "coverage",
+      "kind": "objection",
+      "author": "ops",
+      "body": "The Tuesday backup shift is uncovered.",
+      "evidence_refs": [
+        "pilot/staffing.md"
+      ],
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is backup coverage sufficient?"
+        }
+      ]
+    }
+  ]
+}

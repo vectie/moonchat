@@ -1,0 +1,50 @@
+{
+  "format": "moonchat.review-revision.v1",
+  "base_bundle_digest": "sha256:355eb4c8264acc8672b3278d3fad86eb9e18e7d7ac9b6a3e8e485007831a664b",
+  "review_id": "release-review",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moontown.collaboration-review.v1",
+    "product_id": "moontown",
+    "conversation_id": "release-room"
+  },
+  "source_artifact_ref": "examples/review-revision/old-source.md",
+  "source_revision_id": "revision-1",
+  "recorded_at": "2026-10-08T12:00:00Z",
+  "participants": [
+    {
+      "participant_id": "fixture-agent",
+      "display_name": "Fixture collaborator",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "fixture-human",
+      "display_name": "Fixture reviewer",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "release-proposal",
+      "entry_kind": "objection",
+      "author_participant_id": "fixture-agent",
+      "turn": {
+        "turn_id": "turn-1",
+        "client_turn_id": "client-1",
+        "command_id": "command-1"
+      },
+      "body": "The café search rollout needs a named rollback owner. 🌙\nDo not lose the original objection when revising this review.",
+      "evidence_refs": [
+        "evidence/unicode-test.txt"
+      ]
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "release-decision",
+      "subject_entry_id": "release-proposal",
+      "reviewer_participant_id": "fixture-human",
+      "prompt": "Does the release have a named rollback owner?"
+    }
+  ]
+}

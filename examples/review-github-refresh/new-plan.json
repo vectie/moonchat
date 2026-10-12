@@ -1,0 +1,36 @@
+{
+  "format": "moonchat.github-review-import.v1",
+  "export_ref": "examples/review-github-refresh/new-comments.json",
+  "export_digest": "sha256:ffd7b3e0b07473805dcc350f2be79549c271d89863361c04af20ae0952595518",
+  "authors": [
+    {
+      "login": "fixture-editor",
+      "participant_id": "editor"
+    },
+    {
+      "login": "fixture-ops",
+      "participant_id": "ops"
+    }
+  ],
+  "threads": [
+    {
+      "root_comment_id": "9007199254740993",
+      "key": "github-fallback",
+      "kind": "objection",
+      "note": "Resolve the fallback concern raised on the code change.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Does the proposed fallback cover the pilot failure mode?"
+        }
+      ]
+    },
+    {
+      "root_comment_id": "101",
+      "key": "github-report",
+      "kind": "question",
+      "note": "Carry the reporting question into the pilot discussion.",
+      "decisions": []
+    }
+  ]
+}

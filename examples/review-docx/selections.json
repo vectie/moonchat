@@ -1,0 +1,40 @@
+{
+  "format": "moonchat.docx-review.v1",
+  "document_digest": "sha256:7317666d62725035130c31a2ee62f78438492fc68676c479ec0171ca201d88a9",
+  "comments": [
+    {
+      "comment_id": "7",
+      "key": "rollback",
+      "kind": "objection",
+      "author": "curator",
+      "note": "Resolve the rollback rehearsal concern.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Can rollback be rehearsed before rollout?"
+        }
+      ]
+    },
+    {
+      "comment_id": "2",
+      "key": "support",
+      "kind": "question",
+      "author": "curator",
+      "note": "Confirm the support route.",
+      "decisions": [
+        {
+          "reviewer": "support",
+          "prompt": "Is coverage assigned?"
+        }
+      ]
+    },
+    {
+      "comment_id": "11",
+      "key": "notes",
+      "kind": "question",
+      "author": "curator",
+      "note": "Retain the automated comment as evidence only.",
+      "decisions": []
+    }
+  ]
+}

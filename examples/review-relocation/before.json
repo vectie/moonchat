@@ -1,0 +1,121 @@
+{
+  "contract_id": "moonchat.conversation-review-bundle.v1",
+  "review_id": "pilot-source-relocation",
+  "source_artifact_ref": "artifacts/pilot-plan.md",
+  "source_digest": "sha256:b80ade3ccf34c57a4eee9e934e16e6052ef2f81f19e101df204819a4bb3609f6",
+  "source_revision_id": "pilot-1",
+  "previous_bundle_ref": "",
+  "previous_bundle_digest": "",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moontown.collaboration-review.v1",
+    "product_id": "moontown",
+    "conversation_id": "pilot-relocation-room"
+  },
+  "participants": [
+    {
+      "participant_id": "fixture-author",
+      "display_name": "Fixture review author",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "fixture-release",
+      "display_name": "Fixture release reviewer",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "fixture-operations",
+      "display_name": "Fixture operations reviewer",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "matching-proposal",
+      "entry_kind": "proposal",
+      "author_participant_id": "fixture-author",
+      "turn": {
+        "turn_id": "host-turn-31",
+        "client_turn_id": "local-turn-31",
+        "command_id": "draft-command-31"
+      },
+      "body": "Keep the pilot traffic limit and expansion question together when preparing the next review.",
+      "evidence_refs": [
+        "evidence/query-fixtures.txt"
+      ]
+    },
+    {
+      "entry_id": "rollback-objection",
+      "entry_kind": "objection",
+      "author_participant_id": "fixture-author",
+      "turn": {
+        "turn_id": "host-turn-32",
+        "client_turn_id": "local-turn-32",
+        "command_id": "draft-command-32"
+      },
+      "body": "The rollback owner and rehearsal need an explicit review. Keep this objection visible.",
+      "evidence_refs": [
+        "evidence/rollback-rehearsal.txt"
+      ]
+    },
+    {
+      "entry_id": "coverage-question",
+      "entry_kind": "question",
+      "author_participant_id": "fixture-author",
+      "turn": {
+        "turn_id": "host-turn-33",
+        "client_turn_id": "local-turn-33",
+        "command_id": "draft-command-33"
+      },
+      "body": "Which bilingual coverage work belongs in the current pilot? 🌙",
+      "evidence_refs": []
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "approve-query-evidence",
+      "subject_entry_id": "matching-proposal",
+      "reviewer_participant_id": "fixture-release",
+      "prompt": "Do the synthetic query examples support the proposed matching behavior?"
+    },
+    {
+      "decision_id": "resolve-rollback-owner",
+      "subject_entry_id": "rollback-objection",
+      "reviewer_participant_id": "fixture-operations",
+      "prompt": "Is a rollback owner named for this exact candidate?"
+    },
+    {
+      "decision_id": "resolve-rehearsal-date",
+      "subject_entry_id": "rollback-objection",
+      "reviewer_participant_id": "fixture-operations",
+      "prompt": "Has the rollback rehearsal date been agreed?"
+    }
+  ],
+  "decision_receipts": [
+    {
+      "receipt_id": "synthetic-query-approval",
+      "decision_id": "approve-query-evidence",
+      "reviewer_participant_id": "fixture-release",
+      "reviewer_name": "Fixture release reviewer",
+      "decision": "approve",
+      "rationale": "Synthetic fixture only: the query evidence is adequate. This receipt does not resolve the separate rollback objection or authorize execution.",
+      "source_digest": "sha256:b80ade3ccf34c57a4eee9e934e16e6052ef2f81f19e101df204819a4bb3609f6",
+      "decided_at": "2026-10-09T12:05:00Z",
+      "evidence_refs": [
+        "evidence/query-fixtures.txt"
+      ]
+    },
+    {
+      "receipt_id": "synthetic-owner-deferral",
+      "decision_id": "resolve-rollback-owner",
+      "reviewer_participant_id": "fixture-operations",
+      "reviewer_name": "Fixture operations reviewer",
+      "decision": "defer",
+      "rationale": "Synthetic fixture only: defer until a named owner is recorded.\nThe original objection remains unresolved.",
+      "source_digest": "sha256:b80ade3ccf34c57a4eee9e934e16e6052ef2f81f19e101df204819a4bb3609f6",
+      "decided_at": "2026-10-09T12:06:00Z",
+      "evidence_refs": []
+    }
+  ],
+  "recorded_at": "2026-10-09T12:00:00Z"
+}

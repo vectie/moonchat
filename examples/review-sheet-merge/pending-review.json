@@ -1,0 +1,128 @@
+{
+  "contract_id": "moonchat.conversation-review-bundle.v1",
+  "review_id": "cafe-parallel-edit",
+  "source_artifact_ref": "examples/review-sheet-merge/source.md",
+  "source_digest": "sha256:4ca2cbd21baa77d38285bb4cac4f1f2ed54937972fb232281448ddbdc6d9941e",
+  "source_revision_id": "pilot-r1",
+  "previous_bundle_ref": "",
+  "previous_bundle_digest": "",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moonchat.review-agenda.v1",
+    "product_id": "moonchat",
+    "conversation_id": "cafe-parallel-room"
+  },
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "entry-support",
+      "entry_kind": "question",
+      "author_participant_id": "editor",
+      "turn": {
+        "turn_id": "turn-support",
+        "client_turn_id": "client-support",
+        "command_id": "command-support"
+      },
+      "body": "Where should support collect failed searches?",
+      "evidence_refs": []
+    },
+    {
+      "entry_id": "entry-launch",
+      "entry_kind": "proposal",
+      "author_participant_id": "assistant",
+      "turn": {
+        "turn_id": "turn-launch",
+        "client_turn_id": "client-launch",
+        "command_id": "command-launch"
+      },
+      "body": "Stage the café search fix for ten pilot teams.\nKeep the \"rollback\" owner on call.",
+      "evidence_refs": [
+        "pilot/rollout-checklist.md",
+        "pilot/support-notes.md"
+      ]
+    },
+    {
+      "entry_id": "entry-rollback",
+      "entry_kind": "objection",
+      "author_participant_id": "assistant",
+      "turn": {
+        "turn_id": "turn-rollback",
+        "client_turn_id": "client-rollback",
+        "command_id": "command-rollback"
+      },
+      "body": "The rollback owner and backup still need names.",
+      "evidence_refs": []
+    },
+    {
+      "entry_id": "entry-pilot-size",
+      "entry_kind": "question",
+      "author_participant_id": "editor",
+      "turn": {
+        "turn_id": "turn-pilot-size",
+        "client_turn_id": "client-pilot-size",
+        "command_id": "command-pilot-size"
+      },
+      "body": "Should the second cohort wait for the first-day report?",
+      "evidence_refs": []
+    },
+    {
+      "entry_id": "entry-coverage",
+      "entry_kind": "objection",
+      "author_participant_id": "ops",
+      "turn": {
+        "turn_id": "turn-coverage",
+        "client_turn_id": "client-coverage",
+        "command_id": "command-coverage"
+      },
+      "body": "The Tuesday backup shift is uncovered.",
+      "evidence_refs": [
+        "pilot/staffing.md"
+      ]
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "decision-6-launch-editor",
+      "subject_entry_id": "entry-launch",
+      "reviewer_participant_id": "editor",
+      "prompt": "Does the announcement state the pilot limit clearly?"
+    },
+    {
+      "decision_id": "decision-6-launch-ops",
+      "subject_entry_id": "entry-launch",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is the staged rollout staffed for Monday?"
+    },
+    {
+      "decision_id": "decision-8-rollback-ops",
+      "subject_entry_id": "entry-rollback",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is rollback ownership adequately covered?"
+    },
+    {
+      "decision_id": "decision-8-coverage-ops",
+      "subject_entry_id": "entry-coverage",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is backup coverage sufficient?"
+    }
+  ],
+  "decision_receipts": [],
+  "recorded_at": "2026-10-10T11:00:00Z"
+}
+

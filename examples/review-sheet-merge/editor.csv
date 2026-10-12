@@ -1,0 +1,8 @@
+key,kind,author,body,evidence_ref,reviewer,prompt
+"support","question","editor","Where should support collect failed searches?","","",""
+"launch","proposal","assistant","Stage the café search fix for ten pilot teams.
+Keep the ""rollback"" owner on call.","","editor","Does the announcement state the pilot limit clearly?"
+"launch","proposal","assistant","Stage the café search fix for ten pilot teams.
+Keep the ""rollback"" owner on call.","","ops","Is the pilot rollout ready?"
+"rollback","objection","assistant","The source does not name a rollback owner.","","ops","Is rollback ownership adequately covered?"
+"pilot-size","question","editor","Should the second cohort wait for the first-day report?","","",""

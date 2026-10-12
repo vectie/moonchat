@@ -1,0 +1,14 @@
+{
+  "budgets": [
+    {
+      "region": "Café 🐈",
+      "amount": 9007199254740993,
+      "currency": "USD"
+    }
+  ],
+  "a/b": {
+    "~key": null
+  },
+  "": false,
+  "html": "<script>untrusted()</script>"
+}

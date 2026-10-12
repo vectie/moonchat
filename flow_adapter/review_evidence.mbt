@@ -60,7 +60,7 @@ async fn materialize_journal(
   for event in @review.review_events(bundle, observed_source_digest) {
     let reference = review_event_ref(request, event)
     let text = immutable_json_ref(root, reference, event.to_json())
-    evidence.push({ artifact_ref: reference, digest: sha256_text(text) })
+    evidence.push({ artifact_ref: reference, digest: sha256_text(text), })
   }
   evidence
 }

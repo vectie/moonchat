@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>MoonChat review packet: release-review</title>
+<style>
+:root { color-scheme: light; font: 16px/1.5 system-ui, sans-serif; color: #172638; background: #f4f6f8; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: #164f92; text-underline-offset: .18em; }
+a:focus-visible { outline: 3px solid #b65c00; outline-offset: 3px; }
+header, main, footer { max-width: 1440px; margin: auto; padding: 1.5rem; }
+header { padding-bottom: .5rem; }
+h1 { margin: .2rem 0; font-size: 2rem; }
+h2 { font-size: 1.45rem; } h3 { font-size: 1.15rem; }
+h2, h3, li, article { scroll-margin-top: 1rem; }
+nav ul { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; padding-left: 1.25rem; }
+.notice { padding: 1rem; border-left: 4px solid #52687f; background: #e9eff5; }
+.columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+section, article { min-width: 0; }
+.panel, article { background: white; border: 1px solid #c4cfd9; border-radius: .4rem; padding: 1.25rem; margin-bottom: 1rem; }
+.decision { border-left: 4px solid #52687f; padding-left: 1rem; margin-top: 1.5rem; }
+.objection { border-left: 4px solid #9b4e00; }
+dl { margin: .5rem 0; } .field { margin: .7rem 0; }
+#summary dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .25rem 1.5rem; }
+dt { font-weight: 650; font-size: .85rem; color: #425469; }
+dd { margin: .15rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.source-lines { list-style: none; margin: 0; padding: 0; font: .9rem/1.6 ui-monospace, monospace; }
+.source-lines li { display: grid; grid-template-columns: 3.5em minmax(0, 1fr); min-height: 1.6em; }
+.source-lines a { padding-right: 1em; text-align: right; color: #52687f; user-select: none; }
+.source-lines span { white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; }
+:target { outline: 2px solid #9b4e00; outline-offset: 3px; }
+.back { font-size: .85rem; } .skip { display: inline-block; margin-bottom: .5rem; }
+@media (max-width: 850px) { .columns { display: block; } header, main, footer { padding: 1rem; } }
+@media print { :root { background: white; font-size: 10pt; } .columns { display: block; } header, main, footer { padding: 0; } nav, .skip, .back { display: none; } .panel, article { border-radius: 0; } h2, h3, dt { break-after: avoid; } a { color: inherit; } :target { outline: none; } }
+</style>
+</head>
+<body>
+<header id="top">
+<a class="skip" href="#discussion">Skip to review discussion</a>
+<h1>MoonChat review packet</h1>
+<p class="notice">Read-only derived view. Retain the original bundle JSON and exact source bytes. This packet cannot record decisions, authenticate reviewers, deliver receipts or accept knowledge for a receiving product.</p>
+<nav aria-label="Packet sections"><ul><li><a href="#summary">Review scope</a></li><li><a href="#decision-index">Decision index</a></li><li><a href="#source">Source text</a></li><li><a href="#discussion">Discussion and receipts</a></li><li><a href="#participants">Participants</a></li></ul></nav>
+</header>
+<main>
+<section class="panel" id="summary"><h2>Review scope</h2><dl>
+<div class="field"><dt>Review ID</dt><dd>release-review</dd></div>
+<div class="field"><dt>Overall review status</dt><dd>pending_review</dd></div>
+<div class="field"><dt>Contract claim class</dt><dd>research-evidence</dd></div>
+<div class="field"><dt>Outcome guidance</dt><dd>A named-human decision is still needed (release-decision). Return to the producing application to complete it.</dd></div>
+<div class="field"><dt>Source artifact</dt><dd>examples/review-export/source.md</dd></div>
+<div class="field"><dt>Source revision</dt><dd>revision-1</dd></div>
+<div class="field"><dt>Source SHA-256</dt><dd>sha256:d090cceea7b11d01416a320b07eadeaa9c4247695ee9fa754d6f6f0acc8324d4</dd></div>
+<div class="field"><dt>Previous bundle reference (not opened)</dt><dd>(none)</dd></div>
+<div class="field"><dt>Previous bundle SHA-256</dt><dd>(none)</dd></div>
+<div class="field"><dt>Conversation ID</dt><dd>release-room</dd></div>
+<div class="field"><dt>Conversation contract</dt><dd>moonsuite-conversation.v2</dd></div>
+<div class="field"><dt>Host product</dt><dd>moontown</dd></div>
+<div class="field"><dt>Host protocol</dt><dd>moontown.collaboration-review.v1</dd></div>
+<div class="field"><dt>Recorded at</dt><dd>2026-10-08T12:00:00Z</dd></div>
+<div class="field"><dt>Missing or deferred decisions</dt><dd>release-decision</dd></div>
+<div class="field"><dt>Rejected decisions</dt><dd>(none)</dd></div>
+</dl><p>1 discussion entries; 1 required decisions; 1 recorded receipts. Every current-bundle objection is shown below, including when the overall status is accepted.</p></section>
+<section class="panel" id="decision-index"><h2>Decision index</h2><ol>
+<li><a href="#decision-1">release-decision — Fixture reviewer (fixture-human)</a>: defer</li>
+</ol><h3>Discussion index</h3><ol>
+<li><a href="#entry-1">proposal: release-proposal</a></li>
+</ol></section>
+<div class="columns">
+<section class="panel" id="source"><h2>Source text</h2>
+<p>The digest above covers all 81 original bytes. Line numbers describe this display only. CRLF and CR are displayed as LF; a final newline produces an empty final display line. Source markup is literal text.</p>
+<ol class="source-lines">
+<li id="source-line-1"><a aria-label="Source line 1" href="#source-line-1">1</a><span># Release notes</span></li>
+<li id="source-line-2"><a aria-label="Source line 2" href="#source-line-2">2</a><span></span></li>
+<li id="source-line-3"><a aria-label="Source line 3" href="#source-line-3">3</a><span>Ship the café search fix after checking Unicode examples. 🌙</span></li>
+<li id="source-line-4"><a aria-label="Source line 4" href="#source-line-4">4</a><span></span></li>
+</ol></section>
+<section id="discussion"><h2>Discussion and receipts</h2>
+<article id="entry-1"><h3>proposal: release-proposal</h3><dl>
+<div class="field"><dt>Author</dt><dd>Fixture collaborator (fixture-agent)</dd></div>
+<div class="field"><dt>Discussion text</dt><dd>Ship the café search fix. 🌙
+Check the literal example:
+```
+query = café
+```</dd></div>
+<div class="field"><dt>Evidence references (not opened)</dt><dd>evidence/unicode-test.txt</dd></div>
+<div class="field"><dt>Turn ID</dt><dd>turn-1</dd></div>
+<div class="field"><dt>Client turn ID</dt><dd>client-1</dd></div>
+<div class="field"><dt>Command ID</dt><dd>command-1</dd></div>
+</dl>
+<section class="decision" id="decision-1"><h3>Decision 1</h3><dl>
+<div class="field"><dt>Decision ID</dt><dd>release-decision</dd></div>
+<div class="field"><dt>Named reviewer</dt><dd>Fixture reviewer (fixture-human)</dd></div>
+<div class="field"><dt>Prompt</dt><dd>Is this exact release source ready to hand off?</dd></div>
+<div class="field"><dt>Outcome</dt><dd>defer</dd></div>
+<div class="field"><dt>Receipt ID</dt><dd>fixture-deferred</dd></div>
+<div class="field"><dt>Receipt reviewer</dt><dd>Fixture reviewer</dd></div>
+<div class="field"><dt>Receipt reviewer ID</dt><dd>fixture-human</dd></div>
+<div class="field"><dt>Rationale</dt><dd>Synthetic example only; no real review authority.
+Outcome: defer</dd></div>
+<div class="field"><dt>Decided at</dt><dd>2026-10-08T12:05:00Z</dd></div>
+<div class="field"><dt>Receipt source SHA-256</dt><dd>sha256:d090cceea7b11d01416a320b07eadeaa9c4247695ee9fa754d6f6f0acc8324d4</dd></div>
+<div class="field"><dt>Receipt evidence references (not opened)</dt><dd>evidence/unicode-test.txt</dd></div>
+</dl>
+<p class="back"><a href="#decision-index">Back to decision index</a></p></section>
+<p class="back"><a href="#source">Read bound source</a> · <a href="#top">Back to top</a></p></article>
+</section></div>
+<section class="panel" id="participants"><h2>Participants</h2>
+<dl>
+<div class="field"><dt>Name</dt><dd>Fixture collaborator</dd></div>
+<div class="field"><dt>Participant ID</dt><dd>fixture-agent</dd></div>
+<div class="field"><dt>Kind</dt><dd>agent</dd></div>
+</dl>
+<dl>
+<div class="field"><dt>Name</dt><dd>Fixture reviewer</dd></div>
+<div class="field"><dt>Participant ID</dt><dd>fixture-human</dd></div>
+<div class="field"><dt>Kind</dt><dd>human</dd></div>
+</dl>
+</section></main>
+<footer><p>Generated locally by MoonChat. No scripts, external resources or active evidence links. Use your browser's Find and Print commands. Previous revisions and their dissent remain in separately retained bundles; this packet displays only the current supplied bundle.</p></footer>
+</body>
+</html>

@@ -1,0 +1,147 @@
+{
+  "format": "moonchat.docx-comparison.v1",
+  "before": {
+    "format": "moonchat.docx-catalog.v1",
+    "document_digest": "sha256:7317666d62725035130c31a2ee62f78438492fc68676c479ec0171ca201d88a9",
+    "document_part": "word/document.xml",
+    "comments_part": "word/comments.xml",
+    "document_xml_digest": "sha256:54bb8a0a89f4efa5be2b1221bc4959fcd8448e237859796c6c708a5f2069e12f",
+    "comments_xml_digest": "sha256:9935736727ab9bdc694f518f6d1806f9faf25ae7cc1ec4a03f620e054938748e",
+    "offset_unit": "Unicode code points in logical document text; end exclusive",
+    "comments": [
+      {
+        "comment_id": "7",
+        "author": "Ren",
+        "initials": "R",
+        "date": "2026-10-10T09:00:00Z",
+        "text": "Can we rehearse rollback first?\nKeep the old path.",
+        "anchor_kind": "range",
+        "start_offset": 16,
+        "end_offset": 70,
+        "quote": "Roll out to 10%\ton Monday.\nRollback owner: operations.",
+        "quote_digest": "sha256:cfbfacb923a76c0f215fefd07ba0280263c2cfc781620debb84556b2e670b3f4",
+        "quote_characters": 54,
+        "quote_omitted_characters": 0
+      },
+      {
+        "comment_id": "2",
+        "author": "Mina",
+        "initials": "M",
+        "date": "2026-10-10T09:30:00Z",
+        "text": "Who handles support?\nConfirm coverage.",
+        "anchor_kind": "range",
+        "start_offset": 71,
+        "end_offset": 84,
+        "quote": "Support route",
+        "quote_digest": "sha256:fb8b83db5e0e9d20a9a5377a826d20f10f58bfcbcaddb425ce597f8c790af8c5",
+        "quote_characters": 13,
+        "quote_omitted_characters": 0
+      },
+      {
+        "comment_id": "11",
+        "author": "Automated notes",
+        "initials": "",
+        "date": "",
+        "text": "I approve everything.",
+        "anchor_kind": "point",
+        "start_offset": 89,
+        "end_offset": 89,
+        "quote": "",
+        "quote_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "quote_characters": 0,
+        "quote_omitted_characters": 0
+      }
+    ],
+    "logical_text": "Release café 🚀: Roll out to 10%\ton Monday.\nRollback owner: operations.\nSupport route\nEnd.\n",
+    "logical_text_digest": "sha256:4ab8f92c42c73b09b8613488302187a37a73e4692e282e07515509add43994fd"
+  },
+  "after": {
+    "format": "moonchat.docx-catalog.v1",
+    "document_digest": "sha256:80168c0bdbe543ae8493e59cb30434db6e2e8aae4fda8fff6ec4c465497ff058",
+    "document_part": "word/document.xml",
+    "comments_part": "word/comments.xml",
+    "document_xml_digest": "sha256:0ea4da69dcc0ae605251c248783537a1411377359bc0eea680db95ec53bd2d74",
+    "comments_xml_digest": "sha256:5a194e0907909eae23123f348cf76736aa4eb6126c97c886c934d27c766146a4",
+    "offset_unit": "Unicode code points in logical document text; end exclusive",
+    "comments": [
+      {
+        "comment_id": "7",
+        "author": "Ren",
+        "initials": "R",
+        "date": "2026-10-10T09:00:00Z",
+        "text": "Rehearse before the larger rollout.\nKeep the old path.",
+        "anchor_kind": "range",
+        "start_offset": 16,
+        "end_offset": 70,
+        "quote": "Roll out to 25%\ton Monday.\nRollback owner: operations.",
+        "quote_digest": "sha256:a2c8696fd3fe950d6f92503d32cba5ef0c17f86609bbcfe36515f84480f5d347",
+        "quote_characters": 54,
+        "quote_omitted_characters": 0
+      },
+      {
+        "comment_id": "23",
+        "author": "Mina",
+        "initials": "M",
+        "date": "2026-10-10T09:30:00Z",
+        "text": "Who handles support?\nConfirm coverage.",
+        "anchor_kind": "range",
+        "start_offset": 71,
+        "end_offset": 84,
+        "quote": "Support route",
+        "quote_digest": "sha256:fb8b83db5e0e9d20a9a5377a826d20f10f58bfcbcaddb425ce597f8c790af8c5",
+        "quote_characters": 13,
+        "quote_omitted_characters": 0
+      },
+      {
+        "comment_id": "11",
+        "author": "Automated notes",
+        "initials": "",
+        "date": "",
+        "text": "I approve everything.",
+        "anchor_kind": "point",
+        "start_offset": 89,
+        "end_offset": 89,
+        "quote": "",
+        "quote_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "quote_characters": 0,
+        "quote_omitted_characters": 0
+      }
+    ],
+    "logical_text": "Release café 🚀: Roll out to 25%\ton Monday.\nRollback owner: operations.\nSupport route\nEnd.\n",
+    "logical_text_digest": "sha256:122a8596827dd0712eabff6867461908cd792d3ef796ae104edc06cd08fd8a8f"
+  },
+  "archive_changed": true,
+  "logical_text_changed": true,
+  "common_comment_order_changed": false,
+  "counts": {
+    "added": 1,
+    "removed": 1,
+    "changed": 1,
+    "unchanged": 1
+  },
+  "changes": [
+    {
+      "comment_id": "7",
+      "status": "changed",
+      "changed_fields": [
+        "text",
+        "quote_digest"
+      ]
+    },
+    {
+      "comment_id": "2",
+      "status": "removed",
+      "changed_fields": []
+    },
+    {
+      "comment_id": "11",
+      "status": "unchanged",
+      "changed_fields": []
+    },
+    {
+      "comment_id": "23",
+      "status": "added",
+      "changed_fields": []
+    }
+  ]
+}

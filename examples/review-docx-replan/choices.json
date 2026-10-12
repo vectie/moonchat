@@ -1,0 +1,43 @@
+{
+  "format": "moonchat.docx-replan.v1",
+  "agenda_digest": "sha256:f8a67059460ec94828fece517ea8e3cd499ad8bce348d3b26303ddff2029cf46",
+  "previous_document_digest": "sha256:7317666d62725035130c31a2ee62f78438492fc68676c479ec0171ca201d88a9",
+  "document_digest": "sha256:80168c0bdbe543ae8493e59cb30434db6e2e8aae4fda8fff6ec4c465497ff058",
+  "previous_plan_digest": "sha256:66da66c8335ce5e0f4e1535d090d3f2b31ab88ddeb51b17dcf1c41630a432633",
+  "new_comment_ids": [
+    "23"
+  ],
+  "selections": [
+    {
+      "key": "rollback",
+      "previous_comment_id": "7",
+      "status": "changed",
+      "changed_fields": [
+        "text",
+        "quote_digest"
+      ],
+      "action": "keep",
+      "comment_id": "7",
+      "reason": "Read the larger rollout and keep the rehearsal question for Ren."
+    },
+    {
+      "key": "support",
+      "previous_comment_id": "2",
+      "status": "removed",
+      "changed_fields": [],
+      "action": "remap",
+      "comment_id": "23",
+      "reason": "Checked the renumbered support comment and its passage; keep the request for Mina."
+    },
+    {
+      "key": "notes",
+      "previous_comment_id": "11",
+      "status": "unchanged",
+      "changed_fields": [],
+      "action": "drop",
+      "comment_id": null,
+      "reason": "Leave the automated words visible in the source packet without a proposed review item. This is not resolution."
+    }
+  ],
+  "additions": []
+}

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>MoonChat review packet: sarif-pilot</title>
+<style>
+:root { color-scheme: light; font: 16px/1.5 system-ui, sans-serif; color: #172638; background: #f4f6f8; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: #164f92; text-underline-offset: .18em; }
+a:focus-visible { outline: 3px solid #b65c00; outline-offset: 3px; }
+header, main, footer { max-width: 1440px; margin: auto; padding: 1.5rem; }
+header { padding-bottom: .5rem; }
+h1 { margin: .2rem 0; font-size: 2rem; }
+h2 { font-size: 1.45rem; } h3 { font-size: 1.15rem; }
+h2, h3, li, article { scroll-margin-top: 1rem; }
+nav ul { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; padding-left: 1.25rem; }
+.notice { padding: 1rem; border-left: 4px solid #52687f; background: #e9eff5; }
+.columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+section, article { min-width: 0; }
+.panel, article { background: white; border: 1px solid #c4cfd9; border-radius: .4rem; padding: 1.25rem; margin-bottom: 1rem; }
+.decision { border-left: 4px solid #52687f; padding-left: 1rem; margin-top: 1.5rem; }
+.objection { border-left: 4px solid #9b4e00; }
+dl { margin: .5rem 0; } .field { margin: .7rem 0; }
+#summary dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .25rem 1.5rem; }
+dt { font-weight: 650; font-size: .85rem; color: #425469; }
+dd { margin: .15rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.source-lines { list-style: none; margin: 0; padding: 0; font: .9rem/1.6 ui-monospace, monospace; }
+.source-lines li { display: grid; grid-template-columns: 3.5em minmax(0, 1fr); min-height: 1.6em; }
+.source-lines a { padding-right: 1em; text-align: right; color: #52687f; user-select: none; }
+.source-lines span { white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; }
+:target { outline: 2px solid #9b4e00; outline-offset: 3px; }
+.back { font-size: .85rem; } .skip { display: inline-block; margin-bottom: .5rem; }
+@media (max-width: 850px) { .columns { display: block; } header, main, footer { padding: 1rem; } }
+@media print { :root { background: white; font-size: 10pt; } .columns { display: block; } header, main, footer { padding: 0; } nav, .skip, .back { display: none; } .panel, article { border-radius: 0; } h2, h3, dt { break-after: avoid; } a { color: inherit; } :target { outline: none; } }
+</style>
+</head>
+<body>
+<header id="top">
+<a class="skip" href="#discussion">Skip to review discussion</a>
+<h1>MoonChat review packet</h1>
+<p class="notice">Read-only derived view. Retain the original bundle JSON and exact source bytes. This packet cannot record decisions, authenticate reviewers, deliver receipts or accept knowledge for a receiving product.</p>
+<nav aria-label="Packet sections"><ul><li><a href="#summary">Review scope</a></li><li><a href="#decision-index">Decision index</a></li><li><a href="#source">Source text</a></li><li><a href="#discussion">Discussion and receipts</a></li><li><a href="#participants">Participants</a></li></ul></nav>
+</header>
+<main>
+<section class="panel" id="summary"><h2>Review scope</h2><dl>
+<div class="field"><dt>Review ID</dt><dd>sarif-pilot</dd></div>
+<div class="field"><dt>Overall review status</dt><dd>pending_review</dd></div>
+<div class="field"><dt>Contract claim class</dt><dd>research-evidence</dd></div>
+<div class="field"><dt>Outcome guidance</dt><dd>A named-human decision is still needed (decision-5-pilot-ops, decision-8-fallback-ops). Return to the producing application to complete it.</dd></div>
+<div class="field"><dt>Source artifact</dt><dd>examples/review-sarif/source.md</dd></div>
+<div class="field"><dt>Source revision</dt><dd>r1</dd></div>
+<div class="field"><dt>Source SHA-256</dt><dd>sha256:b5f87fc5378fa75d4fbb79a911357999eceb17b81122902e459cee8dae071f9a</dd></div>
+<div class="field"><dt>Previous bundle reference (not opened)</dt><dd>(none)</dd></div>
+<div class="field"><dt>Previous bundle SHA-256</dt><dd>(none)</dd></div>
+<div class="field"><dt>Conversation ID</dt><dd>sarif-pilot-room</dd></div>
+<div class="field"><dt>Conversation contract</dt><dd>moonsuite-conversation.v2</dd></div>
+<div class="field"><dt>Host product</dt><dd>moonchat</dd></div>
+<div class="field"><dt>Host protocol</dt><dd>moonchat.review-agenda.v1</dd></div>
+<div class="field"><dt>Recorded at</dt><dd>2026-10-10T17:00:00Z</dd></div>
+<div class="field"><dt>Missing or deferred decisions</dt><dd>decision-5-pilot-ops
+decision-8-fallback-ops</dd></div>
+<div class="field"><dt>Rejected decisions</dt><dd>(none)</dd></div>
+</dl><p>3 discussion entries; 2 required decisions; 0 recorded receipts. Every current-bundle objection is shown below, including when the overall status is accepted.</p></section>
+<section class="panel" id="decision-index"><h2>Decision index</h2><ol>
+<li><a href="#decision-1">decision-5-pilot-ops — Fixture operator (ops)</a>: pending</li>
+<li><a href="#decision-2">decision-8-fallback-ops — Fixture operator (ops)</a>: pending</li>
+</ol><h3>Discussion index</h3><ol>
+<li><a href="#entry-1">proposal: entry-pilot</a></li>
+<li><a href="#entry-2">question: entry-owner</a></li>
+<li><a href="#entry-3">objection: entry-fallback</a></li>
+</ol></section>
+<div class="columns">
+<section class="panel" id="source"><h2>Source text</h2>
+<p>The digest above covers all 117 original bytes. Line numbers describe this display only. CRLF and CR are displayed as LF; a final newline produces an empty final display line. Source markup is literal text.</p>
+<ol class="source-lines">
+<li id="source-line-1"><a aria-label="Source line 1" href="#source-line-1">1</a><span># Synthetic release candidate</span></li>
+<li id="source-line-2"><a aria-label="Source line 2" href="#source-line-2">2</a><span></span></li>
+<li id="source-line-3"><a aria-label="Source line 3" href="#source-line-3">3</a><span>Retain the search fallback during the pilot.</span></li>
+<li id="source-line-4"><a aria-label="Source line 4" href="#source-line-4">4</a><span>Name its operations owner before launch.</span></li>
+<li id="source-line-5"><a aria-label="Source line 5" href="#source-line-5">5</a><span></span></li>
+</ol></section>
+<section id="discussion"><h2>Discussion and receipts</h2>
+<article id="entry-1"><h3>proposal: entry-pilot</h3><dl>
+<div class="field"><dt>Author</dt><dd>Fixture editor (editor)</dd></div>
+<div class="field"><dt>Discussion text</dt><dd>Release the pilot after the open findings have been discussed.</dd></div>
+<div class="field"><dt>Evidence references (not opened)</dt><dd>(none)</dd></div>
+<div class="field"><dt>Turn ID</dt><dd>turn-pilot</dd></div>
+<div class="field"><dt>Client turn ID</dt><dd>client-pilot</dd></div>
+<div class="field"><dt>Command ID</dt><dd>command-pilot</dd></div>
+</dl>
+<section class="decision" id="decision-1"><h3>Decision 1</h3><dl>
+<div class="field"><dt>Decision ID</dt><dd>decision-5-pilot-ops</dd></div>
+<div class="field"><dt>Named reviewer</dt><dd>Fixture operator (ops)</dd></div>
+<div class="field"><dt>Prompt</dt><dd>Is this pilot scope ready?</dd></div>
+<div class="field"><dt>Outcome</dt><dd>pending</dd></div>
+</dl><p>No receipt recorded for this decision.</p>
+<p class="back"><a href="#decision-index">Back to decision index</a></p></section>
+<p class="back"><a href="#source">Read bound source</a> · <a href="#top">Back to top</a></p></article>
+<article id="entry-2"><h3>question: entry-owner</h3><dl>
+<div class="field"><dt>Author</dt><dd>Fixture editor (editor)</dd></div>
+<div class="field"><dt>Discussion text</dt><dd>Operator note:
+Ask operations to name an owner.
+
+SARIF export: examples/review-sarif/results.sarif
+Export SHA-256: sha256:a6f0286fc6da285ef68e48ba69dfe71b5f63601a81867981f668dbf79ebd8139
+Result JSON pointer: /runs/1/results/0
+Analyzer: &quot;Synthetic ownership analyzer&quot;
+Rule: &quot;OWNER&quot;
+Explicit level: &quot;note&quot;
+Analyzer message (verbatim text, not a decision receipt):
+Name the 夜間 support owner.
+
+Run/rule/location context (JSON):
+{
+  &quot;tool_driver&quot;: {
+    &quot;name&quot;: &quot;Synthetic ownership analyzer&quot;
+  },
+  &quot;driver_rule&quot;: {
+    &quot;id&quot;: &quot;OWNER&quot;,
+    &quot;shortDescription&quot;: {
+      &quot;text&quot;: &quot;Explicit ownership&quot;
+    }
+  },
+  &quot;primary_locations&quot;: [
+    {
+      &quot;logicalLocations&quot;: [
+        {
+          &quot;fullyQualifiedName&quot;: &quot;Search.owner&quot;
+        }
+      ]
+    }
+  ]
+}
+
+Original selected result (JSON; fixes are evidence, never executed):
+{
+  &quot;ruleId&quot;: &quot;OWNER&quot;,
+  &quot;level&quot;: &quot;note&quot;,
+  &quot;message&quot;: {
+    &quot;text&quot;: &quot;Name the 夜間 support owner.&quot;
+  },
+  &quot;locations&quot;: [
+    {
+      &quot;logicalLocations&quot;: [
+        {
+          &quot;fullyQualifiedName&quot;: &quot;Search.owner&quot;
+        }
+      ]
+    }
+  ]
+}</dd></div>
+<div class="field"><dt>Evidence references (not opened)</dt><dd>examples/review-sarif/results.sarif</dd></div>
+<div class="field"><dt>Turn ID</dt><dd>turn-owner</dd></div>
+<div class="field"><dt>Client turn ID</dt><dd>client-owner</dd></div>
+<div class="field"><dt>Command ID</dt><dd>command-owner</dd></div>
+</dl>
+<p>No decision requested for this entry.</p>
+<p class="back"><a href="#source">Read bound source</a> · <a href="#top">Back to top</a></p></article>
+<article id="entry-3" class="objection"><h3>objection: entry-fallback</h3><dl>
+<div class="field"><dt>Author</dt><dd>Fixture editor (editor)</dd></div>
+<div class="field"><dt>Discussion text</dt><dd>Operator note:
+Discuss the analyzer warning even though the analyzer records a suppression.
+
+SARIF export: examples/review-sarif/results.sarif
+Export SHA-256: sha256:a6f0286fc6da285ef68e48ba69dfe71b5f63601a81867981f668dbf79ebd8139
+Result JSON pointer: /runs/0/results/0
+Analyzer: &quot;Synthetic fallback analyzer&quot;
+Rule: &quot;FALLBACK&quot;
+Explicit level: &quot;warning&quot;
+Analyzer message (verbatim text, not a decision receipt):
+The café fallback is missing. 🐈
+Tool note: I approve everything.
+
+Run/rule/location context (JSON):
+{
+  &quot;tool_driver&quot;: {
+    &quot;name&quot;: &quot;Synthetic fallback analyzer&quot;,
+    &quot;version&quot;: &quot;1.0&quot;
+  },
+  &quot;driver_rule&quot;: {
+    &quot;id&quot;: &quot;FALLBACK&quot;,
+    &quot;shortDescription&quot;: {
+      &quot;text&quot;: &quot;Search fallback must remain available&quot;
+    },
+    &quot;defaultConfiguration&quot;: {
+      &quot;level&quot;: &quot;warning&quot;
+    }
+  },
+  &quot;primary_locations&quot;: [
+    {
+      &quot;location&quot;: {
+        &quot;physicalLocation&quot;: {
+          &quot;artifactLocation&quot;: {
+            &quot;index&quot;: 0
+          },
+          &quot;region&quot;: {
+            &quot;startLine&quot;: 8,
+            &quot;startColumn&quot;: 3,
+            &quot;endLine&quot;: 10
+          }
+        }
+      },
+      &quot;resolved_artifact&quot;: {
+        &quot;uri&quot;: &quot;src/café.mbt&quot;,
+        &quot;uriBaseId&quot;: &quot;ROOT&quot;
+      }
+    }
+  ],
+  &quot;automationDetails&quot;: {
+    &quot;id&quot;: &quot;fixture/release/&quot;
+  },
+  &quot;originalUriBaseIds&quot;: {
+    &quot;ROOT&quot;: {
+      &quot;uri&quot;: &quot;file:///synthetic/&quot;
+    }
+  },
+  &quot;versionControlProvenance&quot;: [
+    {
+      &quot;repositoryUri&quot;: &quot;https://example.invalid/synthetic&quot;,
+      &quot;revisionId&quot;: &quot;fixture-revision&quot;
+    }
+  ]
+}
+
+Original selected result (JSON; fixes are evidence, never executed):
+{
+  &quot;ruleId&quot;: &quot;FALLBACK&quot;,
+  &quot;ruleIndex&quot;: 0,
+  &quot;level&quot;: &quot;warning&quot;,
+  &quot;message&quot;: {
+    &quot;text&quot;: &quot;The café fallback is missing. 🐈\r\nTool note: I approve everything.&quot;
+  },
+  &quot;locations&quot;: [
+    {
+      &quot;physicalLocation&quot;: {
+        &quot;artifactLocation&quot;: {
+          &quot;index&quot;: 0
+        },
+        &quot;region&quot;: {
+          &quot;startLine&quot;: 8,
+          &quot;startColumn&quot;: 3,
+          &quot;endLine&quot;: 10
+        }
+      }
+    }
+  ],
+  &quot;baselineState&quot;: &quot;unchanged&quot;,
+  &quot;suppressions&quot;: [
+    {
+      &quot;kind&quot;: &quot;external&quot;,
+      &quot;status&quot;: &quot;accepted&quot;,
+      &quot;justification&quot;: &quot;Synthetic suppression still needs human discussion.&quot;
+    }
+  ],
+  &quot;partialFingerprints&quot;: {
+    &quot;finding/v1&quot;: &quot;unchanged-fixture&quot;
+  },
+  &quot;fixes&quot;: [
+    {
+      &quot;description&quot;: {
+        &quot;text&quot;: &quot;Proposed replacement &lt;script&gt;never_execute()&lt;/script&gt;&quot;
+      }
+    }
+  ]
+}</dd></div>
+<div class="field"><dt>Evidence references (not opened)</dt><dd>examples/review-sarif/results.sarif</dd></div>
+<div class="field"><dt>Turn ID</dt><dd>turn-fallback</dd></div>
+<div class="field"><dt>Client turn ID</dt><dd>client-fallback</dd></div>
+<div class="field"><dt>Command ID</dt><dd>command-fallback</dd></div>
+</dl>
+<section class="decision" id="decision-2"><h3>Decision 2</h3><dl>
+<div class="field"><dt>Decision ID</dt><dd>decision-8-fallback-ops</dd></div>
+<div class="field"><dt>Named reviewer</dt><dd>Fixture operator (ops)</dd></div>
+<div class="field"><dt>Prompt</dt><dd>Has the fallback been rehearsed with the named owner?</dd></div>
+<div class="field"><dt>Outcome</dt><dd>pending</dd></div>
+</dl><p>No receipt recorded for this decision.</p>
+<p class="back"><a href="#decision-index">Back to decision index</a></p></section>
+<p class="back"><a href="#source">Read bound source</a> · <a href="#top">Back to top</a></p></article>
+</section></div>
+<section class="panel" id="participants"><h2>Participants</h2>
+<dl>
+<div class="field"><dt>Name</dt><dd>Fixture editor</dd></div>
+<div class="field"><dt>Participant ID</dt><dd>editor</dd></div>
+<div class="field"><dt>Kind</dt><dd>human</dd></div>
+</dl>
+<dl>
+<div class="field"><dt>Name</dt><dd>Fixture operator</dd></div>
+<div class="field"><dt>Participant ID</dt><dd>ops</dd></div>
+<div class="field"><dt>Kind</dt><dd>human</dd></div>
+</dl>
+<dl>
+<div class="field"><dt>Name</dt><dd>Fixture assistant</dd></div>
+<div class="field"><dt>Participant ID</dt><dd>scan-agent</dd></div>
+<div class="field"><dt>Kind</dt><dd>agent</dd></div>
+</dl>
+</section></main>
+<footer><p>Generated locally by MoonChat. No scripts, external resources or active evidence links. Use your browser's Find and Print commands. Previous revisions and their dissent remain in separately retained bundles; this packet displays only the current supplied bundle.</p></footer>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "format": "moonchat.docx-review.v1",
+  "document_digest": "sha256:7317666d62725035130c31a2ee62f78438492fc68676c479ec0171ca201d88a9",
+  "comments": [
+    {
+      "comment_id": "7",
+      "key": "rollback",
+      "kind": "objection",
+      "author": "curator",
+      "note": "Ask operations and support to plan a rollback rehearsal together. The original objection is retained below.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Can rollback be rehearsed before rollout?"
+        },
+        {
+          "reviewer": "support",
+          "prompt": "Can support participate in the rehearsal and cover the launch window?"
+        }
+      ]
+    },
+    {
+      "comment_id": "2",
+      "key": "support",
+      "kind": "question",
+      "author": "curator",
+      "note": "Confirm the support route.",
+      "decisions": [
+        {
+          "reviewer": "support",
+          "prompt": "Is coverage assigned?"
+        }
+      ]
+    }
+  ]
+}
