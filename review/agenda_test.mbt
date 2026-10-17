@@ -5,6 +5,7 @@ fn agenda_fixture() -> @review.ReviewAgenda {
     conversation_id: "launch-room",
     source_artifact_ref: "release/source.md",
     source_revision_id: "r1",
+    source_digest_constraint: "",
     recorded_at: "2026-10-08T12:00:00Z",
     participants: [
       {

@@ -1,0 +1,22 @@
+{
+  "format": "moonchat.review-slack.v1",
+  "source_digest": "sha256:8fc4561408c85256d9970c208e958ee9f5037eb4d6c197c221fdede69b9a0249",
+  "selections": [
+    {
+      "ordinal": 1,
+      "key": "release-proposal",
+      "kind": "proposal",
+      "author": "curator",
+      "note": "Review the recorded release proposal. Emoji reactions do not establish a named decision.",
+      "decisions": [{"reviewer": "ops", "prompt": "Is this proposal sufficiently specified for a separate release review?"}]
+    },
+    {
+      "ordinal": 2,
+      "key": "rollback-objection",
+      "kind": "objection",
+      "author": "curator",
+      "note": "Preserve the missing-owner objection. The referenced thread root is outside this daily file.",
+      "decisions": [{"reviewer": "ops", "prompt": "Has rollback ownership been independently verified?"}]
+    }
+  ]
+}

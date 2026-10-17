@@ -1,5 +1,8 @@
 # MoonChat documentation
 
+- [Curate local Slack daily messages](REVIEW_SLACK_IMPORT.md): catalog supported
+  snapshots and archival warnings, then select quoted evidence for named review.
+
 - [Compare review revisions and source text](REVIEW_COMPARISONS.md) — inspect
   numbered source edits with context alongside discussion and decision changes.
 - [Import GitHub review threads](REVIEW_GITHUB_IMPORT.md) — bring selected local
@@ -57,3 +60,15 @@ consume its portable artifacts through their own product workflows.
 
 - [Review changes between retained JUnit reports](REVIEW_JUNIT_COMPARISONS.md):
   compare complete case evidence and select differences into named review requests.
+
+- [Reuse a review checklist](REVIEW_CHECKLISTS.md): discover role and text slots,
+  then prepare fresh source-bound agendas for different artifacts and reviewers.
+# Structured source changes
+
+- [Curate a standalone email](REVIEW_EML_IMPORT.md): catalog original RFC822 EML
+  bytes and explicitly select quoted content into digest-bound pending review.
+
+Use [review-linked JSON edits](REVIEW_JSON_EDITS.md) to change selected typed
+values, preview the full candidate and reopen its linked pending review.
+
+- [Review original SubRip cues](REVIEW_SRT_IMPORT.md): source-bound explicit cue selection, native preview and pending bundle.

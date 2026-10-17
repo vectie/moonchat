@@ -1,0 +1,214 @@
+///|
+import {
+  "moonbitlang/async@0.20.2",
+  "moonbitlang/async@0.20.2/fs",
+  "moonbitlang/async@0.20.2/process",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/core/encoding/utf8",
+}
+
+///|
+fn fields(value : Json) -> Map[String, Json] raise {
+  guard value is Object(fields) else { fail("expected object") }
+  fields
+}
+
+///|
+fn array(value : Json) -> Array[Json] raise {
+  guard value is Array(values) else { fail("expected array") }
+  values
+}
+
+///|
+async fn invoke(binary : String, args : Array[String], success? : Bool = true) -> String {
+  let (status, stdout, stderr) = @process.collect_output(binary, args)
+  if success {
+    assert_eq(status, 0, msg=stderr.text())
+    assert_eq(stderr.text(), "")
+  } else {
+    assert_true(status != 0)
+    assert_eq(stdout.text(), "")
+    assert_true(stderr.text().contains("review_slack:"))
+  }
+  stdout.text()
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  assert_eq(args.length(), 4, msg="Usage: verify-slack-import.mbtx <native-command-dir> <source-root> <evidence-dir>")
+  let binaries = args[1]
+  let source = args[2]
+  let evidence = args[3]
+  if !@fs.exists(evidence) { @fs.mkdir(evidence, recursive=true) }
+  let importer = binaries + "/review_slack/review_slack.exe"
+  let composer = binaries + "/review_compose/review_compose.exe"
+  let decider = binaries + "/review_decide/review_decide.exe"
+  let exporter = binaries + "/review_export/review_export.exe"
+  let packet = binaries + "/review_packet/review_packet.exe"
+  let examples = source + "/examples/review-slack"
+  let daily = examples + "/2026-10-13.json"
+  let agenda = examples + "/agenda.json"
+  let plan = examples + "/selections.json"
+  let original_daily = @fs.read_file(daily).binary()
+  let original_agenda = @fs.read_file(agenda).binary()
+  let original_plan = @fs.read_file(plan).binary()
+  let catalog_text = invoke(importer, ["catalog", daily])
+  let catalog = fields(@json.parse(catalog_text))
+  let messages = array(catalog["messages"])
+  assert_eq(messages.length(), 6)
+  assert_eq(fields(messages[0])["selectable"], true.to_json())
+  assert_eq(fields(messages[3])["classification"], "archival_message_changed".to_json())
+  assert_eq(fields(messages[4])["classification"], "archival_message_deleted".to_json())
+  assert_eq(fields(messages[5])["selectable"], false.to_json())
+  guard fields(messages[0])["raw_message"] is String(raw) else { fail("raw") }
+  assert_true(@utf8.decode(original_daily).contains(raw))
+  @fs.write_file(evidence + "/catalog.json", catalog_text, create_mode=CreateOrTruncate)
+  println("PASS 1: actual native catalog preserves six exact record slices and explicit archival/unsupported rows")
+
+  let selected = invoke(importer, ["agenda", agenda, daily, plan])
+  let bundle = invoke(importer, ["bundle", agenda, daily, plan])
+  let preview = invoke(importer, ["preview", agenda, daily, plan])
+  let html = invoke(importer, ["html", agenda, daily, plan])
+  let selected_path = evidence + "/selected-agenda.json"
+  let bundle_path = evidence + "/review.json"
+  @fs.write_file(selected_path, selected, create_mode=CreateOrTruncate)
+  @fs.write_file(bundle_path, bundle, create_mode=CreateOrTruncate)
+  @fs.write_file(evidence + "/preview.md", preview, create_mode=CreateOrTruncate)
+  @fs.write_file(evidence + "/packet.html", html, create_mode=CreateOrTruncate)
+  let parsed = fields(@json.parse(bundle))
+  assert_eq(parsed["source_digest"], catalog["source_digest"])
+  assert_eq(array(parsed["entries"]).length(), 3)
+  assert_eq(array(parsed["required_decisions"]).length(), 2)
+  assert_eq(array(parsed["decision_receipts"]).length(), 0)
+  assert_true(preview.contains("pending_review"))
+  assert_true(preview.contains("research-evidence"))
+  assert_true(preview.contains("U_RELEASE"))
+  assert_true(preview.contains("white_check_mark"))
+  assert_false(preview.contains("Unselected scheduling discussion"))
+  assert_false(preview.contains("Historical replacement text"))
+  assert_eq(bundle, invoke(composer, ["bundle", selected_path, daily]))
+  println("PASS 2: two selected messages plus prior question compose identically through the existing native consumer")
+
+  let form_text = invoke(decider, ["prepare", bundle_path, daily, "ops"])
+  let choices = array(fields(@json.parse(form_text))["choices"])
+  assert_eq(choices.length(), 2)
+  for choice in choices {
+    assert_eq(fields(choice)["outcome"], "".to_json())
+    assert_eq(fields(choice)["receipt_id"], "".to_json())
+  }
+  @fs.write_file(evidence + "/decision-form.json", form_text, create_mode=CreateOrTruncate)
+  assert_eq(preview, invoke(exporter, [bundle_path, daily]))
+  let packet_text = invoke(packet, [bundle_path, daily])
+  assert_eq(html.trim().to_owned(), packet_text.trim().to_owned())
+  assert_true(html.contains("&lt;script&gt;quoted evidence only&lt;/script&gt;"))
+  assert_false(html.contains("<script>quoted evidence only</script>"))
+  assert_false(html.contains("href=\"https://example.invalid/release\""))
+  assert_true(html.contains("Unselected scheduling discussion"))
+  assert_true(html.contains("Historical replacement text"))
+  @fs.write_file(evidence + "/handoff.md", preview, create_mode=CreateOrTruncate)
+  println("PASS 3: existing decision/export/HTML consumers preserve blank choices, literal evidence and whole-source packet disclosure")
+
+  let edited = @json.parse(selected)
+  fields(array(fields(edited)["items"])[1])["body"] = "Curator independently edited the agenda before composing.".to_json()
+  let edited_path = evidence + "/edited-agenda.json"
+  @fs.write_file(edited_path, edited.stringify(indent=2), create_mode=CreateOrTruncate)
+  let edited_bundle = invoke(composer, ["bundle", edited_path, daily])
+  assert_true(edited_bundle.contains("Curator independently edited"))
+  assert_eq(array(fields(@json.parse(edited_bundle))["decision_receipts"]).length(), 0)
+  @fs.write_file(evidence + "/edited-review.json", edited_bundle, create_mode=CreateOrTruncate)
+  println("PASS 4: imported agenda remains independently editable without importing receipts")
+
+  for mode in ["catalog"] { assert_eq(catalog_text, invoke(importer, [mode, daily])) }
+  for mode in ["agenda", "bundle", "preview", "html"] {
+    assert_eq(invoke(importer, [mode, agenda, daily, plan]), invoke(importer, [mode, agenda, daily, plan]))
+  }
+  assert_eq(@fs.read_file(daily).binary(), original_daily)
+  assert_eq(@fs.read_file(agenda).binary(), original_agenda)
+  assert_eq(@fs.read_file(plan).binary(), original_plan)
+  println("PASS 5: deterministic repeated output and exact unchanged input bytes")
+
+  let tmp = @fs.tmpdir(prefix="moonchat-slack-")
+  defer @fs.rmdir(tmp, recursive=true)
+  let changed = tmp + "/changed.json"
+  @fs.write_file(changed, @utf8.decode(original_daily) + "\n", create_mode=CreateNew)
+  for mode in ["agenda", "bundle", "preview", "html"] {
+    ignore(invoke(importer, [mode, agenda, changed, plan], success=false))
+  }
+  for binary in [exporter, packet] {
+    let (status, stdout, _) = @process.collect_output(binary, [bundle_path, changed])
+    assert_true(status != 0)
+    if binary == packet {
+      assert_eq(stdout.text(), "")
+    } else {
+      // The retained legacy Markdown command reports uncaught errors on stdout.
+      // It must not emit a valid handoff, and callers must inspect its status.
+      assert_false(stdout.text().contains("# MoonChat review handoff"))
+    }
+  }
+  println("PASS 6: one-byte source change rejects import and downstream Markdown/HTML consumption")
+
+  let bad_plan = tmp + "/bad-plan.json"
+  for ordinal in [0, 4, 5, 6, 7] {
+    let invalid = @json.parse(@utf8.decode(original_plan))
+    fields(array(fields(invalid)["selections"])[1])["ordinal"] = ordinal.to_json()
+    @fs.write_file(bad_plan, invalid.stringify(), create_mode=CreateOrTruncate)
+    for mode in ["agenda", "bundle", "preview", "html"] {
+      ignore(invoke(importer, [mode, agenda, daily, bad_plan], success=false))
+    }
+  }
+  println("PASS 7: late archival, unsupported and absent selections produce no partial stdout in all modes")
+
+  @fs.write_file(bad_plan, "{", create_mode=TruncateExisting)
+  ignore(invoke(importer, ["agenda", agenda, daily, bad_plan], success=false))
+  ignore(invoke(importer, ["catalog", tmp + "/missing.json"], success=false))
+  ignore(invoke(importer, ["unsupported-mode", agenda, daily, plan], success=false))
+  for text in ["[{}", "[null]", "{\"messages\":[]}", "[{\"text\":1,\"te\\u0078t\":2}]", "[{\"attachments\":[{\"x\":1,\"x\":2}]}]"] {
+    @fs.write_file(changed, text, create_mode=TruncateExisting)
+    ignore(invoke(importer, ["catalog", changed], success=false))
+  }
+  println("PASS 8: malformed plans/files, missing paths, duplicate decoded keys and wrong command modes fail closed")
+
+  let raw_unicode = "{\r\n\"type\":\"message\",\"user\":\"U1\",\"text\":\"café 🌙 [ } \\\" \\u0061\",\"ts\":\"1.000001\",\"thread_ts\":\"0.000001\"\r\n}"
+  @fs.write_file(changed, "[ " + raw_unicode + " ]", create_mode=TruncateExisting)
+  let unicode_catalog = fields(@json.parse(invoke(importer, ["catalog", changed])))
+  assert_eq(fields(array(unicode_catalog["messages"])[0])["raw_message"], raw_unicode.to_json())
+  assert_eq(fields(array(unicode_catalog["messages"])[0])["selectable"], true.to_json())
+  println("PASS 9: native Unicode/CRLF/escape spelling and absent thread-root context remain exact quoted data")
+
+  let invalid = @json.parse(@utf8.decode(original_plan))
+  fields(array(fields(invalid)["selections"])[0])["author"] = "U_RELEASE".to_json()
+  @fs.write_file(bad_plan, invalid.stringify(), create_mode=TruncateExisting)
+  ignore(invoke(importer, ["bundle", agenda, daily, bad_plan], success=false))
+  assert_true(invoke(importer, ["--help"]).contains("No Slack access"))
+  println("PASS 10: recorded Slack user cannot silently become an agenda participant; help documents offline scope")
+
+  let original_plan_text = @utf8.decode(original_plan)
+  for token in ["1.9", "1.00000000000000000000000001", "0.99999999999999999999999999", "10.00000000000000000001e-1"] {
+    @fs.write_file(bad_plan, original_plan_text.replace(old="\"ordinal\": 1", new="\"ordinal\": " + token), create_mode=TruncateExisting)
+    for mode in ["agenda", "bundle", "preview", "html"] {
+      ignore(invoke(importer, [mode, agenda, daily, bad_plan], success=false))
+    }
+  }
+  for token in ["1.0", "10e-1", "0.01e2"] {
+    @fs.write_file(bad_plan, original_plan_text.replace(old="\"ordinal\": 1", new="\"ordinal\": " + token), create_mode=TruncateExisting)
+    assert_eq(invoke(importer, ["bundle", agenda, daily, bad_plan]), bundle)
+  }
+  println("PASS 11: exact numeric ordinal tokens reject fractions before Int conversion and preserve integral decimal/exponent selections")
+
+  assert_eq(fields(@json.parse(selected))["source_digest_constraint"], catalog["source_digest"])
+  assert_eq(fields(@json.parse(edited.stringify()))["source_digest_constraint"], catalog["source_digest"])
+  @fs.write_file(changed, @utf8.decode(original_daily).replace(old="Proposal: release the café update after rollback ownership is confirmed.", new="Do not release. The rollback check failed."), create_mode=TruncateExisting)
+  for candidate in [selected_path, edited_path] {
+    let (status, stdout, stderr) = @process.collect_output(composer, ["bundle", candidate, changed])
+    assert_true(status != 0)
+    assert_false(stdout.text().contains("\"contract_id\""))
+    assert_true((stdout.text() + stderr.text()).contains("agenda source digest constraint"))
+  }
+  let (status, stdout, _) = @process.collect_output(packet, [bundle_path, changed])
+  assert_true(status != 0)
+  assert_eq(stdout.text(), "")
+  println("PASS 12: imported and wording-edited agenda source constraints survive reload and reject stale compose/packet journeys")
+  println("Native Slack workflow: 12 passed, 0 failed.")
+}

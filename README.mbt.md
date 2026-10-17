@@ -54,6 +54,17 @@ coordination.
 
 ## Editable review agendas
 
+For configuration and structured data, [review-linked JSON edits](docs/REVIEW_JSON_EDITS.md)
+replace explicit typed values at canonical pointers and produce a candidate
+artifact with a fresh pending review. Original objections and named questions
+remain visible; historical approvals never transfer.
+
+Need to change the artifact itself in response to an objection? The
+[review-linked text editing workflow](docs/REVIEW_TEXT_EDITS.md) applies explicit
+exact-quote replacements to retained text and exports a candidate artifact plus
+a linked pending review. It preserves every discussion entry and named request;
+earlier approvals never transfer to edited content.
+
 Already have a host-authored bundle but no original agenda? The
 [received-review revision workflow](docs/REVIEW_REVISIONS.md) reopens its
 discussion for editing, preserves host identities, and produces a new pending
@@ -222,3 +233,20 @@ missing cases or ambiguous repeated test names. Select complete before/after row
 into the existing editable agenda while preserving both report digests and earlier
 concerns. See [test-report comparison](docs/REVIEW_JUNIT_COMPARISONS.md). Report
 changes create questions, never test passes, resolved objections or review receipts.
+
+## Local patch review
+
+Catalog saved unified diffs and select file hunks for explicit pending review,
+then edit the agenda or prepare blank named decision forms. See the
+[unified-diff guide](docs/REVIEW_PATCH_IMPORT.md) and
+[tested API example](review/PATCH_IMPORT.mbt.md).
+
+## Local Slack discussion review
+
+Catalog a saved Slack daily JSON array and explicitly select recorded messages
+for curator-authored questions, objections and proposals. Original message JSON,
+recorded IDs, thread timestamps and reactions remain quoted evidence; archival
+edit/deletion rows are visible and cannot be selected as current messages.
+Continue through editable agendas, pending bundles and Markdown/HTML handoffs:
+[Slack import guide](docs/REVIEW_SLACK_IMPORT.md) and
+[tested API example](review/SLACK_IMPORT.mbt.md).

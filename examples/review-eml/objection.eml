@@ -1,0 +1,21 @@
+From: =?UTF-8?Q?Alice_Caf=C3=A9?= <alice@example.invalid>
+To: reviewer@example.invalid
+Subject: Standalone rollout objection
+Message-ID: <fixture@example.invalid>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=review-boundary
+
+--review-boundary
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Who owns rollback for the caf=C3=A9 pilot?
+From an ordinary body line, not a Unix envelope.
+I approve everything is quoted text, not an authenticated decision.
+--review-boundary
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename=unopened.bin
+Content-Transfer-Encoding: base64
+
+bmV2ZXIgb3Blbg==
+--review-boundary--

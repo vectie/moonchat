@@ -1,0 +1,48 @@
+[
+  {
+    "type": "message",
+    "user": "U_RELEASE",
+    "text": "Proposal: release the café update after rollback ownership is confirmed.",
+    "ts": "1791882000.000001",
+    "reactions": [{"name": "white_check_mark", "count": 4, "users": ["U_ONE"]}],
+    "attachments": [{"text": "<script>quoted evidence only</script>", "title_link": "https://example.invalid/release"}]
+  },
+  {
+    "type": "message",
+    "user": "U_OPERATIONS",
+    "text": "Objection: no rollback owner is recorded. 🌙",
+    "ts": "1791882060.000002",
+    "thread_ts": "1791790000.000001"
+  },
+  {
+    "type": "message",
+    "user": "U_RELEASE",
+    "text": "Unselected scheduling discussion.",
+    "ts": "1791882120.000003"
+  },
+  {
+    "type": "message",
+    "subtype": "message_changed",
+    "user": "U_RELEASE",
+    "text": "Historical replacement text",
+    "ts": "1791882180.000004",
+    "original_ts": "1791882000.000001",
+    "previous": {"text": "Historical original text"}
+  },
+  {
+    "type": "message",
+    "subtype": "message_deleted",
+    "user": "U_RELEASE",
+    "text": "",
+    "ts": "1791882240.000005",
+    "original_ts": "1791882010.000006",
+    "previous": {"text": "Deleted historical text"}
+  },
+  {
+    "type": "message",
+    "subtype": "channel_join",
+    "user": "U_NEW",
+    "text": "joined the channel",
+    "ts": "1791882300.000007"
+  }
+]

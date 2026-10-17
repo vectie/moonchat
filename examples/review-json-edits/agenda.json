@@ -1,0 +1,15 @@
+{
+  "review_id": "pilot-config",
+  "conversation_id": "pilot-config-room",
+  "source_artifact_ref": "examples/review-json-edits/source.json",
+  "source_revision_id": "r1",
+  "recorded_at": "2026-10-14T06:00:00Z",
+  "participants": [
+    {"participant_id": "editor", "display_name": "Fixture editor", "participant_kind": "human"},
+    {"participant_id": "ops", "display_name": "Fixture operations lead", "participant_kind": "human"}
+  ],
+  "items": [
+    {"key": "scope", "kind": "objection", "author": "editor", "body": "The first pilot is too broad. Limit users and regions before review.", "evidence_refs": [], "decisions": [{"reviewer": "ops", "prompt": "Is the proposed pilot scope appropriate?"}]},
+    {"key": "owner", "kind": "question", "author": "editor", "body": "Who owns rollback? Keep this question visible after editing.", "evidence_refs": [], "decisions": [{"reviewer": "ops", "prompt": "Is rollback ownership adequately covered?"}]}
+  ]
+}

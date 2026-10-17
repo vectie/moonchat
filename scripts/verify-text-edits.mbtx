@@ -1,0 +1,244 @@
+///|
+import {
+  "moonbitlang/async@0.20.2",
+  "moonbitlang/async@0.20.2/fs",
+  "moonbitlang/async@0.20.2/process",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/x@0.4.50/crypto",
+}
+
+///|
+fn object(value : Json) -> Map[String, Json] raise {
+  guard value is Object(fields) else { fail("expected JSON object") }
+  fields
+}
+
+///|
+fn field(value : Json, key : String) -> Json raise {
+  object(value)[key]
+}
+
+///|
+fn array(value : Json) -> Array[Json] raise {
+  guard value is Array(values) else { fail("expected JSON array") }
+  values
+}
+
+///|
+fn digest(bytes : Bytes) -> String {
+  "sha256:" + @crypto.bytes_to_hex_string(@crypto.sha256(bytes))
+}
+
+///|
+async fn invoke(
+  binary : String,
+  args : Array[String],
+  success? : Bool = true,
+) -> Bytes {
+  let (status, stdout, stderr) = @process.collect_output(binary, args)
+  if success {
+    assert_eq(status, 0, msg=stderr.text())
+  } else {
+    assert_true(status != 0)
+    assert_eq(stdout.binary(), b"")
+    assert_true(stderr.text().contains("review_edit:"))
+  }
+  stdout.binary()
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  assert_eq(
+    args.length(),
+    5,
+    msg="Usage: verify-text-edits.mbtx <editor> <decider> <exporter> <source-root>",
+  )
+  let editor = args[1]
+  let decider = args[2]
+  let exporter = args[3]
+  let source_root = args[4]
+  let tmp = @fs.tmpdir(prefix="moonchat-text-edits-")
+  defer @fs.rmdir(tmp, recursive=true)
+  let previous = tmp + "/previous.json"
+  let source = tmp + "/source.md"
+  let plan = tmp + "/edits.json"
+  let previous_ref = "examples/review-agenda/review.json"
+  let original = @fs.read_file(source_root + "/" + previous_ref).binary()
+  let original_source = @fs.read_file(
+    source_root + "/examples/review-agenda/source.md",
+  ).binary()
+  let original_plan = @fs.read_file(
+    source_root + "/examples/review-text-edits/selected-edits.json",
+  ).binary()
+  @fs.write_file(previous, original, create_mode=CreateNew)
+  @fs.write_file(source, original_source, create_mode=CreateNew)
+  @fs.write_file(plan, original_plan, create_mode=CreateNew)
+  async fn edit(mode : String, success : Bool) -> Bytes {
+    invoke(editor, [mode, plan, previous, source, previous_ref], success~)
+  }
+  async fn write_plan(value : Json) -> Unit {
+    @fs.write_file(plan, value.stringify(), create_mode=TruncateExisting)
+  }
+  fn fresh_plan() -> Json raise {
+    @json.parse(@utf8.decode(original_plan))
+  }
+  let candidate_source = edit("source", true)
+  let candidate_bundle = edit("bundle", true)
+  assert_eq(
+    candidate_source,
+    @fs.read_file(
+      source_root + "/examples/review-text-edits/candidate-source.md",
+    ).binary(),
+  )
+  assert_eq(
+    candidate_bundle,
+    @fs.read_file(
+      source_root + "/examples/review-text-edits/candidate-review.json",
+    ).binary(),
+  )
+  assert_eq(
+    edit("preview", true),
+    @fs.read_file(source_root + "/examples/review-text-edits/preview.md").binary(),
+  )
+  let next = @json.parse(@utf8.decode(candidate_bundle))
+  let old = @json.parse(@utf8.decode(original))
+  assert_eq(field(next, "source_digest"), digest(candidate_source).to_json())
+  assert_eq(field(next, "previous_bundle_digest"), digest(original).to_json())
+  for key in ["entries", "required_decisions", "participants", "conversation"] {
+    assert_eq(field(next, key), field(old, key))
+  }
+  assert_eq(array(field(next, "decision_receipts")).length(), 0)
+  let candidate_path = tmp + "/candidate.md"
+  let review_path = tmp + "/candidate.json"
+  @fs.write_file(candidate_path, candidate_source, create_mode=CreateNew)
+  @fs.write_file(review_path, candidate_bundle, create_mode=CreateNew)
+  let form = @json.parse(
+    @utf8.decode(
+      invoke(decider, ["prepare", review_path, candidate_path, "ops"]),
+    ),
+  )
+  let choices = array(field(form, "choices"))
+  assert_eq(choices.length(), 2)
+  for choice in choices {
+    assert_eq(field(choice, "outcome"), "".to_json())
+  }
+  let report = @utf8.decode(invoke(exporter, [review_path, candidate_path]))
+  assert_true(report.contains("pending_review"))
+  assert_true(report.contains("The source does not name a rollback owner."))
+  println(
+    "PASS 1: actual candidate bytes, bound review and existing native consumers",
+  )
+
+  let catalog = @utf8.decode(invoke(editor, ["catalog", source]))
+  assert_true(catalog.contains(digest(original_source)))
+  assert_true(
+    catalog.contains(
+      "5 | \"Rollback ownership still needs to be assigned.\\n\"",
+    ),
+  )
+  let blank = @json.parse(
+    @utf8.decode(invoke(editor, ["draft", previous, source])),
+  )
+  assert_eq(array(field(blank, "edits")).length(), 0)
+  assert_eq(field(blank, "next_source_revision_id"), "".to_json())
+  assert_eq(field(blank, "base_bundle_digest"), digest(original).to_json())
+  println("PASS 2: catalog and exact-bound empty preparation")
+
+  for mode in ["source", "bundle", "preview"] {
+    assert_eq(edit(mode, true), edit(mode, true))
+  }
+  assert_eq(@fs.read_file(previous).binary(), original)
+  assert_eq(@fs.read_file(source).binary(), original_source)
+  assert_eq(@fs.read_file(plan).binary(), original_plan)
+  println("PASS 3: deterministic exports and unchanged inputs")
+
+  let (status, rejected, _) = @process.collect_output(exporter, [
+    review_path, source,
+  ])
+  assert_true(status != 0)
+  // Existing exporter reports errors on stdout; it must not produce a handoff.
+  assert_false(rejected.text().contains("# MoonChat review handoff"))
+  println("PASS 4: existing consumer rejects mismatching candidate source")
+
+  @fs.write_file(
+    source,
+    @utf8.decode(original_source) + "changed\n",
+    create_mode=TruncateExisting,
+  )
+  for mode in ["source", "bundle", "preview"] {
+    ignore(edit(mode, false))
+  }
+  @fs.write_file(source, original_source, create_mode=TruncateExisting)
+  println("PASS 5: replaced source fails before candidate output")
+
+  @fs.write_file(
+    previous,
+    @utf8.decode(original) + "\n",
+    create_mode=TruncateExisting,
+  )
+  ignore(edit("source", false))
+  @fs.write_file(previous, original, create_mode=TruncateExisting)
+  println("PASS 6: changed predecessor serialization requires new preparation")
+
+  let changed_quote = fresh_plan()
+  object(array(field(changed_quote, "edits"))[0])["quote"] = "Wrong quote\n".to_json()
+  write_plan(changed_quote)
+  ignore(edit("source", false))
+  println("PASS 7: exact quote mismatch fails")
+
+  let overlap = fresh_plan()
+  let duplicate = @json.parse(array(field(overlap, "edits"))[0].stringify())
+  object(duplicate)["key"] = "another-suggestion".to_json()
+  array(field(overlap, "edits")).push(duplicate)
+  write_plan(overlap)
+  ignore(edit("source", false))
+  println("PASS 8: overlapping suggestions require explicit resolution")
+
+  let same_source = fresh_plan()
+  object(same_source)["next_source_artifact_ref"] = "examples/review-agenda/source.md".to_json()
+  write_plan(same_source)
+  ignore(edit("source", false))
+  let same_revision = fresh_plan()
+  object(same_revision)["next_source_revision_id"] = "r1".to_json()
+  write_plan(same_revision)
+  ignore(edit("bundle", false))
+  println("PASS 9: original artifact path and revision cannot be reused")
+
+  let unicode_source = @utf8.encode("café 🌙\r\nold\r\nlast line")
+  @fs.write_file(source, unicode_source, create_mode=TruncateExisting)
+  object(old)["source_digest"] = digest(unicode_source).to_json()
+  @fs.write_file(previous, old.stringify(), create_mode=TruncateExisting)
+  let unicode_plan = @json.parse(
+    @utf8.decode(invoke(editor, ["draft", previous, source])),
+  )
+  let fields = object(unicode_plan)
+  fields["next_source_artifact_ref"] = "next/source.md".to_json()
+  fields["next_source_revision_id"] = "r2".to_json()
+  fields["recorded_at"] = "2026-10-13T03:00:00Z".to_json()
+  fields["edits"] = [
+    {
+      "key": "unicode",
+      "entry_id": "entry-rollback",
+      "start_line": 2,
+      "end_line": 2,
+      "quote": "old\r\n",
+      "replacement": "更新\r\n",
+    },
+  ]
+  write_plan(unicode_plan)
+  assert_eq(
+    edit("source", true),
+    @utf8.encode("café 🌙\r\n更新\r\nlast line"),
+  )
+  println("PASS 10: Unicode, CRLF and no final newline survive native stdout")
+
+  @fs.write_file(plan, "{", create_mode=TruncateExisting)
+  ignore(edit("source", false))
+  @fs.remove(plan)
+  ignore(edit("source", false))
+  println("PASS 11: malformed and missing input emit no candidate")
+  println("Native CLI integration: 11 passed, 0 failed.")
+}

@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from html import escape as html_escape
+import base64
+import hashlib
 
 MAX_PACKET_BYTES = 32 * 1024 * 1024
 MAX_QUOTE_PREVIEW = 2000
@@ -35,11 +37,14 @@ def escape(value: str) -> str:
     return html_escape(value).replace("\r", "&#13;")
 
 
+AUTHOR_STYLE = '.author-compose-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }\n@media (max-width: 55rem) { .author-compose-layout { display: block; } }\n#authoring label { display: block; margin: .6rem 0; }\n#authoring textarea { display: block; width: 95%; }\n#authoring button, #comments button { margin: .3rem; }\n#authoring input, #authoring select { max-width: 95%; }\n[hidden] { display: none !important; }\n'
+
+
 class PacketError(ValueError):
     """The complete packet exceeds its output bound."""
 
 
-def render_packet(catalog: dict, document_text: str, *, planning: dict | None = None) -> str:
+def render_packet(catalog: dict, document_text: str, *, planning: dict | None = None, authoring: dict | None = None) -> str:
     """Return an offline packet; optional draft planning data is prepared by the importer."""
     comments = catalog["comments"]
     output: list[str] = []
@@ -52,19 +57,20 @@ def render_packet(catalog: dict, document_text: str, *, planning: dict | None = 
             raise PacketError("DOCX HTML packet exceeds 32 MiB; no partial packet emitted")
         output.append(value)
 
+    script_policy = ("script-src 'sha256-" + base64.b64encode(hashlib.sha256(authoring["script"].encode("utf-8")).digest()).decode("ascii") + "'; ") if authoring else ""
     add('<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
         '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; '
-        'style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'">'
-        '<title>MoonChat · ' + ('Word review planning packet' if planning else 'Word comment reading packet') +
-        '</title><style>' + STYLE + '</style></head><body>')
-    add('<header id="top"><h1>' + ('Word review planning packet' if planning else 'Word comments in context') + '</h1>'
+        'style-src \'unsafe-inline\'; ' + script_policy + 'base-uri \'none\'; form-action \'none\'">'
+        '<title>MoonChat · ' + ('Word review authoring' if authoring else 'Word review planning packet' if planning else 'Word comment reading packet') +
+        '</title><style>' + STYLE + (AUTHOR_STYLE if authoring else '') + '</style></head><body>')
+    add('<header id="top"><h1>' + ('Word review authoring' if authoring else 'Word review planning packet' if planning else 'Word comments in context') + '</h1>'
         '<p>A local MoonChat reading packet of classic Word comments and logical document text.</p>'
         '<p class="notice"><strong>Evidence only.</strong> Displayed authors and dates are unverified '
         'document metadata. Comments, including words such as “approved,” are not human decision '
         'receipts. This packet neither validates a review bundle nor changes review status.</p>'
         '<p>This is logical text, not Word layout: formatting, numbering and hidden-text visibility '
-        'are not rendered. All main-body text is included. Nothing is fetched or executed.</p><dl>')
+        'are not rendered. All main-body text is included. ' + ('Only the local authoring controls execute; nothing is fetched.' if authoring else 'Nothing is fetched or executed.') + '</p><dl>')
     for label, value in (("Exact DOCX SHA-256", catalog["document_digest"]),
                          ("Document part", catalog["document_part"]),
                          ("Document XML SHA-256", catalog["document_xml_digest"]),
@@ -85,6 +91,8 @@ def render_packet(catalog: dict, document_text: str, *, planning: dict | None = 
         add('<li><a href="#comment-' + identity + '">Comment ' + identity + '</a> · <bdi>' +
             escape(label) + '</bdi> · <a href="#source-' + identity + '">Source</a></li>')
     add('</ul></nav>')
+    if authoring:
+        add(authoring["markup"])
     if planning:
         from review_docx_plan import render_planning
         add(render_planning(planning))
@@ -132,6 +140,8 @@ def render_packet(catalog: dict, document_text: str, *, planning: dict | None = 
         begin, end = item["start_offset"], item["end_offset"]
         add('<article id="comment-' + identity + '" aria-labelledby="heading-' + identity +
             '"><h3 id="heading-' + identity + '">Comment ' + identity + '</h3>')
+        if authoring:
+            add('<p><button type="button" id="author-select-' + identity + '">Select for review</button> · <a href="#authoring">Authoring controls</a></p>')
         if planning:
             target = planning['comment_links'].get(identity)
             add('<p><a href="#' + target + '">Read proposed review item and decisions</a></p>' if target else
@@ -141,9 +151,9 @@ def render_packet(catalog: dict, document_text: str, *, planning: dict | None = 
             add('<dt>' + label + '</dt><dd><bdi>' + escape(item[key] or "Not recorded") + '</bdi></dd>')
         add('<dt>Anchor</dt><dd>' + item["anchor_kind"] + ' · [' + str(begin) + ', ' + str(end) +
             ') · <a href="#source-' + identity + '">Go to source</a></dd></dl><h4>Comment text</h4>'
-            '<pre class="comment-text"><span></span>' + escape(item["text"]) + '</pre>')
+            '<pre class="comment-text"' + (' id="author-original-text-' + identity + '"' if authoring else '') + '><span></span>' + escape(item["text"]) + '</pre>')
         if end > begin:
-            add('<h4>Anchored passage</h4><pre class="quote"><span></span>' + escape(item["quote"]) + '</pre>')
+            add('<h4>Anchored passage</h4><pre class="quote"' + (' id="author-quote-text-' + identity + '"' if authoring else '') + '><span></span>' + escape(item["quote"]) + '</pre>')
             omitted = end - begin - len(item["quote"])
             if omitted:
                 add('<p class="muted">Excerpt stops after ' + str(MAX_QUOTE_PREVIEW) +
@@ -158,5 +168,5 @@ def render_packet(catalog: dict, document_text: str, *, planning: dict | None = 
     add('</section></main><footer><p>Keep this reading packet with the exact original DOCX. '
         'A later Word save changes its digest and requires a new packet. Use the existing catalog '
         'and explicit selection plan to import comments into a pending agenda; this packet does '
-        + ('not verify' if planning else 'not supply') + ' participants, decision owners or receipts.</p></footer></body></html>\n')
+        + ('not verify' if planning else 'not supply') + ' participants, decision owners or receipts.</p></footer>' + ('<script>' + authoring['script'] + '</script>' if authoring else '') + '</body></html>\n')
     return "".join(output)

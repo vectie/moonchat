@@ -1,0 +1,21 @@
+{
+  "review_id": "release-patch",
+  "conversation_id": "release-patch-room",
+  "source_artifact_ref": "examples/review-patch/changes.diff",
+  "source_revision_id": "patch-r1",
+  "recorded_at": "2026-10-13T05:30:00Z",
+  "participants": [
+    { "participant_id": "editor", "display_name": "Fixture editor", "participant_kind": "human" },
+    { "participant_id": "ops", "display_name": "Fixture operator", "participant_kind": "human" }
+  ],
+  "items": [
+    {
+      "key": "deployment-window",
+      "kind": "question",
+      "author": "editor",
+      "body": "Which deployment window will use this patch?",
+      "evidence_refs": [],
+      "decisions": []
+    }
+  ]
+}

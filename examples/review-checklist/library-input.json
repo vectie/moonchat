@@ -1,0 +1,19 @@
+{
+  "format": "moonchat.review-checklist-input.v1",
+  "checklist_id": "release-readiness",
+  "review_id": "library-release-r7",
+  "conversation_id": "library-release-review",
+  "source_artifact_ref": "examples/review-checklist/library.md",
+  "source_revision_id": "r7",
+  "source_digest": "sha256:8b649cec6cda39c38329030e06084cfbe8f6cb9f0cdb87714c88c6aed445cf5f",
+  "recorded_at": "2026-10-13T08:05:00Z",
+  "participants": [
+    {"participant_id": "writer", "display_name": "Synthetic preparation assistant", "participant_kind": "agent"},
+    {"participant_id": "sam", "display_name": "Sam, synthetic operator", "participant_kind": "human"}
+  ],
+  "role_assignments": [
+    {"role": "writer", "participant_id": "writer"},
+    {"role": "operator", "participant_id": "sam"}
+  ],
+  "values": [{"variable": "product", "value": "Library"}, {"variable": "window", "value": "Friday"}]
+}

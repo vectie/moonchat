@@ -1,0 +1,6 @@
+{
+  "pilot": {"enabled": true, "max_users": 500, "rollback_owner": null},
+  "regions": ["west", "east"],
+  "allocation_id": 9007199254740993,
+  "reference_ratio": 1.00000000000000001
+}

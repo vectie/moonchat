@@ -1,0 +1,20 @@
+{
+  "review_id": "srt-pilot",
+  "conversation_id": "srt-pilot-review",
+  "source_artifact_ref": "examples/review-srt/meeting.srt",
+  "source_revision_id": "srt-r1",
+  "recorded_at": "2026-10-14T08:00:00Z",
+  "participants": [
+    {
+      "participant_id": "curator",
+      "display_name": "Fixture curator",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations reviewer",
+      "participant_kind": "human"
+    }
+  ],
+  "items": []
+}

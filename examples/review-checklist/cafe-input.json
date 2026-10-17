@@ -1,0 +1,19 @@
+{
+  "format": "moonchat.review-checklist-input.v1",
+  "checklist_id": "release-readiness",
+  "review_id": "cafe-release-r1",
+  "conversation_id": "cafe-release-review",
+  "source_artifact_ref": "examples/review-checklist/cafe.md",
+  "source_revision_id": "r1",
+  "source_digest": "sha256:6aec9ff3d4c0cb6a928281ddead2fca580da9fcb2d66b18542b169a22cda5597",
+  "recorded_at": "2026-10-13T08:00:00Z",
+  "participants": [
+    {"participant_id": "assistant", "display_name": "Synthetic preparation assistant", "participant_kind": "agent"},
+    {"participant_id": "mei", "display_name": "Mei, synthetic operator", "participant_kind": "human"}
+  ],
+  "role_assignments": [
+    {"role": "writer", "participant_id": "assistant"},
+    {"role": "operator", "participant_id": "mei"}
+  ],
+  "values": [{"variable": "product", "value": "Café 🌙"}, {"variable": "window", "value": "Tuesday"}]
+}

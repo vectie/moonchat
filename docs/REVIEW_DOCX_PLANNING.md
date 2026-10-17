@@ -124,3 +124,77 @@ reading-packet and comparison regressions also run. These are Python/HTML-model
 checks. Native MoonBit compilation/execution, real browser and Word rendering,
 accessibility devices, human decisions and receiving-product integration remain
 unqualified. R50 remains last fully verified cumulative; R51–55 remain separate.
+
+## Author selections in the local packet
+
+The explicit `--authoring` option adds interactive curation to the same source
+packet. The default remains the existing script-free, byte-compatible reading
+view. No plan file is required when starting a new authoring session:
+
+```sh
+python -B tools/review_docx/review_docx.py plan-packet examples/review-docx-plan/agenda.json examples/review-docx/launch.docx --authoring > authoring.html
+```
+
+You can optionally pass an existing `moonchat.docx-review.v1` recipe before
+`--authoring` to resume it. The producer checks it through the same DOCX parser
+and `import_comments` path with full quoted evidence; an invalid or stale seed
+emits no page. This does not import a review bundle or any human decisions.
+
+1. Open the local HTML and read the exact source identity and original agenda.
+   Every comment, including omitted dissent and unverified automated assertions,
+   remains present. Choose **Select for review** on a comment card. Source and
+   original-comment links in the editor use the existing exact anchors.
+2. Supply a unique stable key, question/objection/proposal kind, existing agenda
+   author and curator note. Add or remove decision requests; each request needs
+   an existing named human and a complete prompt. Equal display names retain
+   distinct participant IDs. An objection requires a request.
+3. **Apply selection** stores the draft item in this page session. **Cancel item
+   edit** keeps the previous applied item, or drops an uncommitted new selection.
+   Another selection, reorder, removal or export cannot replace an open edit;
+   apply or cancel it first. Reading source links does not discard the edit.
+4. Reorder or remove applied selections. Existing agenda items remain first and
+   unchanged. Repeated selection focuses the same editor; repeated Apply cannot
+   duplicate a comment. Removed comments remain visible as original evidence.
+5. **Preview selection recipe** shows the exact JSON that **Download
+   selections.json** requests. Any edit, selection, cancel, removal or reorder
+   invalidates that preview. Download failure leaves the draft and preview
+   available; a download request is not confirmation that a file was saved.
+6. Keep the saved recipe, original pre-import agenda and exact DOCX. Pass all
+   three through the existing `agenda`, `preview` or `bundle` CLI with a trusted
+   absolute native composer path, as above. Reopening a seed preserves its
+   choices; no browser-storage recovery or recipe upload control is provided.
+
+Only the unchanged `moonchat.docx-review.v1` selection recipe is downloaded.
+The file binds the original archive SHA-256; it does not add an agenda hash or
+claim that a later on-disk document is unchanged. The page separately displays
+the exact input agenda hash and optional seed hash. The normal importer rejects
+a different DOCX digest. Native validation still owns timestamps, portable
+references, required-decision semantics and pending-bundle production.
+
+Authoring uses one hash-authorized inline script, with `default-src 'none'`,
+no external resources, network requests, storage, authentication or source-file
+writes. Bootstrap JSON escapes HTML script delimiters; authored content is
+assigned to DOM text/value properties, never interpreted as markup. No reviewer
+is authenticated and no human decision or receipt is collected. All changes
+are local and ephemeral. A best-effort navigation warning is available, but
+browsers may suppress it: save the recipe before closing or refreshing.
+
+The UI checks 1–100 unique comment selections, safe noncolliding keys, required
+fields, existing authors, distinct human reviewers per item, 4 MiB UTF-8 recipe
+output and 16 MiB imported-body bytes. It uses exact Python-computed evidence
+costs (including full long/overlapping quotes) without embedding those quotes
+again in the script. The complete source page remains bounded at 32 MiB.
+No new Python/JavaScript package or native schema is required.
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python -B -m unittest discover -s tools/review_docx -p 'test_*.py' -v
+node tools/review_docx/test_review_docx_author.cjs /tmp/new-selections.json
+```
+
+The Node harness invokes the real Python CLI and drives actual emitted controls
+with a lightweight DOM model. It covers editing, interruptions, repeated
+controls, reviewer identity, text injection, limits and failed downloads. It
+can retain the exact UI-authored recipe for the real native consumer checks.
+This is not a real-browser layout, CSP-enforcement, download-save, keyboard or
+assistive-technology qualification. Core preparation does not complete the
+MoonFind/MoonProj hosted-review or receipt-return PRD gates.

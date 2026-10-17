@@ -1,0 +1,10 @@
+{
+  "review_id": "email-pilot", "conversation_id": "email-pilot-review",
+  "source_artifact_ref": "examples/review-eml/objection.eml", "source_revision_id": "eml-r1",
+  "recorded_at": "2026-10-14T08:00:00Z",
+  "participants": [
+    {"participant_id":"curator","display_name":"Fixture curator","participant_kind":"agent"},
+    {"participant_id":"ops","display_name":"Fixture operations reviewer","participant_kind":"human"}
+  ],
+  "items": []
+}

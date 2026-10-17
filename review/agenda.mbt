@@ -5,6 +5,8 @@ pub(all) struct ReviewAgenda {
   conversation_id : String
   source_artifact_ref : String
   source_revision_id : String
+  // Empty for legacy authoring; imports constrain retained evidence to bytes.
+  source_digest_constraint : String
   recorded_at : String
   participants : Array[ReviewParticipant]
   items : Array[ReviewAgendaItem]
@@ -34,6 +36,7 @@ pub fn compile_review_agenda(
   agenda : ReviewAgenda,
   source_bytes : Bytes,
 ) -> ConversationReviewBundle raise {
+  validate_agenda_source_constraint(agenda, source_bytes)
   let entries : Array[ReviewEntry] = []
   let decisions : Array[RequiredDecision] = []
   let keys : Map[String, Bool] = {}
@@ -93,5 +96,27 @@ pub fn compile_review_agenda(
 
 ///|
 pub fn parse_review_agenda(text : String) -> ReviewAgenda raise {
-  @json.from_json(@json.parse(text))
+  let value = @json.parse(text)
+  json_review_unique_keys(text)
+  guard value is Object(fields) else { fail("review agenda must be an object") }
+  if !fields.contains("source_digest_constraint") {
+    fields["source_digest_constraint"] = "".to_json()
+  }
+  @json.from_json(value)
+}
+
+///|
+fn validate_agenda_source_constraint(
+  agenda : ReviewAgenda,
+  bytes : Bytes,
+) -> Unit raise {
+  if !agenda.source_digest_constraint.is_empty() &&
+    (
+      !sha256_digest(agenda.source_digest_constraint) ||
+      agenda.source_digest_constraint != review_source_digest(bytes)
+    ) {
+    fail(
+      "agenda source digest constraint does not match supplied source bytes; recatalog and explicitly reselect imported evidence",
+    )
+  }
 }

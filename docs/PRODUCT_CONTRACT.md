@@ -101,3 +101,34 @@ MoonChat is now a callable contract pack, not a standalone application.
 Promotion to a user-facing application is still unjustified. A future UI would
 require a distinct user journey that cannot be cleanly projected by an
 existing host; repository existence alone is not a reason to create one.
+
+## Explicit decision completion
+
+The [decision-form workflow](REVIEW_DECISIONS.md) prepares source-bound blank
+choices with retained objections and validates local unverified submissions.
+The host-only application API requires an independently verified reviewer
+identity and preserves other decisions. The CLI cannot create qualifying
+receipts; authentication, storage and receipt return remain host responsibilities.
+
+## Local transcript evidence intake
+
+The [WebVTT workflow](REVIEW_VTT_IMPORT.md) binds selected timestamped meeting
+cues to exact original transcript bytes through the existing agenda composer.
+Selections create pending review requirements, never authenticated speaker
+claims or reviewer receipts. The consuming host still owns identity and acceptance.
+
+## Candidate source editing
+
+The [review-linked text editing workflow](REVIEW_TEXT_EDITS.md) turns explicit
+exact-quote replacements into candidate UTF-8 content and a pending linked
+revision. It retains all discussion and named requests without declaring any
+objection resolved. The original review and receipts remain historical evidence;
+the producer still owns storage, authenticated decisions and receipt delivery.
+
+## Local patch review intake
+
+The [unified-diff workflow](REVIEW_PATCH_IMPORT.md) catalogs a saved textual patch
+and turns explicitly selected file hunks into editable pending review items.
+Exact patch bytes, literal file headers, additions/deletions and hunk coordinates
+remain bound as evidence. No patch is applied and no checkout or approval is
+inferred. Existing composition and decision-form consumers accept the result.

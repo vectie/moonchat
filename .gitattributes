@@ -1,0 +1,3 @@
+# This golden fixture preserves the exact existing Markdown renderer output.
+# Indented empty source lines and its final separator are intentional bytes.
+examples/review-text-edits/preview.md whitespace=-blank-at-eol,-blank-at-eof
