@@ -1,0 +1,69 @@
+{
+  "contract_id": "moonchat.conversation-review-bundle.v1",
+  "review_id": "pilot-config",
+  "source_artifact_ref": "examples/review-json-edits/source.json",
+  "source_digest": "sha256:dd697ea432593cb3f172271b3b434aafc3171eb213865fc8cf052099676f4484",
+  "source_revision_id": "r1",
+  "previous_bundle_ref": "",
+  "previous_bundle_digest": "",
+  "conversation": {
+    "contract_id": "moonsuite-conversation.v2",
+    "protocol": "moonchat.review-agenda.v1",
+    "product_id": "moonchat",
+    "conversation_id": "pilot-config-room"
+  },
+  "participants": [
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "entry-scope",
+      "entry_kind": "objection",
+      "author_participant_id": "editor",
+      "turn": {
+        "turn_id": "turn-scope",
+        "client_turn_id": "client-scope",
+        "command_id": "command-scope"
+      },
+      "body": "The first pilot is too broad. Limit users and regions before review.",
+      "evidence_refs": []
+    },
+    {
+      "entry_id": "entry-owner",
+      "entry_kind": "question",
+      "author_participant_id": "editor",
+      "turn": {
+        "turn_id": "turn-owner",
+        "client_turn_id": "client-owner",
+        "command_id": "command-owner"
+      },
+      "body": "Who owns rollback? Keep this question visible after editing.",
+      "evidence_refs": []
+    }
+  ],
+  "required_decisions": [
+    {
+      "decision_id": "decision-5-scope-ops",
+      "subject_entry_id": "entry-scope",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is the proposed pilot scope appropriate?"
+    },
+    {
+      "decision_id": "decision-5-owner-ops",
+      "subject_entry_id": "entry-owner",
+      "reviewer_participant_id": "ops",
+      "prompt": "Is rollback ownership adequately covered?"
+    }
+  ],
+  "decision_receipts": [],
+  "recorded_at": "2026-10-14T06:00:00Z"
+}

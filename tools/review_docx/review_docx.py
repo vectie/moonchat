@@ -445,7 +445,8 @@ def main(argv=None) -> int:
     planning = sub.add_parser("plan-packet", help="read proposed agenda decisions beside exact DOCX passages; draft only")
     planning.add_argument("agenda", type=pathlib.Path)
     planning.add_argument("document", type=pathlib.Path)
-    planning.add_argument("plan", type=pathlib.Path)
+    planning.add_argument("plan", type=pathlib.Path, nargs="?")
+    planning.add_argument("--authoring", action="store_true", help="explicitly enable local selection/note/prompt editing and recipe download")
     for mode in ("agenda", "preview", "bundle"):
         command = sub.add_parser(mode, help="select comments and validate through the existing native MoonChat composer")
         command.add_argument("agenda", type=pathlib.Path)
@@ -477,9 +478,16 @@ def main(argv=None) -> int:
             sys.stdout.write(result)
             return 0
         if args.mode == "plan-packet":
-            from review_docx_plan import planning_packet
-            result = planning_packet(bounded_read(args.agenda, MAX_JSON), data,
-                                     bounded_read(args.plan, MAX_JSON))
+            if args.authoring:
+                from review_docx_author import authoring_packet
+                result = authoring_packet(bounded_read(args.agenda, MAX_JSON), data,
+                                          bounded_read(args.plan, MAX_JSON) if args.plan else None)
+            else:
+                from review_docx_plan import planning_packet
+                if args.plan is None:
+                    raise IntakeError("plan-packet requires a plan unless --authoring is explicit")
+                result = planning_packet(bounded_read(args.agenda, MAX_JSON), data,
+                                         bounded_read(args.plan, MAX_JSON))
             sys.stdout.write(result)
             return 0
         if args.mode == "packet":

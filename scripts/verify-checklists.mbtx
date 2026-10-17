@@ -1,0 +1,144 @@
+///|
+import {
+  "moonbitlang/async@0.20.2",
+  "moonbitlang/async@0.20.2/fs",
+  "moonbitlang/async@0.20.2/process",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+}
+
+///|
+fn fields(value : Json) -> Map[String, Json] raise {
+  guard value is Object(fields) else { fail("expected object") }
+  fields
+}
+
+///|
+fn array(value : Json) -> Array[Json] raise {
+  guard value is Array(values) else { fail("expected array") }
+  values
+}
+
+///|
+async fn invoke(binary : String, args : Array[String], success? : Bool = true) -> String {
+  let (status, stdout, stderr) = @process.collect_output(binary, args)
+  if success {
+    assert_eq(status, 0, msg=stderr.text())
+    assert_eq(stderr.text(), "")
+  } else {
+    assert_true(status != 0)
+    assert_eq(stdout.text(), "")
+    assert_true(stderr.text().contains("review_checklist:"))
+  }
+  stdout.text()
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  assert_eq(args.length(), 4)
+  let binaries = args[1]
+  let source = args[2]
+  let evidence = args[3]
+  if !@fs.exists(evidence) { @fs.mkdir(evidence, recursive=true) }
+  let command = binaries + "/review_checklist/review_checklist.exe"
+  let composer = binaries + "/review_compose/review_compose.exe"
+  let decider = binaries + "/review_decide/review_decide.exe"
+  let exporter = binaries + "/review_export/review_export.exe"
+  let examples = source + "/examples/review-checklist"
+  let template = examples + "/release-checklist.json"
+  let originals : Map[String, Bytes] = Map([])
+  for name in ["release-checklist.json", "cafe-input.json", "library-input.json", "cafe.md", "library.md"] {
+    originals[name] = @fs.read_file(examples + "/" + name).binary()
+  }
+  let catalog = invoke(command, ["catalog", template])
+  assert_eq(array(fields(@json.parse(catalog))["roles"]).length(), 2)
+  assert_eq(array(fields(@json.parse(catalog))["variables"]).length(), 2)
+  assert_true(catalog.contains("launch/decision/operator"))
+  @fs.write_file(evidence + "/catalog.json", catalog, create_mode=CreateOrTruncate)
+  println("PASS 1: native catalog explains role responsibilities and actual variable use")
+
+  let bundles : Array[Json] = []
+  for sample in ["cafe", "library"] {
+    let input = examples + "/" + sample + "-input.json"
+    let artifact = examples + "/" + sample + ".md"
+    let agenda = invoke(command, ["agenda", template, input, artifact])
+    let bundle = invoke(command, ["bundle", template, input, artifact])
+    let preview = invoke(command, ["preview", template, input, artifact])
+    let agenda_path = evidence + "/" + sample + "-agenda.json"
+    let bundle_path = evidence + "/" + sample + "-bundle.json"
+    @fs.write_file(agenda_path, agenda, create_mode=CreateOrTruncate)
+    @fs.write_file(bundle_path, bundle, create_mode=CreateOrTruncate)
+    @fs.write_file(evidence + "/" + sample + "-preview.md", preview, create_mode=CreateOrTruncate)
+    assert_eq(bundle, invoke(composer, ["bundle", agenda_path, artifact]))
+    assert_eq(bundle, invoke(command, ["bundle", template, input, artifact]))
+    assert_true(preview.contains("pending_review"))
+    let parsed = @json.parse(bundle)
+    bundles.push(parsed)
+    assert_eq(array(fields(parsed)["entries"]).length(), 3)
+    assert_eq(array(fields(parsed)["required_decisions"]).length(), 2)
+    assert_eq(array(fields(parsed)["decision_receipts"]).length(), 0)
+    assert_eq(fields(parsed)["previous_bundle_ref"], "".to_json())
+    assert_eq(fields(parsed)["source_digest"], invoke(command, ["digest", artifact]).trim().to_owned().to_json())
+    let reviewer = if sample == "cafe" { "mei" } else { "sam" }
+    let form = invoke(decider, ["prepare", bundle_path, artifact, reviewer])
+    for choice in array(fields(@json.parse(form))["choices"]) {
+      assert_eq(fields(choice)["outcome"], "".to_json())
+      assert_eq(fields(choice)["receipt_id"], "".to_json())
+    }
+    @fs.write_file(evidence + "/" + sample + "-decisions.json", form, create_mode=CreateOrTruncate)
+    let handoff = invoke(exporter, [bundle_path, artifact])
+    assert_true(handoff.contains("rollback owner"))
+    @fs.write_file(evidence + "/" + sample + "-handoff.md", handoff, create_mode=CreateOrTruncate)
+  }
+  assert_true(fields(bundles[0])["source_digest"] != fields(bundles[1])["source_digest"])
+  assert_true(fields(bundles[0])["review_id"] != fields(bundles[1])["review_id"])
+  assert_true(fields(bundles[0])["source_revision_id"] != fields(bundles[1])["source_revision_id"])
+  println("PASS 2: one checklist creates two separately bound pending reviews through the existing composer")
+  println("PASS 3: both named-human decision forms and readable handoffs stay blank and source-bound")
+
+  let tmp = @fs.tmpdir(prefix="moonchat-checklist-")
+  defer @fs.rmdir(tmp, recursive=true)
+  let edited = @json.parse(@fs.read_file(evidence + "/cafe-agenda.json").text())
+  fields(array(fields(edited)["items"])[0])["body"] = "Hold this synthetic release until rollback has an owner.".to_json()
+  let edited_path = tmp + "/edited-agenda.json"
+  @fs.write_file(edited_path, edited.stringify(), create_mode=CreateNew)
+  let composed = invoke(composer, ["bundle", edited_path, examples + "/cafe.md"])
+  assert_true(composed.contains("Hold this synthetic release"))
+  @fs.write_file(evidence + "/cafe-edited-bundle.json", composed, create_mode=CreateOrTruncate)
+  println("PASS 4: materialized agenda remains editable by the existing workflow")
+
+  let bad_input = tmp + "/bad-input.json"
+  for field in ["values", "role_assignments"] {
+    let incomplete = @json.parse(@fs.read_file(examples + "/cafe-input.json").text())
+    fields(incomplete)[field] = ([] : Array[Json]).to_json()
+    @fs.write_file(bad_input, incomplete.stringify(), create_mode=CreateOrTruncate)
+    for mode in ["agenda", "bundle", "preview"] {
+      ignore(invoke(command, [mode, template, bad_input, examples + "/cafe.md"], success=false))
+    }
+  }
+  println("PASS 5: missing values or role assignments produce no partial stdout in any mode")
+
+  for mode in ["agenda", "bundle", "preview"] {
+    ignore(invoke(command, [mode, template, examples + "/cafe-input.json", examples + "/library.md"], success=false))
+  }
+  let malformed = tmp + "/malformed.json"
+  @fs.write_file(malformed, "{", create_mode=CreateNew)
+  ignore(invoke(command, ["catalog", malformed], success=false))
+  ignore(invoke(command, ["catalog", tmp + "/missing.json"], success=false))
+  println("PASS 6: changed source bytes, malformed checklist and missing file fail without an artifact")
+
+  let literal = @json.parse(@fs.read_file(examples + "/cafe-input.json").text())
+  fields(array(fields(literal)["values"])[0])["value"] = "Café 🌙 ${window}\nsecond line".to_json()
+  @fs.write_file(bad_input, literal.stringify(), create_mode=CreateOrTruncate)
+  let literal_agenda = invoke(command, ["agenda", template, bad_input, examples + "/cafe.md"])
+  assert_true(literal_agenda.contains("Café 🌙 ${window}"))
+  @fs.write_file(evidence + "/literal-values-agenda.json", literal_agenda, create_mode=CreateOrTruncate)
+  println("PASS 7: inserted Unicode and multiline values are literal, never evaluated as templates")
+
+  for name, bytes in originals {
+    assert_eq(@fs.read_file(examples + "/" + name).binary(), bytes)
+  }
+  println("PASS 8: repeatable read-only CLI leaves every reusable checklist and sample input unchanged")
+  println("Native checklist workflow: 8 passed, 0 failed.")
+}

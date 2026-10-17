@@ -1,0 +1,14 @@
+{
+  "format": "moonchat.review-json-edits.v1",
+  "base_bundle_digest": "sha256:87b94502e4e032a0f98bd204828c346f9d3b351d036741238faf81bcf471471b",
+  "source_digest": "sha256:dd697ea432593cb3f172271b3b434aafc3171eb213865fc8cf052099676f4484",
+  "next_source_artifact_ref": "examples/review-json-edits/candidate-source.json",
+  "next_source_revision_id": "r2",
+  "recorded_at": "2026-10-14T06:30:00Z",
+  "edits": [
+    {"key": "disable-pending-review", "entry_id": "entry-scope", "pointer": "/pilot/enabled", "expected_value": true, "replacement": false},
+    {"key": "bound-pilot", "entry_id": "entry-scope", "pointer": "/pilot/max_users", "expected_value": 500, "replacement": 50},
+    {"key": "name-owner", "entry_id": "entry-owner", "pointer": "/pilot/rollback_owner", "expected_value": null, "replacement": "Operations lead"},
+    {"key": "west-only", "entry_id": "entry-scope", "pointer": "/regions", "expected_value": ["west", "east"], "replacement": ["west"]}
+  ]
+}

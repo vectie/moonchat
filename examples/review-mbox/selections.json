@@ -1,0 +1,32 @@
+{
+  "format": "moonchat.mbox-review.v1",
+  "mailbox_digest": "sha256:c8feffb25557af71f00cd14f31ced09d8458077a4ca56977da86df7e09e45bad",
+  "messages": [
+    {
+      "ordinal": 2,
+      "key": "mail-rollback",
+      "kind": "objection",
+      "author": "assistant",
+      "note": "The recorded thread leaves rollback ownership unresolved. Please review it explicitly.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is rollback ownership sufficiently defined for the pilot?"
+        }
+      ]
+    },
+    {
+      "ordinal": 1,
+      "key": "mail-scope",
+      "kind": "question",
+      "author": "editor",
+      "note": "Does the recorded pilot scope match the intended experiment?",
+      "decisions": [
+        {
+          "reviewer": "editor",
+          "prompt": "Is the scope suitable?"
+        }
+      ]
+    }
+  ]
+}

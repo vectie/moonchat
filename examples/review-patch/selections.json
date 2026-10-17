@@ -1,0 +1,16 @@
+{
+  "format": "moonchat.review-patch.v1",
+  "source_digest": "sha256:859b6c92441d7b5784640510b6f97038a0020d738163d5762423de9a7d82c346",
+  "selections": [
+    {
+      "file": 1, "hunk": 1, "key": "assign-owner", "kind": "proposal", "author": "editor",
+      "note": "Confirm the named rollout owner before applying these changes.",
+      "decisions": [{ "reviewer": "ops", "prompt": "Is this owner assignment correct?" }]
+    },
+    {
+      "file": 2, "hunk": 1, "key": "checklist", "kind": "question", "author": "editor",
+      "note": "Check that the new checklist covers the operator handoff.",
+      "decisions": [{ "reviewer": "ops", "prompt": "Is this checklist sufficient?" }]
+    }
+  ]
+}

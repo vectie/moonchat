@@ -1,0 +1,147 @@
+///|
+import {
+  "moonbitlang/async@0.20.2",
+  "moonbitlang/async@0.20.2/fs",
+  "moonbitlang/async@0.20.2/process",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/core/encoding/utf8",
+}
+
+///|
+fn fields(value : Json) -> Map[String, Json] raise {
+  guard value is Object(fields) else { fail("expected object") }
+  fields
+}
+
+///|
+fn array(value : Json) -> Array[Json] raise {
+  guard value is Array(values) else { fail("expected array") }
+  values
+}
+
+///|
+async fn invoke(binary : String, args : Array[String], success? : Bool = true) -> String {
+  let (status, stdout, stderr) = @process.collect_output(binary, args)
+  if success {
+    assert_eq(status, 0, msg=stderr.text())
+    assert_eq(stderr.text(), "")
+  } else {
+    assert_true(status != 0)
+    assert_eq(stdout.text(), "")
+    assert_true(stderr.text().contains("review_patch:"))
+  }
+  stdout.text()
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  assert_eq(args.length(), 4, msg="Usage: verify-patch-import.mbtx <native-command-dir> <source-root> <evidence-dir>")
+  let binaries = args[1]
+  let source = args[2]
+  let evidence = args[3]
+  if !@fs.exists(evidence) { @fs.mkdir(evidence, recursive=true) }
+  let importer = binaries + "/review_patch/review_patch.exe"
+  let composer = binaries + "/review_compose/review_compose.exe"
+  let decider = binaries + "/review_decide/review_decide.exe"
+  let exporter = binaries + "/review_export/review_export.exe"
+  let examples = source + "/examples/review-patch"
+  let patch = examples + "/changes.diff"
+  let agenda = examples + "/agenda.json"
+  let plan = examples + "/selections.json"
+  let original_patch = @fs.read_file(patch).binary()
+  let original_agenda = @fs.read_file(agenda).binary()
+  let original_plan = @fs.read_file(plan).binary()
+  let catalog_text = invoke(importer, ["catalog", patch])
+  let catalog = @json.parse(catalog_text)
+  let files = array(fields(catalog)["files"])
+  assert_eq(files.length(), 2)
+  assert_eq(array(fields(files[0])["hunks"]).length(), 2)
+  assert_eq(array(fields(files[1])["hunks"]).length(), 1)
+  @fs.write_file(evidence + "/catalog.json", catalog_text, create_mode=CreateOrTruncate)
+  println("PASS 1: native catalog retains two files and three complete hunks")
+
+  let selected = invoke(importer, ["agenda", agenda, patch, plan])
+  let bundle = invoke(importer, ["bundle", agenda, patch, plan])
+  let preview = invoke(importer, ["preview", agenda, patch, plan])
+  let selected_path = evidence + "/selected-agenda.json"
+  let bundle_path = evidence + "/review.json"
+  @fs.write_file(selected_path, selected, create_mode=CreateOrTruncate)
+  @fs.write_file(bundle_path, bundle, create_mode=CreateOrTruncate)
+  @fs.write_file(evidence + "/preview.md", preview, create_mode=CreateOrTruncate)
+  let parsed = fields(@json.parse(bundle))
+  assert_eq(parsed["source_digest"], fields(catalog)["source_digest"])
+  assert_eq(array(parsed["entries"]).length(), 3)
+  assert_eq(array(parsed["required_decisions"]).length(), 2)
+  assert_eq(array(parsed["decision_receipts"]).length(), 0)
+  assert_eq(bundle, invoke(composer, ["bundle", selected_path, patch]))
+  assert_true(preview.contains("pending_review"))
+  assert_true(preview.contains("deployment window"))
+  assert_false(preview.contains("Watch errors for 30 minutes"))
+  println("PASS 2: selected hunks plus prior question compose through the existing native consumer")
+
+  let form_text = invoke(decider, ["prepare", bundle_path, patch, "ops"])
+  let form = fields(@json.parse(form_text))
+  let choices = array(form["choices"])
+  assert_eq(choices.length(), 2)
+  for choice in choices {
+    assert_eq(fields(choice)["outcome"], "".to_json())
+    assert_eq(fields(choice)["receipt_id"], "".to_json())
+  }
+  @fs.write_file(evidence + "/decision-form.json", form_text, create_mode=CreateOrTruncate)
+  let exported = invoke(exporter, [bundle_path, patch])
+  assert_true(exported.contains("Is this owner assignment correct?"))
+  assert_true(exported.contains("Is this checklist sufficient?"))
+  @fs.write_file(evidence + "/handoff.md", exported, create_mode=CreateOrTruncate)
+  println("PASS 3: existing native decision preparation yields two blank choices and readable handoff")
+
+  for mode in ["agenda", "bundle", "preview"] {
+    assert_eq(invoke(importer, [mode, agenda, patch, plan]), invoke(importer, [mode, agenda, patch, plan]))
+  }
+  assert_eq(@fs.read_file(patch).binary(), original_patch)
+  assert_eq(@fs.read_file(agenda).binary(), original_agenda)
+  assert_eq(@fs.read_file(plan).binary(), original_plan)
+  println("PASS 4: repeated output is deterministic and all input bytes remain unchanged")
+
+  let tmp = @fs.tmpdir(prefix="moonchat-patch-")
+  defer @fs.rmdir(tmp, recursive=true)
+  let changed_patch = tmp + "/changed.diff"
+  @fs.write_file(changed_patch, @utf8.decode(original_patch) + "\n", create_mode=CreateNew)
+  for mode in ["agenda", "bundle", "preview"] {
+    ignore(invoke(importer, [mode, agenda, changed_patch, plan], success=false))
+  }
+  let (status, stdout, _) = @process.collect_output(exporter, [bundle_path, changed_patch])
+  assert_true(status != 0)
+  assert_false(stdout.text().contains("# MoonChat review handoff"))
+  println("PASS 5: replaced patch bytes reject both import and existing bundle consumption")
+
+  let bad_plan = tmp + "/bad-plan.json"
+  let invalid = @json.parse(@utf8.decode(original_plan))
+  fields(array(fields(invalid)["selections"])[1])["hunk"] = (99 : Int).to_json()
+  @fs.write_file(bad_plan, invalid.stringify(), create_mode=CreateNew)
+  ignore(invoke(importer, ["bundle", agenda, patch, bad_plan], success=false))
+  @fs.write_file(bad_plan, "{", create_mode=TruncateExisting)
+  ignore(invoke(importer, ["agenda", agenda, patch, bad_plan], success=false))
+  ignore(invoke(importer, ["catalog", tmp + "/missing.diff"], success=false))
+  println("PASS 6: late invalid selection, malformed plan and missing file produce no partial stdout")
+
+  for text in [
+    "--- a/x\n+++ b/x\n@@ -1,2 +1 @@\n-old\n+new\n",
+    "diff --git a/x b/x\nGIT binary patch\nliteral 1\nX\n",
+    @utf8.decode(original_patch) + "diff --git a/mode b/mode\nold mode 100644\nnew mode 100755\n",
+  ] {
+    @fs.write_file(changed_patch, text, create_mode=TruncateExisting)
+    ignore(invoke(importer, ["catalog", changed_patch], success=false))
+  }
+  println("PASS 7: truncated, binary and mixed metadata-only patches are wholly rejected")
+
+  let unicode_patch = "--- a/café\r\n+++ b/café\r\n@@ -1 +1 @@\r\n-old\r\n+🌙\r\n\\ No newline at end of file\r\n"
+  @fs.write_file(changed_patch, unicode_patch, create_mode=TruncateExisting)
+  let unicode_catalog = invoke(importer, ["catalog", changed_patch])
+  assert_true(unicode_catalog.contains("🌙"))
+  assert_true(unicode_catalog.contains("\\r\\n"))
+  assert_true(unicode_catalog.contains("No newline at end of file"))
+  println("PASS 8: actual native UTF-8/CRLF/no-final-newline evidence survives cataloging")
+  println("Native patch workflow: 8 passed, 0 failed.")
+}

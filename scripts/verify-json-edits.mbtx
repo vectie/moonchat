@@ -1,0 +1,186 @@
+///|
+import {
+  "moonbitlang/async@0.20.2",
+  "moonbitlang/async@0.20.2/fs",
+  "moonbitlang/async@0.20.2/process",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.4.50/crypto",
+}
+
+///|
+fn object(value : Json) -> Map[String, Json] raise {
+  guard value is Object(fields) else { fail("expected object") }
+  fields
+}
+
+///|
+fn field(value : Json, key : String) -> Json raise {
+  object(value)[key]
+}
+
+///|
+fn digest(bytes : Bytes) -> String {
+  "sha256:" + @crypto.bytes_to_hex_string(@crypto.sha256(bytes))
+}
+
+///|
+struct Runner {
+  workspace : String
+  calls : Array[Json]
+}
+
+///|
+async fn Runner::run(
+  self : Runner,
+  binary : String,
+  args : Array[String],
+  fails? : Bool = false,
+) -> String {
+  let (status, out, err) = @process.collect_output(binary, args)
+  let number = self.calls.length() + 1
+  @fs.write_file(
+    self.workspace + "/logs/\{number}.stdout",
+    out,
+    create_mode=CreateNew,
+  )
+  @fs.write_file(
+    self.workspace + "/logs/\{number}.stderr",
+    err,
+    create_mode=CreateNew,
+  )
+  self.calls.push({
+    "binary": binary.to_json(),
+    "args": args.to_json(),
+    "exit": status.to_json(),
+    "expected_failure": fails.to_json(),
+  })
+  @fs.write_file(
+    self.workspace + "/logs/commands.json",
+    self.calls.to_json().stringify(indent=2),
+    create_mode=CreateOrTruncate,
+  )
+  assert_eq(status != 0, fails, msg=out.text() + err.text())
+  if fails {
+    assert_eq(out.text(), "")
+    assert_true(err.text().contains("review_json_edit:"))
+  }
+  out.text()
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  guard args.length() == 6 else {
+    fail(
+      "Usage: verify-json-edits.mbtx EDITOR DECIDER EXPORTER SOURCE_ROOT NEW_WORKSPACE",
+    )
+  }
+  let editor = args[1]
+  let workspace = args[5]
+  assert_true(workspace.has_prefix("/"))
+  assert_false(@fs.exists(workspace))
+  @fs.mkdir(workspace)
+  @fs.mkdir(workspace + "/logs")
+  let sample = args[4] + "/examples/review-json-edits/"
+  for name in ["source.json", "review.json", "selected-edits.json"] {
+    @fs.write_file(
+      workspace + "/" + name,
+      @fs.read_file(sample + name),
+      create_mode=CreateNew,
+    )
+  }
+  let runner = Runner::{ workspace, calls: [], }
+  let source = workspace + "/source.json"
+  let previous = workspace + "/review.json"
+  let plan = workspace + "/selected-edits.json"
+  let previous_ref = "examples/review-json-edits/review.json"
+  let original_source = @fs.read_file(source).binary()
+  let original_review = @fs.read_file(previous).binary()
+  let original_plan = @fs.read_file(plan).text()
+  let blank = @json.parse(runner.run(editor, ["draft", previous, source]))
+  assert_eq(field(blank, "edits"), [])
+  assert_eq(
+    field(blank, "base_bundle_digest"),
+    digest(original_review).to_json(),
+  )
+  let catalog = runner.run(editor, ["catalog", source])
+  assert_true(catalog.contains("1.00000000000000001"))
+  async fn edit(mode : String, fails : Bool) -> String {
+    runner.run(editor, [mode, plan, previous, source, previous_ref], fails~)
+  }
+  let candidate = edit("source", false)
+  let bundle_text = edit("bundle", false)
+  let preview = edit("preview", false)
+  assert_eq(candidate, @fs.read_file(sample + "candidate-source.json").text())
+  assert_eq(bundle_text, @fs.read_file(sample + "candidate-review.json").text())
+  // The checked-in readable fixture trims presentation-only trailing spaces.
+  let clean_preview = preview
+    .split("\n")
+    .map(line => line.trim_end().to_string())
+    .join("\n")
+    .trim_end()
+    .to_string() +
+    "\n"
+  assert_eq(clean_preview, @fs.read_file(sample + "preview.md").text())
+  assert_eq(candidate, edit("source", false))
+  assert_true(candidate.contains("9007199254740993"))
+  assert_true(candidate.contains("1.00000000000000001"))
+  let candidate_path = workspace + "/candidate-source.json"
+  let bundle_path = workspace + "/candidate-review.json"
+  @fs.write_file(candidate_path, candidate, create_mode=CreateNew)
+  @fs.write_file(bundle_path, bundle_text, create_mode=CreateNew)
+  let bundle = @json.parse(bundle_text)
+  let old = @json.parse(@fs.read_file(previous).text())
+  assert_eq(
+    field(bundle, "source_digest"),
+    digest(@fs.read_file(candidate_path).binary()).to_json(),
+  )
+  assert_eq(
+    field(bundle, "previous_bundle_digest"),
+    digest(original_review).to_json(),
+  )
+  assert_eq(field(bundle, "decision_receipts"), [])
+  for key in ["entries", "required_decisions", "participants", "conversation"] {
+    assert_eq(field(bundle, key), field(old, key))
+  }
+  let decisions = @json.parse(
+    runner.run(args[2], ["prepare", bundle_path, candidate_path, "ops"]),
+  )
+  guard field(decisions, "choices") is Array(choices) else { fail("choices") }
+  assert_eq(choices.length(), 2)
+  for choice in choices {
+    assert_eq(field(choice, "outcome"), "")
+  }
+  let exported = runner.run(args[3], [bundle_path, candidate_path])
+  assert_true(exported.contains("pending_review"))
+  assert_true(exported.contains("The first pilot is too broad."))
+  assert_true(exported.contains("Who owns rollback?"))
+  // Late invalid selection never produces partial content in any export mode.
+  let invalid = object(@json.parse(original_plan))
+  guard invalid["edits"] is Array(edits) else { fail("edits") }
+  object(edits[3])["pointer"] = "/regions/01"
+  @fs.write_file(
+    plan,
+    Json::object(invalid).stringify(),
+    create_mode=TruncateExisting,
+  )
+  for mode in ["source", "bundle", "preview"] {
+    ignore(edit(mode, true))
+  }
+  @fs.write_file(plan, original_plan, create_mode=TruncateExisting)
+  @fs.write_file(
+    previous,
+    @fs.read_file(sample + "review.json").text() + "\n",
+    create_mode=TruncateExisting,
+  )
+  ignore(edit("source", true))
+  @fs.write_file(previous, original_review, create_mode=TruncateExisting)
+  assert_eq(edit("source", false), candidate)
+  assert_eq(@fs.read_file(source).binary(), original_source)
+  assert_eq(@fs.read_file(previous).binary(), original_review)
+  assert_eq(@fs.read_file(plan).text(), original_plan)
+  println(
+    "JSON edit native CLI journey passed: \{runner.calls.length()} commands; candidate, lineage, fresh choices, retained dissent and empty failure output verified",
+  )
+}

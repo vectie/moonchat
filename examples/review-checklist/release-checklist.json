@@ -1,0 +1,30 @@
+{
+  "format": "moonchat.review-checklist.v1",
+  "checklist_id": "release-readiness",
+  "title": "Reusable release readiness questions",
+  "roles": ["writer", "operator"],
+  "variables": ["product", "window"],
+  "items": [
+    {
+      "key": "launch",
+      "kind": "proposal",
+      "author_role": "writer",
+      "body": "Release ${product} during ${window} after the named review is complete.",
+      "decisions": [{"reviewer_role": "operator", "prompt": "Is ${product} ready for ${window}?"}]
+    },
+    {
+      "key": "fallback",
+      "kind": "objection",
+      "author_role": "writer",
+      "body": "Confirm rollback ownership before releasing ${product}. This checklist does not establish that the source already answers the question.",
+      "decisions": [{"reviewer_role": "operator", "prompt": "Does the bound plan name a rollback owner?"}]
+    },
+    {
+      "key": "support",
+      "kind": "question",
+      "author_role": "operator",
+      "body": "Who covers support during ${window}?",
+      "decisions": []
+    }
+  ]
+}

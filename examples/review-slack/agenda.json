@@ -1,0 +1,21 @@
+{
+  "review_id": "slack-cafe-review",
+  "conversation_id": "slack-cafe-preparation",
+  "source_artifact_ref": "exports/release/2026-10-13.json",
+  "source_revision_id": "retained-daily-snapshot-1",
+  "recorded_at": "2026-10-13T12:00:00Z",
+  "participants": [
+    {"participant_id": "curator", "display_name": "Casey, review curator (synthetic)", "participant_kind": "human"},
+    {"participant_id": "ops", "display_name": "Morgan, operations reviewer (synthetic)", "participant_kind": "human"}
+  ],
+  "items": [
+    {
+      "key": "scope-question",
+      "kind": "question",
+      "author": "curator",
+      "body": "Which release artifact should be independently verified before acting on this discussion?",
+      "evidence_refs": [],
+      "decisions": []
+    }
+  ]
+}

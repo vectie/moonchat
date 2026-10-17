@@ -27,6 +27,12 @@ Keep the exact source bytes alongside it. It is still a pending research record.
   will be retained. The source-file command argument is the file read now;
   it does not rewrite this portable reference.
 - `source_revision_id`: your revision label; change it when source bytes change.
+- `source_digest_constraint`: optional in legacy JSON, empty for unbound
+  authoring or an exact lowercase `sha256:` digest. When nonempty, composition
+  rejects any other source bytes. Slack import sets this field and ordinary
+  serialization/editing preserves it. Keep it when editing wording; recatalog
+  and reselect into a fresh preparation scope when the imported source changes.
+  Programmatic ReviewAgenda struct literals must explicitly supply the field.
 - `recorded_at`: explicit UTC time, such as `2026-10-08T12:00:00Z`.
 - `participants`: IDs, display names and `human` or `agent` kinds.
 - `items`: ordered discussion points with `key`, `kind`, `author`, `body`,
@@ -58,6 +64,8 @@ moon run cmd/review_compose --target native -- preview edited-agenda.json new-so
 
 Review and conversation IDs must stay unchanged. Changed source bytes require
 a new source revision label. The prior bundle and its source remain untouched;
+agendas with a nonempty source digest constraint also require a fresh explicit
+import/preparation scope rather than silently retaining evidence from old bytes.
 retain them at their recorded references. The new version has no receipts,
 including when the prior version already had decisions. This is the existing
 supersession API exposed for local editing, not a receipt editor or journal.
@@ -77,3 +85,10 @@ For annotated Word artifacts, use the [DOCX comment workflow](REVIEW_DOCX_COMMEN
 For analysis notebooks, use the [notebook cell workflow](REVIEW_NOTEBOOK_IMPORT.md)
 to select saved code/text/output context and bind the review to the original
 `.ipynb` without running it.
+
+For recorded meetings, [select local WebVTT cues](REVIEW_VTT_IMPORT.md) to create
+this same editable agenda and compile it against the exact original transcript.
+
+For local mailbox exports, [select exact Unix mbox messages](REVIEW_MBOX_IMPORT.md)
+to retain message headers and inline plain-text evidence in this same pending
+agenda workflow. Sender text never supplies a decision or verified identity.

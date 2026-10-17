@@ -1,0 +1,37 @@
+{
+  "review_id": "meeting",
+  "conversation_id": "meeting-room",
+  "source_artifact_ref": "examples/review-vtt/meeting.vtt",
+  "source_revision_id": "r1",
+  "recorded_at": "2026-10-12T12:00:00Z",
+  "participants": [
+    {
+      "participant_id": "author",
+      "display_name": "Fixture author",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "reviewer",
+      "display_name": "Fixture reviewer",
+      "participant_kind": "human"
+    }
+  ],
+  "items": [
+    {
+      "key": "rollback",
+      "kind": "objection",
+      "author": "author",
+      "body": "Who will own rollback?",
+      "cues": [
+        2,
+        1
+      ],
+      "decisions": [
+        {
+          "reviewer": "reviewer",
+          "prompt": "Is rollback ownership ready?"
+        }
+      ]
+    }
+  ]
+}

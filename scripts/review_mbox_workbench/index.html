@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MoonChat mailbox review workbench</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script></head>
+<body><main><h1>Mailbox review workbench</h1>
+<p>Frozen local evidence. Mail headers and quoted approval words are not verified identity or decisions. Every exported decision request remains pending.</p>
+<p id="snapshot"></p><h2>Existing participants</h2><ul id="participants"></ul>
+<details><summary>Existing agenda items (preserved)</summary><pre id="agenda"></pre></details>
+<h2>Mailbox catalog</h2><button id="attachments" type="button">Inspect supported text/plain attachments</button><p>Attachments stay opaque until you explicitly inspect them. HTML is never rendered or selected.</p><div id="catalog"></div>
+<h2>Selected review items</h2><p>Add evidence above, fill its key, kind, author, note and named human decision requests below. Use Up/Down to set export order.</p><div id="selections"></div>
+<h2>Keep unfinished work</h2><p>Blank keys, notes and pending prompts can be saved. Click Save, then download the draft file. Restart with the same agenda and mailbox to reopen it. Drafts contain private curator edits; keep them somewhere safe. They do not contain mail text or approval.</p>
+<button id="save-draft" type="button">Save unfinished draft</button> <a id="draft-download" hidden download="unfinished-mailbox-review.json">Download unfinished draft file</a>
+<label for="draft-file">Saved draft file</label><input id="draft-file" type="file" accept=".json,application/json">
+<button id="open-draft" type="button">Open saved draft</button><p>Opening replaces the selected cards only after validation. Failed imports keep current edits. Attachment inspection consent is never restored from a file.</p>
+<button id="preview" type="button">Preview pending review</button><p id="status" role="status" aria-live="polite"></p>
+<a id="download" hidden download="pending-review.json">Download exact previewed pending bundle</a>
+<pre id="result"></pre></main></body></html>

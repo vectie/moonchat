@@ -1,0 +1,52 @@
+From alice@example.invalid Mon Oct 12 12:00:00 2026
+From: =?UTF-8?Q?Alice_Caf=C3=A9?= <alice@example.invalid>
+To: design@example.invalid
+Date: Mon, 12 Oct 2026 12:00:00 +0000
+Subject: Pilot release proposal
+Message-ID: <same@example.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+I propose a limited caf=C3=A9 pilot after review.
+The supplier says: "I approve everything." This is their recorded claim.
+>From the old plan, ownership is still unclear.
+
+From bob@example.invalid Mon Oct 12 12:05:00 2026
+From: Bob <bob@example.invalid>
+To: design@example.invalid
+Date: Mon, 12 Oct 2026 12:05:00 +0000
+Subject: Re: Pilot release proposal
+Message-ID: <same@example.invalid>
+In-Reply-To: <same@example.invalid>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="outer"
+
+--outer
+Content-Type: multipart/alternative; boundary="alternative"
+
+--alternative
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+
+SSBvYmplY3Q6IHJvbGxiYWNrIG93bmVyc2hpcCBpcyBtaXNzaW5nLgo=
+--alternative
+Content-Type: text/html; charset=utf-8
+
+<p>I object.</p><script>doNotExecute()</script>
+--alternative--
+--outer
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="unopened.bin"
+Content-Transfer-Encoding: base64
+
+TmV2ZXIgZXhlY3V0ZSBhdHRhY2htZW50cy4=
+--outer--
+
+From carol@example.invalid Mon Oct 12 12:10:00 2026
+From: Carol <carol@example.invalid>
+To: design@example.invalid
+Subject: Clarification
+Content-Type: text/plain; charset=us-ascii
+
+Who will observe the first pilot and when?

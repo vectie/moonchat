@@ -1,0 +1,43 @@
+{
+  "review_id": "cafe-release",
+  "conversation_id": "cafe-release-room",
+  "source_artifact_ref": "examples/review-mbox/thread.mbox",
+  "source_revision_id": "mailbox-r1",
+  "recorded_at": "2026-10-08T12:00:00Z",
+  "participants": [
+    {
+      "participant_id": "assistant",
+      "display_name": "Fixture assistant",
+      "participant_kind": "agent"
+    },
+    {
+      "participant_id": "editor",
+      "display_name": "Fixture editor",
+      "participant_kind": "human"
+    },
+    {
+      "participant_id": "ops",
+      "display_name": "Fixture operations lead",
+      "participant_kind": "human"
+    }
+  ],
+  "items": [
+    {
+      "key": "launch",
+      "kind": "proposal",
+      "author": "assistant",
+      "body": "Ship the café search fix to the pilot group on Monday.",
+      "evidence_refs": [],
+      "decisions": [
+        {
+          "reviewer": "editor",
+          "prompt": "Is the release wording ready?"
+        },
+        {
+          "reviewer": "ops",
+          "prompt": "Is the pilot rollout ready?"
+        }
+      ]
+    }
+  ]
+}

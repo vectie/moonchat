@@ -1,0 +1,26 @@
+{
+  "format": "moonchat.review-text-edits.v1",
+  "base_bundle_digest": "sha256:fd02bfbc2b493369d7c7fd22e94cb81eb054f252dc3d28ba3db33ef229d95411",
+  "source_digest": "sha256:f16ed8766b8b89b1cb1bc2154d6e5d57214c7521cbdcde79c31ed97fc4572d27",
+  "next_source_artifact_ref": "examples/review-text-edits/candidate-source.md",
+  "next_source_revision_id": "r2",
+  "recorded_at": "2026-10-13T03:00:00Z",
+  "edits": [
+    {
+      "key": "name-rollback-owner",
+      "entry_id": "entry-rollback",
+      "start_line": 5,
+      "end_line": 5,
+      "quote": "Rollback ownership still needs to be assigned.\n",
+      "replacement": "The operations lead owns rollback; rehearse the procedure before the pilot.\n"
+    },
+    {
+      "key": "support-collection",
+      "entry_id": "entry-support",
+      "start_line": 4,
+      "end_line": 4,
+      "quote": "The support team will collect failed searches before wider rollout.\n",
+      "replacement": "The support team will collect failed searches in the pilot issue log before wider rollout.\n"
+    }
+  ]
+}

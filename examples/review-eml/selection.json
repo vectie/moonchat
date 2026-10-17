@@ -1,0 +1,9 @@
+{
+  "format": "moonchat.eml-review.v1",
+  "source_digest": "sha256:83ea35f486194f66345d4e7d60b7d1f31a1f3310b6eb6d10c813815e4e086f4f",
+  "selection": {
+    "key": "email-rollback", "kind": "objection", "author": "curator",
+    "note": "Please assess the recorded rollback concern independently.",
+    "decisions": [{"reviewer":"ops","prompt":"Is rollback ownership clear enough for the pilot?"}]
+  }
+}

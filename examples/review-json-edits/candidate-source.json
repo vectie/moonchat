@@ -1,0 +1,12 @@
+{
+  "pilot": {
+    "enabled": false,
+    "max_users": 50,
+    "rollback_owner": "Operations lead"
+  },
+  "regions": [
+    "west"
+  ],
+  "allocation_id": 9007199254740993,
+  "reference_ratio": 1.00000000000000001
+}

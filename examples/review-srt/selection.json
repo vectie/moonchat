@@ -1,0 +1,22 @@
+{
+  "format": "moonchat.srt-review.v1",
+  "source_digest": "sha256:ab43336323b581f89720fab91b8b61511273d87f32c0b3091d2b9eaf3067b3b2",
+  "items": [
+    {
+      "cues": [
+        1,
+        2
+      ],
+      "key": "rollback",
+      "kind": "objection",
+      "author": "curator",
+      "note": "Assess the recorded rollback concern independently.",
+      "decisions": [
+        {
+          "reviewer": "ops",
+          "prompt": "Is rollback ownership clear enough?"
+        }
+      ]
+    }
+  ]
+}

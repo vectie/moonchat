@@ -97,7 +97,7 @@ fn json_review_nodes(bytes : Bytes) -> Map[String, Json] raise {
     fail("JSON artifact exceeds 1 MiB")
   }
   let text = @utf8.decode(bytes, ignore_bom=false)
-  let value = @json.parse(text, max_nesting_depth=64)
+  let value = review_parse_exact_json(text)
   json_review_unique_keys(text)
   let nodes : Map[String, Json] = {}
   json_review_walk(value, "", nodes)
