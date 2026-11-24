@@ -24,7 +24,7 @@ pub fn output_schema_ref() -> String {
 }
 
 ///|
-pub fn capability_json(healthy? : Bool = false) -> Json {
+pub fn capability_json(healthy~ : Bool = false) -> Json {
   {
     "adapter_id": adapter_id(),
     "product_id": "moonchat",
@@ -58,7 +58,7 @@ struct FlowRequest {
   required_claim : String
   input_digest : String
   input_artifacts : Array[String]
-  timeout_ms : Int
+  timeout_ms : Int32
   created_at : String
 } derive(Debug, Eq)
 
@@ -74,7 +74,7 @@ fn json_object(value : Json, label : String) -> Map[String, Json] raise {
 fn json_string_field(
   fields : Map[String, Json],
   name : String,
-  allow_empty? : Bool = false,
+  allow_empty~ : Bool = false,
 ) -> String raise {
   match fields.get(name) {
     Some(String(value)) if allow_empty || !value.trim().is_empty() => value
@@ -83,7 +83,7 @@ fn json_string_field(
 }
 
 ///|
-fn json_int_field(fields : Map[String, Json], name : String) -> Int raise {
+fn json_int_field(fields : Map[String, Json], name : String) -> Int32 raise {
   match fields.get(name) {
     Some(Number(value, ..)) => value.to_int()
     _ => fail("MoonChat Flow adapter requires integer \{name}")
@@ -94,7 +94,7 @@ fn json_int_field(fields : Map[String, Json], name : String) -> Int raise {
 fn json_strings_field(
   fields : Map[String, Json],
   name : String,
-  required? : Bool = true,
+  required~ : Bool = true,
 ) -> Array[String] raise {
   match fields.get(name) {
     Some(Array(values)) =>

@@ -1,7 +1,7 @@
 ///|
 // Common parsed JSON numbers are binary64 and Int decoding truncates. Inspect
 // the original decimal token before converting, retaining exact integral forms.
-fn slack_exact_ordinal(token : String) -> Int raise {
+fn slack_exact_ordinal(token : String) -> Int32 raise {
   if token.is_empty() || token[0] == '-' || token[0] < '0' || token[0] > '9' {
     fail("Slack ordinal must be an exact positive integer JSON number")
   }
@@ -69,7 +69,7 @@ fn slack_exact_ordinal(token : String) -> Int raise {
   if result < 1 || result > 1000 {
     fail("Slack ordinal must be in 1..1000")
   }
-  let decoded : Int = @json.from_json(@json.parse(token))
+  let decoded : Int32 = @json.from_json(@json.parse(token))
   if decoded != result {
     fail("Slack ordinal decoder disagrees with its exact decimal token")
   }

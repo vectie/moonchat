@@ -10,8 +10,8 @@ pub(all) struct SarifReviewImportPlan {
 
 ///|
 pub(all) struct SarifReviewSelection {
-  run_index : Int
-  result_index : Int
+  run_index : Int32
+  result_index : Int32
   key : String
   kind : String
   author : String
@@ -21,8 +21,8 @@ pub(all) struct SarifReviewSelection {
 
 ///|
 priv struct SarifFinding {
-  run_index : Int
-  result_index : Int
+  run_index : Int32
+  result_index : Int32
   tool : String
   rule : String
   level : String
@@ -77,7 +77,7 @@ fn sarif_array(fields : Map[String, Json], key : String) -> Array[Json] raise {
 }
 
 ///|
-fn sarif_index(value : Json, label : String) -> Int raise {
+fn sarif_index(value : Json, label : String) -> Int32 raise {
   guard value is Number(number, ..) &&
     number >= 0.0 &&
     number <= 2147483647.0 &&

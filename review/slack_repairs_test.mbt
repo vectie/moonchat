@@ -105,7 +105,7 @@ test "Legacy agenda JSON remains unbound while explicit constraints and duplicat
   assert_eq(legacy.source_digest_constraint, "")
   @review.compile_review_agenda(legacy, b"first") |> ignore
   @review.compile_review_agenda(legacy, b"second") |> ignore
-  fields["source_digest_constraint"] = (1 : Int).to_json()
+  fields["source_digest_constraint"] = (1 : Int32).to_json()
   assert_true((try? @review.parse_review_agenda(value.stringify())) is Err(_))
   assert_true(
     (try? @review.parse_review_agenda(

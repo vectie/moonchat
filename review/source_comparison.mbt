@@ -1,8 +1,8 @@
 ///|
 priv struct SourceComparisonRow {
   kind : String
-  before_line : Int
-  after_line : Int
+  before_line : Int32
+  after_line : Int32
   text : String
 }
 
@@ -64,7 +64,7 @@ fn source_comparison_rows(
       lengths[i * (m + 1) + j] = if before[i] == after[j] {
         1 + lengths[(i + 1) * (m + 1) + j + 1]
       } else {
-        Int::max(lengths[(i + 1) * (m + 1) + j], lengths[i * (m + 1) + j + 1])
+        Int32::max(lengths[(i + 1) * (m + 1) + j], lengths[i * (m + 1) + j + 1])
       }
     }
   }
@@ -105,7 +105,7 @@ fn compare_review_source_text(
   out : StringBuilder,
   before : Bytes,
   after : Bytes,
-  context : Int,
+  context : Int32,
 ) -> Unit raise {
   if context < 0 || context > 20 {
     fail("source text context must be between 0 and 20 lines")
@@ -138,8 +138,8 @@ fn compare_review_source_text(
   let selected = FixedArray::make(rows.length(), false)
   for i, row in rows {
     if row.kind != "=" {
-      let start = Int::max(0, i - context)
-      let end = Int::min(rows.length(), i + context + 1)
+      let start = Int32::max(0, i - context)
+      let end = Int32::min(rows.length(), i + context + 1)
       for k = start; k < end; k = k + 1 {
         selected[k] = true
       }

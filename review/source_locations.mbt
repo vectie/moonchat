@@ -13,8 +13,8 @@ pub(all) struct ReviewSourceLocations {
 /// display text joined with LF, without an added final newline.
 pub(all) struct ReviewSourceLocation {
   entry_id : String
-  start_line : Int
-  end_line : Int
+  start_line : Int32
+  end_line : Int32
   quote : String
 } derive(Eq, ToJson, @json.FromJson)
 
@@ -32,8 +32,8 @@ pub fn parse_review_source_locations(
 ///|
 priv struct SourceLocationIndex {
   locations : Array[ReviewSourceLocation]
-  by_entry : Map[String, Array[Int]]
-  by_line : Map[Int, Array[Int]]
+  by_entry : Map[String, Array[Int32]]
+  by_line : Map[Int32, Array[Int32]]
 }
 
 ///|
@@ -54,9 +54,9 @@ fn index_source_locations(
   if locations.locations.length() > 1000 {
     fail("source locations exceed the 1000 range limit")
   }
-  let by_entry : Map[String, Array[Int]] = {}
-  let by_line : Map[Int, Array[Int]] = {}
-  let seen : Map[(String, Int, Int), Bool] = {}
+  let by_entry : Map[String, Array[Int32]] = {}
+  let by_line : Map[Int32, Array[Int32]] = {}
+  let seen : Map[(String, Int32, Int32), Bool] = {}
   let mut selected_lines = 0
   let mut quote_units = 0
   for index, location in locations.locations {
@@ -136,7 +136,7 @@ fn review_html_entry_locations(
 fn review_html_line_locations(
   out : StringBuilder,
   bundle : ConversationReviewBundle,
-  line : Int,
+  line : Int32,
   locations : SourceLocationIndex,
 ) -> Unit {
   match locations.by_line.get(line) {

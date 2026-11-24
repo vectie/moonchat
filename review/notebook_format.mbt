@@ -1,6 +1,6 @@
 ///|
 priv struct NotebookReviewCell {
-  index : Int
+  index : Int32
   id : String
   kind : String
   source : String
@@ -11,7 +11,7 @@ priv struct NotebookReviewCell {
 
 ///|
 priv struct NotebookReviewDocument {
-  minor : Int
+  minor : Int32
   metadata : Json
   cells : Array[NotebookReviewCell]
 }
@@ -60,7 +60,7 @@ fn notebook_multiline(value : Json, label : String) -> String raise {
 }
 
 ///|
-fn notebook_index(value : Json, label : String) -> Int raise {
+fn notebook_index(value : Json, label : String) -> Int32 raise {
   guard value is Number(number, ..) &&
     number >= 0.0 &&
     number <= 2147483647.0 &&
@@ -189,7 +189,7 @@ fn notebook_document(bytes : Bytes) -> NotebookReviewDocument raise {
           id.length() > 64 ||
           !id
           .iter()
-          .all(c => c is ('a'..='z' | 'A'..='Z' | '0'..='9' | '-' | '_')) {
+          .all(c => c is ('a'..<='z' | 'A'..<='Z' | '0'..<='9' | '-' | '_')) {
           fail("Notebook cell id must be 1–64 ASCII letters, digits, - or _")
         }
         if ids.contains(id) {

@@ -2,7 +2,7 @@
 fn text_comparison(
   before : Bytes,
   after : Bytes,
-  context? : Int = 3,
+  context~ : Int32 = 3,
 ) -> String raise {
   @review.export_review_comparison(
     authored_bundle(source=before),

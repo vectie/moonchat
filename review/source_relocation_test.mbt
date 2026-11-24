@@ -14,8 +14,8 @@ fn relocation_map(
 ///|
 fn relocation_range(
   id : String,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   quote : String,
 ) -> @review.ReviewSourceLocation {
   { entry_id: id, start_line: start, end_line: end, quote, }

@@ -11,7 +11,7 @@ pub(all) struct SlackReviewImportPlan {
 /// Ordinals are one-based positions in the complete array, including unsupported
 /// records. Every selection must use the catalog's exact source digest.
 pub(all) struct SlackReviewSelection {
-  ordinal : Int
+  ordinal : Int32
   key : String
   kind : String
   author : String
@@ -268,7 +268,7 @@ pub fn import_slack_review(
     fail("Slack plan must select 1–100 messages")
   }
   let messages = slack_messages(bytes)
-  let selected : Map[Int, Bool] = {}
+  let selected : Map[Int32, Bool] = {}
   let items = agenda.items.map(item => {
     ..item,
     evidence_refs: item.evidence_refs.copy(),

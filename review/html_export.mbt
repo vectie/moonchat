@@ -28,7 +28,7 @@ fn review_html_decision(
   out : StringBuilder,
   bundle : ConversationReviewBundle,
   required : RequiredDecision,
-  index : Int,
+  index : Int32,
 ) -> Unit {
   out.write_string(
     "<section class=\"decision\" id=\"decision-\{index + 1}\"><h3>Decision \{index + 1}</h3><dl>\n",

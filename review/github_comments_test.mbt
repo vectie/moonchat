@@ -1,10 +1,10 @@
 ///|
 fn github_comment_fixture(
   id : String,
-  parent? : String = "",
-  login? : String = "alice",
-  body? : String = "Please keep café fallback.\r\n```diff\n-old\n+new\n```",
-  created_at? : String = "2026-10-10T00:00:00Z",
+  parent~ : String = "",
+  login~ : String = "alice",
+  body~ : String = "Please keep café fallback.\r\n```diff\n-old\n+new\n```",
+  created_at~ : String = "2026-10-10T00:00:00Z",
 ) -> Json raise {
   let fields : Map[String, Json] = {
     "id": @json.parse(id),

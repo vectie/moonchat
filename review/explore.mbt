@@ -27,10 +27,10 @@ fn exploration_outcome(
 pub fn explore_review(
   bundle : ConversationReviewBundle,
   observed_source_bytes : Bytes,
-  text? : String = "",
-  kind? : String = "",
-  reviewer? : String = "",
-  outcome? : String = "",
+  text~ : String = "",
+  kind~ : String = "",
+  reviewer~ : String = "",
+  outcome~ : String = "",
 ) -> String raise {
   let record = project_review_record(
     bundle,

@@ -8,7 +8,7 @@ pub fn draft_review_entry(
   author_participant_id~ : String,
   turn~ : ConversationTurnIdentity,
   body~ : String,
-  evidence_refs? : Array[String] = [],
+  evidence_refs~ : Array[String] = [],
 ) -> ReviewEntry raise {
   if !["question", "objection", "proposal"].contains(entry_kind) {
     fail("review entry kind must be question, objection or proposal")

@@ -89,7 +89,7 @@ pub fn export_review_comparison(
   before_source : Bytes,
   after : ConversationReviewBundle,
   after_source : Bytes,
-  source_context? : Int,
+  source_context? : Int32,
 ) -> String raise {
   let old_record = project_review_record(
     before,

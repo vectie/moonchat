@@ -8,7 +8,7 @@ pub(all) struct NotebookReviewImportPlan {
 
 ///|
 pub(all) struct NotebookReviewSelection {
-  cell_index : Int
+  cell_index : Int32
   key : String
   kind : String
   author : String
@@ -77,7 +77,7 @@ pub fn import_notebook_review(
     evidence_refs: item.evidence_refs.copy(),
     decisions: item.decisions.copy(),
   })
-  let selected : Map[Int, Bool] = Map([])
+  let selected : Map[Int32, Bool] = Map([])
   let mut body_bytes = 0
   for selection in plan.cells {
     if selected.contains(selection.cell_index) {

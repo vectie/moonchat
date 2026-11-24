@@ -3,12 +3,13 @@
 // decimals too precise for Double. Editing one value must not round another.
 priv struct ReviewJsonReader {
   chars : Array[Char]
-  mut position : Int
+  mut position : Int32
 }
 
 ///|
 fn ReviewJsonReader::space(self : ReviewJsonReader) -> Unit {
-  while self.position < self.chars.length() && [' ', '\t', '\r', '\n'].contains(self.chars[self.position]) {
+  while self.position < self.chars.length() &&
+        [' ', '\t', '\r', '\n'].contains(self.chars[self.position]) {
     self.position += 1
   }
 }
@@ -25,9 +26,13 @@ fn ReviewJsonReader::string(self : ReviewJsonReader) -> String raise {
     if ch == '\\' {
       token.write_char(self.chars[self.position])
       self.position += 1
-    } else if ch == '"' { break }
+    } else if ch == '"' {
+      break
+    }
   }
-  guard @json.parse(token.to_string()) is String(value) else { fail("invalid JSON string") }
+  guard @json.parse(token.to_string()) is String(value) else {
+    fail("invalid JSON string")
+  }
   value
 }
 
@@ -42,12 +47,16 @@ fn ReviewJsonReader::value(self : ReviewJsonReader) -> Json raise {
       if self.chars[self.position] != '}' {
         while true {
           let key = self.string()
-          if fields.contains(key) { fail("JSON artifact contains a duplicate object key") }
+          if fields.contains(key) {
+            fail("JSON artifact contains a duplicate object key")
+          }
           self.space()
           self.position += 1
           fields[key] = self.value()
           self.space()
-          if self.chars[self.position] == '}' { break }
+          if self.chars[self.position] == '}' {
+            break
+          }
           self.position += 1
           self.space()
         }
@@ -63,7 +72,9 @@ fn ReviewJsonReader::value(self : ReviewJsonReader) -> Json raise {
         while true {
           values.push(self.value())
           self.space()
-          if self.chars[self.position] == ']' { break }
+          if self.chars[self.position] == ']' {
+            break
+          }
           self.position += 1
         }
       }
@@ -73,7 +84,10 @@ fn ReviewJsonReader::value(self : ReviewJsonReader) -> Json raise {
     '"' => Json::string(self.string())
     _ => {
       let token = StringBuilder()
-      while self.position < self.chars.length() && ![' ', '\t', '\r', '\n', ',', '}', ']'].contains(self.chars[self.position]) {
+      while self.position < self.chars.length() &&
+            ![' ', '\t', '\r', '\n', ',', '}', ']'].contains(
+              self.chars[self.position],
+            ) {
         token.write_char(self.chars[self.position])
         self.position += 1
       }
@@ -89,6 +103,6 @@ fn ReviewJsonReader::value(self : ReviewJsonReader) -> Json raise {
 ///|
 fn review_parse_exact_json(text : String) -> Json raise {
   ignore(@json.parse(text, max_nesting_depth=64))
-  let reader : ReviewJsonReader = {chars: text.iter().collect(), position: 0}
+  let reader : ReviewJsonReader = { chars: text.iter().collect(), position: 0, }
   reader.value()
 }

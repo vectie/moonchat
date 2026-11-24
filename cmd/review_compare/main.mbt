@@ -9,7 +9,7 @@ async fn run() -> Unit {
     }
     _ => ()
   }
-  let (paths, source_context) : (ArrayView[String], Int?) = match args[1:] {
+  let (paths, source_context) : (ArrayView[String], Int32?) = match args[1:] {
     ["--source-text", "--context", value, .. paths] => {
       let context = @string.parse_int(value) catch {
         _ => fail("source text context must be an integer from 0 to 20")
@@ -49,7 +49,7 @@ async fn run() -> Unit {
 }
 
 ///|
-extern "C" fn exit(code : Int) = "exit"
+extern "C" fn exit(code : Int32) = "exit"
 
 ///|
 async fn main {

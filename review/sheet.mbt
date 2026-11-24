@@ -56,7 +56,7 @@ pub fn import_review_sheet(
     )
   }
   let items : Array[ReviewAgendaItem] = []
-  let indices : Map[String, Int] = Map([])
+  let indices : Map[String, Int32] = Map([])
   for index = 1; index < rows.length(); index = index + 1 {
     let row = rows[index]
     if row.length() != 7 {

@@ -10,8 +10,8 @@ pub(all) struct PatchReviewImportPlan {
 ///|
 /// File and hunk numbers are one-based, as shown by catalog_patch_review.
 pub(all) struct PatchReviewSelection {
-  file : Int
-  hunk : Int
+  file : Int32
+  hunk : Int32
   key : String
   kind : String
   author : String
@@ -21,12 +21,12 @@ pub(all) struct PatchReviewSelection {
 
 ///|
 priv struct PatchHunk {
-  old_start : Int
-  old_count : Int
-  new_start : Int
-  new_count : Int
-  added : Int
-  removed : Int
+  old_start : Int32
+  old_count : Int32
+  new_start : Int32
+  new_count : Int32
+  added : Int32
+  removed : Int32
   text : String
 } derive(ToJson)
 
@@ -76,7 +76,7 @@ fn patch_lines(bytes : Bytes) -> Array[String] raise {
 }
 
 ///|
-fn patch_number(text : String, start : Int) -> (Int, Int) raise {
+fn patch_number(text : String, start : Int32) -> (Int32, Int32) raise {
   let mut cursor = start
   let mut number = 0
   while cursor < text.length() && text[cursor] >= '0' && text[cursor] <= '9' {
@@ -94,7 +94,7 @@ fn patch_number(text : String, start : Int) -> (Int, Int) raise {
 }
 
 ///|
-fn patch_range(text : String, cursor : Int) -> (Int, Int, Int) raise {
+fn patch_range(text : String, cursor : Int32) -> (Int32, Int32, Int32) raise {
   let (start, next) = patch_number(text, cursor)
   let (count, end) = if next < text.length() && text[next] == ',' {
     patch_number(text, next + 1)
@@ -108,7 +108,7 @@ fn patch_range(text : String, cursor : Int) -> (Int, Int, Int) raise {
 }
 
 ///|
-fn patch_header(text : String) -> (Int, Int, Int, Int) raise {
+fn patch_header(text : String) -> (Int32, Int32, Int32, Int32) raise {
   if !text.has_prefix("@@ -") {
     fail(
       "expected ordinary unified diff hunk header; combined diffs are unsupported",
@@ -356,7 +356,7 @@ pub fn import_patch_review(
     fail("patch plan must select 1–100 hunks")
   }
   let files = patch_files(bytes)
-  let selected : Map[(Int, Int), Bool] = Map([])
+  let selected : Map[(Int32, Int32), Bool] = Map([])
   let items = agenda.items.map(item => {
     ..item,
     evidence_refs: item.evidence_refs.copy(),

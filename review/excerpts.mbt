@@ -16,8 +16,8 @@ pub(all) struct ReviewExcerptSelection {
   kind : String
   author : String
   note : String
-  start_line : Int
-  end_line : Int
+  start_line : Int32
+  end_line : Int32
   decisions : Array[ReviewAgendaDecision]
 } derive(Eq, ToJson, @json.FromJson)
 

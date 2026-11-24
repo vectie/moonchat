@@ -9,8 +9,8 @@ fn authoring_reviewer() -> @review.ReviewParticipant {
 
 ///|
 fn authored_bundle(
-  source? : Bytes = b"revision one\n",
-  revision? : String = "rev-one",
+  source~ : Bytes = b"revision one\n",
+  revision~ : String = "rev-one",
 ) -> @review.ConversationReviewBundle raise {
   let reviewer = authoring_reviewer()
   let entries = ["question", "objection", "proposal"].map(kind => {

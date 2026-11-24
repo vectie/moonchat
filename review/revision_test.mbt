@@ -20,7 +20,7 @@ fn revision_fixture() -> (String, @review.ConversationReviewBundle) raise {
 fn compile_revision_fixture(
   draft : @review.ReviewRevisionDraft,
   text : String,
-  source? : Bytes = b"revision one\n",
+  source~ : Bytes = b"revision one\n",
 ) -> @review.ConversationReviewBundle raise {
   @review.compile_review_revision(
     draft,

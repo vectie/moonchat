@@ -1,7 +1,7 @@
 ///|
 fn text_edit_fixture(
-  source? : Bytes = b"# Pilot brief\nRollback owner: TBD\nPublic launch: Friday\nKeep this concern visible.\n",
-  outcome? : String = "reject",
+  source~ : Bytes = b"# Pilot brief\nRollback owner: TBD\nPublic launch: Friday\nKeep this concern visible.\n",
+  outcome~ : String = "reject",
 ) -> (String, @review.ReviewTextEditPlan) raise {
   let previous = authored_bundle(source~)
   previous.decision_receipts.push(fixture_receipt(previous, outcome))
@@ -30,7 +30,7 @@ fn text_edit_fixture(
 fn apply_text_fixture(
   text : String,
   plan : @review.ReviewTextEditPlan,
-  source? : Bytes = b"# Pilot brief\nRollback owner: TBD\nPublic launch: Friday\nKeep this concern visible.\n",
+  source~ : Bytes = b"# Pilot brief\nRollback owner: TBD\nPublic launch: Friday\nKeep this concern visible.\n",
 ) -> @review.ReviewTextEditResult raise {
   @review.apply_review_text_edits(
     plan,

@@ -21,7 +21,7 @@ fn moonsuite_active_workspace_root() -> String {
 ///|
 fn moonsuite_shared_product_home_for_workspace_root(
   root : String,
-  book_id? : String = "<book-id>",
+  book_id~ : String = "<book-id>",
 ) -> @moonsuite.ProductHome {
   @moonsuite.product_home_for_workspace_root(
     root,
@@ -97,14 +97,14 @@ pub fn moonsuite_product_tmp_path() -> String {
 ///|
 pub fn moonsuite_product_accepted_output_path_for_workspace_root(
   root : String,
-  book_id? : String = "<book-id>",
+  book_id~ : String = "<book-id>",
 ) -> String {
   moonsuite_shared_product_home_for_workspace_root(root, book_id~).accepted_output_path
 }
 
 ///|
 pub fn moonsuite_product_accepted_output_path(
-  book_id? : String = "<book-id>",
+  book_id~ : String = "<book-id>",
 ) -> String {
   moonsuite_product_accepted_output_path_for_workspace_root(
     moonsuite_active_workspace_root(),
@@ -115,7 +115,7 @@ pub fn moonsuite_product_accepted_output_path(
 ///|
 pub fn moonsuite_product_home_for_workspace_root(
   root : String,
-  book_id? : String = "<book-id>",
+  book_id~ : String = "<book-id>",
 ) -> MoonChatMoonSuiteProductHome {
   moonchat_product_home_from_shared(
     moonsuite_shared_product_home_for_workspace_root(root, book_id~),
@@ -124,7 +124,7 @@ pub fn moonsuite_product_home_for_workspace_root(
 
 ///|
 pub fn moonsuite_product_home(
-  book_id? : String = "<book-id>",
+  book_id~ : String = "<book-id>",
 ) -> MoonChatMoonSuiteProductHome {
   moonsuite_product_home_for_workspace_root(
     moonsuite_active_workspace_root(),

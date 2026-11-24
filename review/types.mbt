@@ -78,7 +78,7 @@ pub(all) struct ReviewEvidence {
 pub(all) struct ConversationReviewEvent {
   contract_id : String
   review_id : String
-  sequence : Int
+  sequence : Int32
   event_id : String
   event_kind : String
   actor_participant_id : String

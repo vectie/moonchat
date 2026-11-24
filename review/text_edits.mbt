@@ -17,8 +17,8 @@ pub(all) struct ReviewTextEditPlan {
 pub(all) struct ReviewTextEdit {
   key : String
   entry_id : String
-  start_line : Int
-  end_line : Int
+  start_line : Int32
+  end_line : Int32
   quote : String
   replacement : String
 } derive(Eq, ToJson, @json.FromJson)

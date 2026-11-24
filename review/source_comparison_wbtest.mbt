@@ -1,5 +1,5 @@
 ///|
-fn source_edit_distance(a : Array[String], b : Array[String]) -> Int {
+fn source_edit_distance(a : Array[String], b : Array[String]) -> Int32 {
   // Independent recursive oracle, deliberately tiny inputs only.
   if a.is_empty() {
     return b.length()
@@ -11,7 +11,7 @@ fn source_edit_distance(a : Array[String], b : Array[String]) -> Int {
     source_edit_distance(a[1:].to_owned(), b[1:].to_owned())
   } else {
     1 +
-    Int::min(
+    Int32::min(
       source_edit_distance(a[1:].to_owned(), b),
       source_edit_distance(a, b[1:].to_owned()),
     )

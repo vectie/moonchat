@@ -2,8 +2,8 @@
 /// A complete display-line match. Reports retain the first 20 candidates per
 /// original range; candidate_count always counts all matches, including overlaps.
 pub(all) struct ReviewLocationCandidate {
-  start_line : Int
-  end_line : Int
+  start_line : Int32
+  end_line : Int32
 } derive(Eq, ToJson)
 
 ///|
@@ -12,7 +12,7 @@ pub(all) struct ReviewLocationCandidate {
 pub(all) struct ReviewLocationRelocation {
   original : ReviewSourceLocation
   status : String
-  candidate_count : Int
+  candidate_count : Int32
   candidates : Array[ReviewLocationCandidate]
 } derive(Eq, ToJson)
 
@@ -26,8 +26,8 @@ pub(all) struct ReviewSourceRelocation {
   next_review_id : String
   next_source_revision_id : String
   next_source_digest : String
-  mapped_count : Int
-  unresolved_count : Int
+  mapped_count : Int32
+  unresolved_count : Int32
   results : Array[ReviewLocationRelocation]
   suggested_locations : ReviewSourceLocations
 } derive(Eq, ToJson)
@@ -38,7 +38,7 @@ pub(all) struct ReviewSourceRelocation {
 fn relocation_candidates(
   lines : Array[String],
   quote_lines : Array[String],
-) -> (Int, Array[ReviewLocationCandidate]) {
+) -> (Int32, Array[ReviewLocationCandidate]) {
   let prefix = Array::make(quote_lines.length(), 0)
   let mut matched = 0
   for i = 1; i < quote_lines.length(); i = i + 1 {
@@ -99,7 +99,7 @@ pub fn relocate_review_source_locations(
   let next_lines = review_html_source_lines(next_source)
   ignore(index_source_locations(previous, old_lines, locations))
   let preliminary = []
-  let destinations : Map[(String, Int, Int), Int] = {}
+  let destinations : Map[(String, Int32, Int32), Int32] = {}
   for original in locations.locations {
     let quote_lines = old_lines[original.start_line - 1:original.end_line].to_owned()
     let (candidate_count, candidates) = relocation_candidates(
