@@ -1,14 +1,16 @@
 ///|
 /// A local selection plan. Run/result indexes refer to this exact export digest,
 /// never to another analyzer execution. The curator is an existing participant.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct SarifReviewImportPlan {
   format : String
   export_ref : String
   export_digest : String
   findings : Array[SarifReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct SarifReviewSelection {
   run_index : Int32
   result_index : Int32
@@ -17,7 +19,7 @@ pub(all) struct SarifReviewSelection {
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 priv struct SarifFinding {
@@ -211,7 +213,7 @@ fn sarif_findings(bytes : Bytes) -> Array[SarifFinding] raise {
           if matches.length() > 1 {
             fail("SARIF driver rules contain an ambiguous ruleId")
           }
-          (id, matches.get(0).or(Json::null()))
+          (id, matches.get(0).unwrap_or(Json::null()))
         }
         Some(value) => {
           let index = sarif_index(value, "ruleIndex")
@@ -286,12 +288,18 @@ pub fn catalog_sarif_review(sarif_bytes : Bytes) -> String raise {
     out.write_string(
       "\nRun \{finding.run_index}, result \{finding.result_index}\n",
     )
-    out.write_string("Tool: " + finding.tool.to_json().stringify() + "\n")
-    out.write_string("Rule: " + finding.rule.to_json().stringify() + "\n")
     out.write_string(
-      "Explicit level: " + finding.level.to_json().stringify() + "\n",
+      "Tool: " + ToJson::to_json(finding.tool).stringify() + "\n",
     )
-    out.write_string("Message: " + finding.message.to_json().stringify() + "\n")
+    out.write_string(
+      "Rule: " + ToJson::to_json(finding.rule).stringify() + "\n",
+    )
+    out.write_string(
+      "Explicit level: " + ToJson::to_json(finding.level).stringify() + "\n",
+    )
+    out.write_string(
+      "Message: " + ToJson::to_json(finding.message).stringify() + "\n",
+    )
     out.write_string("Context: " + finding.context.stringify() + "\n")
     out.write_string("Original result: " + finding.result.stringify() + "\n")
   }
@@ -379,11 +387,11 @@ pub fn import_sarif_review(
       "\nResult JSON pointer: " +
       pointer +
       "\nAnalyzer: " +
-      finding.tool.to_json().stringify() +
+      ToJson::to_json(finding.tool).stringify() +
       "\nRule: " +
-      finding.rule.to_json().stringify() +
+      ToJson::to_json(finding.rule).stringify() +
       "\nExplicit level: " +
-      finding.level.to_json().stringify() +
+      ToJson::to_json(finding.level).stringify() +
       "\nAnalyzer message (verbatim text, not a decision receipt):\n" +
       finding.message +
       "\n\nRun/rule/location context (JSON):\n" +

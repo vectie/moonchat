@@ -66,7 +66,8 @@ fn checklist_input(bytes : Bytes) -> @review.ReviewChecklistInput {
 test "checklist catalog shows actual role uses and variable locations" {
   let checklist = checklist_fixture()
   assert_true(
-    @review.parse_review_checklist(checklist.to_json().stringify()) == checklist,
+    @review.parse_review_checklist(ToJson::to_json(checklist).stringify()) ==
+    checklist,
   )
   let catalog = @review.catalog_review_checklist(checklist)
   assert_eq(catalog, @review.catalog_review_checklist(checklist))
@@ -90,7 +91,8 @@ test "checklist reuse binds two distinct artifacts and human decision forms" {
   let first_bytes = b"Cafe release draft"
   let input = checklist_input(first_bytes)
   assert_true(
-    @review.parse_review_checklist_input(input.to_json().stringify()) == input,
+    @review.parse_review_checklist_input(ToJson::to_json(input).stringify()) ==
+    input,
   )
   let agenda = @review.instantiate_review_checklist(
     checklist, input, first_bytes,
@@ -184,11 +186,15 @@ test "checklist variables require an exact unique nonempty input set" {
       [{ variable: "product", value: " ", }, input.values[1]],
     ] {
     assert_true(
-      (try? @review.instantiate_review_checklist(
-        checklist,
-        { ..input, values, },
-        b"x",
-      ))
+      (Ok(
+        @review.instantiate_review_checklist(
+          checklist,
+          { ..input, values, },
+          b"x",
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -218,11 +224,15 @@ test "checklist roles require exact assignments and named human deciders" {
       ],
     ] {
     assert_true(
-      (try? @review.instantiate_review_checklist(
-        checklist,
-        { ..input, role_assignments, },
-        b"x",
-      ))
+      (Ok(
+        @review.instantiate_review_checklist(
+          checklist,
+          { ..input, role_assignments, },
+          b"x",
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -242,11 +252,15 @@ test "checklist roles require exact assignments and named human deciders" {
     ],
   }
   assert_true(
-    (try? @review.instantiate_review_checklist(
-      { ..checklist, items: [two], },
-      same_person,
-      b"x",
-    ))
+    (Ok(
+      @review.instantiate_review_checklist(
+        { ..checklist, items: [two], },
+        same_person,
+        b"x",
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }
@@ -267,15 +281,23 @@ test "checklist declarations and text reject unknown missing duplicate and malfo
       { ..checklist, items: [], },
       { ..checklist, items: [checklist.items[0], checklist.items[0]], },
     ] {
-    assert_true((try? @review.catalog_review_checklist(invalid)) is Err(_))
     assert_true(
-      (try? @review.parse_review_checklist(invalid.to_json().stringify()))
+      (Ok(@review.catalog_review_checklist(invalid)) catch { e => Err(e) })
+      is Err(_),
+    )
+    assert_true(
+      (Ok(@review.parse_review_checklist(ToJson::to_json(invalid).stringify())) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
   for body in ["${}", "${product", "${bad name}", "${unknown}"] {
     let invalid = { ..checklist, items: [{ ..checklist.items[0], body, }], }
-    assert_true((try? @review.catalog_review_checklist(invalid)) is Err(_))
+    assert_true(
+      (Ok(@review.catalog_review_checklist(invalid)) catch { e => Err(e) })
+      is Err(_),
+    )
   }
 }
 
@@ -305,7 +327,9 @@ test "checklist preserves review meanings and requires decisions for objections"
       { ..checklist.items[0], kind: "objection", decisions: [], },
     ] {
     assert_true(
-      (try? @review.catalog_review_checklist({ ..checklist, items: [item], }))
+      (Ok(@review.catalog_review_checklist({ ..checklist, items: [item], })) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -316,7 +340,9 @@ test "checklist source and identity fields stay explicit and are validated" {
   let checklist = checklist_fixture()
   let input = checklist_input(b"x")
   assert_true(
-    (try? @review.instantiate_review_checklist(checklist, input, b"changed"))
+    (Ok(@review.instantiate_review_checklist(checklist, input, b"changed")) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   for
@@ -331,15 +357,24 @@ test "checklist source and identity fields stay explicit and are validated" {
       { ..input, participants: [..input.participants, input.participants[0]], },
     ] {
     assert_true(
-      (try? @review.instantiate_review_checklist(checklist, invalid, b"x"))
+      (Ok(@review.instantiate_review_checklist(checklist, invalid, b"x")) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
-  assert_true((try? @review.parse_review_checklist_input("{")) is Err(_))
   assert_true(
-    (try? @review.parse_review_checklist_input(
-      { ..input, format: "v2", }.to_json().stringify(),
-    ))
+    (Ok(@review.parse_review_checklist_input("{")) catch { e => Err(e) })
+    is Err(_),
+  )
+  assert_true(
+    (Ok(
+      @review.parse_review_checklist_input(
+        ToJson::to_json({ ..input, format: "v2", }).stringify(),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }
@@ -348,16 +383,16 @@ test "checklist source and identity fields stay explicit and are validated" {
 test "checklist outputs can be edited without changing the reusable original or other reviews" {
   let checklist = checklist_fixture()
   let input = checklist_input(b"x")
-  let before_template = checklist.to_json().stringify()
-  let before_input = input.to_json().stringify()
+  let before_template = ToJson::to_json(checklist).stringify()
+  let before_input = ToJson::to_json(input).stringify()
   let agenda = @review.instantiate_review_checklist(checklist, input, b"x")
   let again = @review.instantiate_review_checklist(checklist, input, b"x")
   assert_true(agenda == again)
   agenda.items[0].evidence_refs.push("new/evidence.txt")
   agenda.items[0].decisions.clear()
   agenda.participants.clear()
-  assert_eq(checklist.to_json().stringify(), before_template)
-  assert_eq(input.to_json().stringify(), before_input)
+  assert_eq(ToJson::to_json(checklist).stringify(), before_template)
+  assert_eq(ToJson::to_json(input).stringify(), before_input)
   assert_eq(again.items[0].decisions.length(), 1)
   assert_eq(again.items[0].evidence_refs, ["releases/cafe.md"])
   assert_eq(again.participants.length(), 3)

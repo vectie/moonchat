@@ -171,8 +171,7 @@ fn compare_review_source_text(
     } else {
       row.after_line.to_string()
     }
-    let literal = row.text
-      .to_json()
+    let literal = ToJson::to_json(row.text)
       .stringify()
       .replace_all(old="\u{feff}", new="\\uFEFF")
     out.write_string(

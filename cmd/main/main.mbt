@@ -1,7 +1,7 @@
 ///|
 fn print_layout(root : String, book_id : String) -> Unit {
   let home = @moonchat.moonsuite_product_home_for_workspace_root(root, book_id~)
-  println(home.to_json().stringify(indent=2))
+  println(ToJson::to_json(home).stringify(indent=2))
 }
 
 ///|

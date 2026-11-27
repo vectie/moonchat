@@ -1,30 +1,34 @@
 ///|
 /// Curated local import of GitHub REST pull-request review comments.
 /// Login mappings describe imported authors; they do not authenticate anyone.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct GitHubReviewImportPlan {
   format : String
   export_ref : String
   export_digest : String
   authors : Array[GitHubReviewAuthor]
   threads : Array[GitHubReviewThread]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct GitHubReviewAuthor {
   login : String
   participant_id : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct GitHubReviewThread {
   root_comment_id : String
   key : String
   kind : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(Eq)
 priv struct GitHubComment {
   id : String
   parent : String
@@ -34,7 +38,7 @@ priv struct GitHubComment {
   created_at : String
   pull_request_url : String
   context : Json
-} derive(Eq)
+}
 
 ///|
 fn github_decimal_id(value : String) -> Bool {
@@ -144,11 +148,11 @@ fn github_comments(bytes : Bytes) -> GitHubCommentSnapshot raise {
       ] {
       context[key] = if key == "diff_hunk" {
         match fields.get(key) {
-          Some(String(value)) => value.to_json()
+          Some(String(value)) => ToJson::to_json(value)
           _ => fail("GitHub review comment requires string diff_hunk")
         }
       } else {
-        github_text(fields, key).to_json()
+        ToJson::to_json(github_text(fields, key))
       }
     }
     context["id"] = fields["id"]
@@ -173,7 +177,7 @@ fn github_comments(bytes : Bytes) -> GitHubCommentSnapshot raise {
       match fields.get(key) {
         None => ()
         Some(Null) => context[key] = null
-        Some(String(value)) => context[key] = value.to_json()
+        Some(String(value)) => context[key] = ToJson::to_json(value)
         _ => fail("GitHub location field must be a string or null: " + key)
       }
     }
@@ -266,7 +270,9 @@ pub fn catalog_github_review_comments(export_bytes : Bytes) -> String raise {
     "GitHub export SHA-256: " + review_source_digest(export_bytes) + "\n",
   )
   out.write_string(
-    "Pull request: " + comments[0].pull_request_url.to_json().stringify() + "\n",
+    "Pull request: " +
+    ToJson::to_json(comments[0].pull_request_url).stringify() +
+    "\n",
   )
   out.write_string(
     "Local snapshot only; completeness against GitHub is not known.\n",
@@ -278,7 +284,7 @@ pub fn catalog_github_review_comments(export_bytes : Bytes) -> String raise {
         "\nRoot " +
         comment.id +
         " | comments: \{thread.length()} | path: " +
-        comment.path.to_json().stringify() +
+        ToJson::to_json(comment.path).stringify() +
         "\n",
       )
       for item in thread {
@@ -286,9 +292,9 @@ pub fn catalog_github_review_comments(export_bytes : Bytes) -> String raise {
           "  " +
           item.id +
           " | " +
-          item.login.to_json().stringify() +
+          ToJson::to_json(item.login).stringify() +
           " | " +
-          item.body.to_json().stringify() +
+          ToJson::to_json(item.body).stringify() +
           "\n",
         )
       }
@@ -408,9 +414,9 @@ pub fn import_github_review_comments(
         "\nComment " +
         comment.id +
         "\nGitHub login: " +
-        comment.login.to_json().stringify() +
+        ToJson::to_json(comment.login).stringify() +
         "\nMapped participant: " +
-        author.to_json().stringify() +
+        ToJson::to_json(author).stringify() +
         "\nContext: " +
         comment.context.stringify(indent=2) +
         "\nBody (verbatim):\n" +

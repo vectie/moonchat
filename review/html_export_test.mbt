@@ -4,7 +4,7 @@ test "HTML packet includes bound source discussion and navigable decision contex
     "# Release plan 🌙\r\n\tDeploy after rehearsal.\r\n",
   )
   let bundle = authored_bundle(source~)
-  let before = bundle.to_json().stringify()
+  let before = ToJson::to_json(bundle).stringify()
   let text = @review.export_review_html(bundle, source)
   assert_true(text.has_prefix("<!doctype html>\n"))
   assert_true(text.contains("<span># Release plan 🌙</span>"))
@@ -24,7 +24,7 @@ test "HTML packet includes bound source discussion and navigable decision contex
   assert_true(text.contains(bundle.source_digest))
   assert_true(!text.contains("\r"))
   assert_eq(text, @review.export_review_html(bundle, source))
-  assert_eq(before, bundle.to_json().stringify())
+  assert_eq(before, ToJson::to_json(bundle).stringify())
 }
 
 ///|

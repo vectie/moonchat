@@ -31,13 +31,13 @@ test "relocation moves whole exact passages into complete next packet without mu
     decision_receipts: [fixture_receipt(old_base, "defer")],
   }
   let draft = @review.prepare_review_revision(
-    old.to_json().stringify(),
+    ToJson::to_json(old).stringify(),
     old_source,
   )
   let next = @review.compile_review_revision(
     { ..draft, source_revision_id: "rev-two", },
     new_source,
-    previous_bundle_text=old.to_json().stringify(),
+    previous_bundle_text=ToJson::to_json(old).stringify(),
     previous_source_bytes=old_source,
     previous_bundle_ref="reviews/previous.json",
   )
@@ -45,9 +45,9 @@ test "relocation moves whole exact passages into complete next packet without mu
     relocation_range("objection", 2, 3, "Traffic cap: 10%.\nOwner: Jules."),
     relocation_range("proposal", 4, 4, "Rollback before expansion."),
   ])
-  let original = old.to_json().stringify()
-  let next_original = next.to_json().stringify()
-  let map_original = map.to_json().stringify()
+  let original = ToJson::to_json(old).stringify()
+  let next_original = ToJson::to_json(next).stringify()
+  let map_original = ToJson::to_json(map).stringify()
   let result = @review.relocate_review_source_locations(
     old, old_source, map, next, new_source,
   )
@@ -72,16 +72,16 @@ test "relocation moves whole exact passages into complete next packet without mu
   assert_true(old.decision_receipts[0].decision == "defer")
   assert_true(result.to_markdown().contains("2 ranges mapped; 0 unresolved."))
   assert_eq(
-    result.to_json().stringify(),
+    ToJson::to_json(result).stringify(),
     @review.relocate_review_source_locations(
       old, old_source, map, next, new_source,
     )
-    .to_json()
-    .stringify(),
+    |> ToJson::to_json
+    |> Json::stringify(),
   )
-  assert_eq(old.to_json().stringify(), original)
-  assert_eq(next.to_json().stringify(), next_original)
-  assert_eq(map.to_json().stringify(), map_original)
+  assert_eq(ToJson::to_json(old).stringify(), original)
+  assert_eq(ToJson::to_json(next).stringify(), next_original)
+  assert_eq(ToJson::to_json(map).stringify(), map_original)
 }
 
 ///|
@@ -326,6 +326,7 @@ test "relocation validates both complete bundles scope old quotes and source byt
 }
 
 ///|
+#warnings("-deprecated_syntax")
 test "relocation applies packet text limits before producing a map" {
   let old = authored_bundle(source=b"x")
   let map = relocation_map(old, [relocation_range("objection", 1, 1, "x")])

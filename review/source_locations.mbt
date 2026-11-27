@@ -1,22 +1,24 @@
 ///|
 /// Optional reading annotations for one exact source, separate from the review
 /// contract. Entry associations are supplied by the reader, not inferred.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewSourceLocations {
   format : String
   review_id : String
   source_digest : String
   locations : Array[ReviewSourceLocation]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// One-based inclusive HTML display lines. Quote is the complete selected
 /// display text joined with LF, without an added final newline.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewSourceLocation {
   entry_id : String
   start_line : Int32
   end_line : Int32
   quote : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 pub fn parse_review_source_locations(
@@ -54,9 +56,9 @@ fn index_source_locations(
   if locations.locations.length() > 1000 {
     fail("source locations exceed the 1000 range limit")
   }
-  let by_entry : Map[String, Array[Int32]] = {}
-  let by_line : Map[Int32, Array[Int32]] = {}
-  let seen : Map[(String, Int32, Int32), Bool] = {}
+  let by_entry : Map[String, Array[Int32]] = Map([])
+  let by_line : Map[Int32, Array[Int32]] = Map([])
+  let seen : Map[(String, Int32, Int32), Bool] = Map([])
   let mut selected_lines = 0
   let mut quote_units = 0
   for index, location in locations.locations {

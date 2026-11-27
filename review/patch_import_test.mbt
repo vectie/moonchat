@@ -101,13 +101,14 @@ test "patch catalog preserves files hunks coordinates additions deletions and me
 test "patch selection composes editable pending evidence and existing decision forms" {
   let bytes = patch_fixture()
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
   let plan = patch_plan(bytes)
   assert_true(
-    @review.parse_patch_review_import_plan(plan.to_json().stringify()) == plan,
+    @review.parse_patch_review_import_plan(ToJson::to_json(plan).stringify()) ==
+    plan,
   )
   let imported = @review.import_patch_review(agenda, plan, bytes)
-  assert_eq(agenda.to_json().stringify(), before)
+  assert_eq(ToJson::to_json(agenda).stringify(), before)
   assert_eq(imported.items.length(), 4)
   let item = imported.items[3]
   assert_eq(item.evidence_refs, [agenda.source_artifact_ref])
@@ -131,7 +132,8 @@ test "patch selection composes editable pending evidence and existing decision f
     form.choices.all(choice => choice.outcome == "" && choice.receipt_id == ""),
   )
   assert_true(
-    @review.parse_review_agenda(imported.to_json().stringify()) == imported,
+    @review.parse_review_agenda(ToJson::to_json(imported).stringify()) ==
+    imported,
   )
   assert_true(
     @review.export_review_markdown(bundle, bytes).contains(
@@ -194,7 +196,10 @@ test "patch rejects truncated overflow empty and wrong-count hunks" {
       "--- a/x\n+++ b/x\n@@ -1 +1 @@\n\n-old\n+new\n",
     ] {
     assert_true(
-      (try? @review.catalog_patch_review(@utf8.encode(text))) is Err(_),
+      (Ok(@review.catalog_patch_review(@utf8.encode(text))) catch {
+        e => Err(e)
+      })
+      is Err(_),
       msg=text,
     )
   }
@@ -211,7 +216,10 @@ test "patch rejects unsupported formats and any trailing nonpatch content" {
       "--- /dev/null\n+++ b/x\n@@ -1 +1 @@\n-old\n+new\n",
     ] {
     assert_true(
-      (try? @review.catalog_patch_review(@utf8.encode(text))) is Err(_),
+      (Ok(@review.catalog_patch_review(@utf8.encode(text))) catch {
+        e => Err(e)
+      })
+      is Err(_),
       msg=text,
     )
   }
@@ -228,7 +236,10 @@ test "patch rejects overlapping or reversed hunks and malformed newline markers"
       "--- a/x\n+++ b/x\n@@ -1 +1 @@\n-old\n+new\n\\ No newline at end of file\n@@ -2,0 +3 @@\n+later\n",
     ] {
     assert_true(
-      (try? @review.catalog_patch_review(@utf8.encode(text))) is Err(_),
+      (Ok(@review.catalog_patch_review(@utf8.encode(text))) catch {
+        e => Err(e)
+      })
+      is Err(_),
       msg=text,
     )
   }
@@ -239,13 +250,17 @@ test "patch import rejects stale nonexistent duplicated and late invalid selecti
   let bytes = patch_fixture()
   let plan = patch_plan(bytes)
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
   assert_true(
-    (try? @review.import_patch_review(
-      agenda,
-      plan,
-      @utf8.encode(@utf8.decode(bytes) + "\n"),
-    ))
+    (Ok(
+      @review.import_patch_review(
+        agenda,
+        plan,
+        @utf8.encode(@utf8.decode(bytes) + "\n"),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   for
@@ -264,11 +279,15 @@ test "patch import rejects stale nonexistent duplicated and late invalid selecti
       },
     ] {
     assert_true(
-      (try? @review.import_patch_review(
-        agenda,
-        { ..plan, selections: [selection], },
-        bytes,
-      ))
+      (Ok(
+        @review.import_patch_review(
+          agenda,
+          { ..plan, selections: [selection], },
+          bytes,
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -280,11 +299,13 @@ test "patch import rejects stale nonexistent duplicated and late invalid selecti
       Array::make(101, plan.selections[0]),
     ] {
     assert_true(
-      (try? @review.import_patch_review(agenda, { ..plan, selections, }, bytes))
+      (Ok(@review.import_patch_review(agenda, { ..plan, selections, }, bytes)) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
-  assert_eq(agenda.to_json().stringify(), before)
+  assert_eq(ToJson::to_json(agenda).stringify(), before)
 }
 
 ///|
@@ -292,15 +313,15 @@ test "patch import isolates mutable output arrays from input agenda and plan" {
   let bytes = patch_fixture()
   let plan = patch_plan(bytes)
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
-  let plan_before = plan.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
+  let plan_before = ToJson::to_json(plan).stringify()
   let imported = @review.import_patch_review(agenda, plan, bytes)
   imported.items[0].evidence_refs.push("new/evidence")
   imported.items[0].decisions.clear()
   imported.items[3].decisions.clear()
   imported.participants.clear()
-  assert_eq(agenda.to_json().stringify(), before)
-  assert_eq(plan.to_json().stringify(), plan_before)
+  assert_eq(ToJson::to_json(agenda).stringify(), before)
+  assert_eq(ToJson::to_json(plan).stringify(), plan_before)
 }
 
 ///|
@@ -332,16 +353,22 @@ test "patch bounds enforce bytes lines files hunks and UTF8 before selection" {
       @utf8.encode(one + "\n".repeat(10000)),
       @utf8.encode(one.repeat(101)),
     ] {
-    assert_true((try? @review.catalog_patch_review(bytes)) is Err(_))
+    assert_true(
+      (Ok(@review.catalog_patch_review(bytes)) catch { e => Err(e) }) is Err(_),
+    )
   }
   let hunks : Array[String] = []
   for i in 1..<=1001 {
     hunks.push("@@ -\{i} +\{i} @@\n-old\n+new\n")
   }
   assert_true(
-    (try? @review.catalog_patch_review(
-      @utf8.encode("--- a/x\n+++ b/x\n" + hunks.join("")),
-    ))
+    (Ok(
+      @review.catalog_patch_review(
+        @utf8.encode("--- a/x\n+++ b/x\n" + hunks.join("")),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }
@@ -352,14 +379,24 @@ test "patch preparation schema and item keys retain normal authoring validation"
   let plan = patch_plan(bytes)
   let wrong = { ..plan, format: "moonchat.review-patch.v2", }
   assert_true(
-    (try? @review.parse_patch_review_import_plan(wrong.to_json().stringify()))
+    (Ok(
+      @review.parse_patch_review_import_plan(ToJson::to_json(wrong).stringify()),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   assert_true(
-    (try? @review.import_patch_review(agenda_fixture(), wrong, bytes)) is Err(_),
+    (Ok(@review.import_patch_review(agenda_fixture(), wrong, bytes)) catch {
+      e => Err(e)
+    })
+    is Err(_),
   )
   let imported = @review.import_patch_review(agenda_fixture(), plan, bytes)
   assert_true(
-    (try? @review.import_patch_review(imported, plan, bytes)) is Err(_),
+    (Ok(@review.import_patch_review(imported, plan, bytes)) catch {
+      e => Err(e)
+    })
+    is Err(_),
   )
 }

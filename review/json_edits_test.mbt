@@ -130,7 +130,7 @@ test "JSON edits support escaped empty and root pointers with arrays and objects
         @json.parse("9007199254740993"),
         @json.parse("9007199254740994"),
       ),
-      ("/", false.to_json(), Json::array([])),
+      ("/", ToJson::to_json(false), Json::array([])),
       ("/regions", (["west", "east"] : Json), ({ "named": true } : Json)),
       ("", @json.parse(@utf8.decode(json_edit_source())), Json::null()),
     ] {
@@ -149,13 +149,13 @@ test "JSON edits support escaped empty and root pointers with arrays and objects
 ///|
 test "JSON edits preserve plans and have order independent disjoint replacements" {
   let (text, plan) = json_edit_fixture()
-  let before = plan.to_json().stringify()
+  let before = ToJson::to_json(plan).stringify()
   let reversed = plan.edits.rev()
   assert_true(
     apply_json_fixture(text, plan) ==
     apply_json_fixture(text, { ..plan, edits: reversed, }),
   )
-  assert_eq(plan.to_json().stringify(), before)
+  assert_eq(ToJson::to_json(plan).stringify(), before)
   assert_true(@review.parse_review_json_edits(before) == plan)
   let preview = @review.preview_review_json_edits(
     plan,
@@ -224,15 +224,14 @@ test "JSON edit plan refuses duplicate and unknown fields and source keys" {
   for source in [b"{\"x\":1,\"x\":2}", b"{\"x\":1,\"\\u0078\":2}", b"[1,]"] {
     assert_true(authoring_fails(() => ignore(json_edit_fixture(source~))))
   }
-  guard plan.to_json() is Object(fields) else { fail("plan") }
+  guard ToJson::to_json(plan) is Object(fields) else { fail("plan") }
   fields["approved"] = true
   assert_true(
     authoring_fails(() => {
       ignore(@review.parse_review_json_edits(Json::object(fields).stringify()))
     }),
   )
-  let duplicate = plan
-    .to_json()
+  let duplicate = ToJson::to_json(plan)
     .stringify()
     .replace(old="\"format\":", new="\"format\":\"wrong\",\"format\":")
   assert_true(
@@ -247,7 +246,7 @@ test "JSON edit plan refuses duplicate and unknown fields and source keys" {
 test "JSON edits retain unchanged precise fractions and reject rounded expected values" {
   let source = b"{\"launch\":{\"limit\":1.00000000000000001},\"other\":1.00000000000000002}"
   let (text, plan) = json_edit_fixture(source~)
-  let raw = plan.to_json().stringify()
+  let raw = ToJson::to_json(plan).stringify()
   let exact = @review.parse_review_json_edits(
     raw.replace(
       old="\"expected_value\":50",

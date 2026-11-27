@@ -39,8 +39,8 @@ test "source comparison is deterministic detached and retains exact review scope
     decision_receipts: [fixture_receipt(draft, "approve")],
   }
   let after = authored_bundle(source=b"new\n", revision="rev-two")
-  let old_saved = before.to_json().stringify()
-  let new_saved = after.to_json().stringify()
+  let old_saved = ToJson::to_json(before).stringify()
+  let new_saved = ToJson::to_json(after).stringify()
   let output = @review.export_review_comparison(
     before,
     b"old\n",
@@ -66,8 +66,8 @@ test "source comparison is deterministic detached and retains exact review scope
   assert_true(
     output.contains("prior receipts cover only their original digest"),
   )
-  assert_eq(before.to_json().stringify(), old_saved)
-  assert_eq(after.to_json().stringify(), new_saved)
+  assert_eq(ToJson::to_json(before).stringify(), old_saved)
+  assert_eq(ToJson::to_json(after).stringify(), new_saved)
 }
 
 ///|

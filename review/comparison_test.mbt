@@ -1,7 +1,7 @@
 ///|
 test "comparison is deterministic and does not mutate or invent changes" {
   let bundle = authored_bundle()
-  let saved = bundle.to_json().stringify()
+  let saved = ToJson::to_json(bundle).stringify()
   let text = @review.export_review_comparison(
     bundle, b"revision one\n", bundle, b"revision one\n",
   )
@@ -14,7 +14,7 @@ test "comparison is deterministic and does not mutate or invent changes" {
       bundle, b"revision one\n", bundle, b"revision one\n",
     ),
   )
-  assert_eq(saved, bundle.to_json().stringify())
+  assert_eq(saved, ToJson::to_json(bundle).stringify())
 }
 
 ///|

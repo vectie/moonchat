@@ -1,7 +1,7 @@
 ///|
 test "exploration filters literal text and kinds deterministically without mutation" {
   let bundle = authored_bundle()
-  let original = bundle.to_json().stringify()
+  let original = ToJson::to_json(bundle).stringify()
   let result = @review.explore_review(
     bundle,
     b"revision one\n",
@@ -22,7 +22,7 @@ test "exploration filters literal text and kinds deterministically without mutat
       kind="objection",
     ),
   )
-  assert_eq(original, bundle.to_json().stringify())
+  assert_eq(original, ToJson::to_json(bundle).stringify())
   assert_true(
     @review.explore_review(bundle, b"revision one\n", text="OBJECTION").contains(
       "Matched 0 of 3 entries.",

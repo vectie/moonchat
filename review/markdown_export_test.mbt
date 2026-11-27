@@ -1,7 +1,7 @@
 ///|
 test "markdown review handoff preserves conversation decisions and projected events" {
   let bundle = authored_bundle()
-  let before = bundle.to_json().stringify()
+  let before = ToJson::to_json(bundle).stringify()
   let text = @review.export_review_markdown(bundle, b"revision one\n")
   assert_true(text.contains("# MoonChat review handoff\n"))
   assert_true(text.contains("Status:\n\n    pending_review\n"))
@@ -17,7 +17,7 @@ test "markdown review handoff preserves conversation decisions and projected eve
   assert_true(text.contains("    client-proposal\n"))
   assert_true(text.contains(bundle.source_digest))
   assert_eq(text, @review.export_review_markdown(bundle, b"revision one\n"))
-  assert_eq(before, bundle.to_json().stringify())
+  assert_eq(before, ToJson::to_json(bundle).stringify())
 }
 
 ///|

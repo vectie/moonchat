@@ -1,6 +1,7 @@
 ///|
 /// An explicit choice supplied by a reviewer, never an authentication proof.
 /// Empty outcome leaves this requirement undecided; no approval is defaulted.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewDecisionChoice {
   decision_id : String
   subject_entry_id : String
@@ -10,11 +11,12 @@ pub(all) struct ReviewDecisionChoice {
   receipt_id : String
   decided_at : String
   evidence_refs : Array[String]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// A local, unverified submission bound to the exact displayed bundle bytes.
 /// Discussion is read-only context, including objections by other participants.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewDecisionForm {
   format : String
   base_bundle_digest : String
@@ -26,7 +28,7 @@ pub(all) struct ReviewDecisionForm {
   reviewer_name : String
   entries : Array[ReviewEntry]
   choices : Array[ReviewDecisionChoice]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Prepare only outstanding requirements for one named human. The host must

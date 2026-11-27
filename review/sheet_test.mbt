@@ -141,7 +141,7 @@ test "spreadsheet accepts UTF8 BOM CRLF blank lines and no terminal newline" {
 test "spreadsheet import reports malformed rows without altering the template" {
   let base = agenda_fixture()
   let header = "key,kind,author,body,evidence_ref,reviewer,prompt\n"
-  let original = base.to_json().stringify()
+  let original = ToJson::to_json(base).stringify()
   for
     row in [
       "x,proposal,author,Body,,editor", "x,proposal,author,Body,,editor,Ready?,extra",
@@ -160,7 +160,7 @@ test "spreadsheet import reports malformed rows without altering the template" {
         |> ignore
       }),
     )
-    assert_eq(base.to_json().stringify(), original)
+    assert_eq(ToJson::to_json(base).stringify(), original)
   }
   assert_true(
     authoring_fails(() => {

@@ -41,6 +41,7 @@ pub fn capability_json(healthy~ : Bool = false) -> Json {
 }
 
 ///|
+#derive(Debug, Eq)
 struct FlowRequest {
   request_id : String
   run_id : String
@@ -60,7 +61,7 @@ struct FlowRequest {
   input_artifacts : Array[String]
   timeout_ms : Int32
   created_at : String
-} derive(Debug, Eq)
+}
 
 ///|
 fn json_object(value : Json, label : String) -> Map[String, Json] raise {

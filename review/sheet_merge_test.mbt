@@ -113,9 +113,9 @@ test "sheet merge reports all conflicting values without a partial agenda" {
     "decision:" + item.decisions[0].reviewer,
   ])
   assert_eq(report.conflicts[0].item_key, item.key)
-  assert_eq(report.conflicts[0].base, item.body.to_json())
-  assert_eq(report.conflicts[0].left, "Left body".to_json())
-  assert_eq(report.conflicts[0].right, "Right body".to_json())
+  assert_eq(report.conflicts[0].base, ToJson::to_json(item.body))
+  assert_eq(report.conflicts[0].left, ToJson::to_json("Left body"))
+  assert_eq(report.conflicts[0].right, ToJson::to_json("Right body"))
   assert_eq(report.format, "moonchat.review-sheet-merge.v1")
   // Resolve by editing both sheets to the chosen common value, then retry.
   let resolved = { ..right, items: [{ ..left.items[0], }, ..base.items[1:]], }
@@ -143,7 +143,7 @@ test "sheet merge retains uncontested deletion and reports deletion versus edit"
   assert_eq(conflict.conflicts.length(), 1)
   assert_eq(conflict.conflicts[0].field, "item")
   assert_eq(conflict.conflicts[0].left, Json::null())
-  assert_eq(conflict.conflicts[0].right, right.items[1].to_json())
+  assert_eq(conflict.conflicts[0].right, ToJson::to_json(right.items[1]))
   assert_true(sheet_merge_fixture(base, left, left).merged_agenda == Some(left))
 }
 
@@ -325,12 +325,12 @@ test "sheet merge validates combined decisions and malformed branch input" {
 ///|
 test "sheet merge does not mutate or alias authoring arrays" {
   let base = agenda_fixture()
-  let original = base.to_json().stringify()
+  let original = ToJson::to_json(base).stringify()
   let result = sheet_merge_fixture(base, base, base).merged_agenda.unwrap()
   assert_true(result == base)
   result.items[0].evidence_refs.clear()
   result.items[0].decisions.clear()
   result.items.clear()
   result.participants.clear()
-  assert_eq(base.to_json().stringify(), original)
+  assert_eq(ToJson::to_json(base).stringify(), original)
 }

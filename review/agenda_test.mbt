@@ -61,7 +61,7 @@ fn agenda_fixture() -> @review.ReviewAgenda {
 ///|
 test "agenda editing compiles stable linked pending reviews and readable outputs" {
   let agenda = agenda_fixture()
-  let parsed = @review.parse_review_agenda(agenda.to_json().stringify())
+  let parsed = @review.parse_review_agenda(ToJson::to_json(agenda).stringify())
   assert_true(parsed == agenda)
   let first = @review.compile_review_agenda(parsed, b"release one")
   assert_eq(first.entries.length(), 3)

@@ -48,7 +48,8 @@ test "SARIF selected findings become editable pending source-bound review eviden
   let bytes = @utf8.encode(sarif_fixture_text())
   let plan = sarif_plan_fixture(bytes)
   assert_true(
-    @review.parse_sarif_review_import_plan(plan.to_json().stringify()) == plan,
+    @review.parse_sarif_review_import_plan(ToJson::to_json(plan).stringify()) ==
+    plan,
   )
   let imported = @review.import_sarif_review(
     agenda_fixture(),
@@ -73,7 +74,10 @@ test "SARIF selected findings become editable pending source-bound review eviden
   assert_eq(bundle.decision_receipts.length(), 0)
   assert_eq(@review.review_status(bundle), "pending_review")
   assert_eq(
-    @review.reimport_review_bundle(bundle.to_json().stringify(), b"source"),
+    @review.reimport_review_bundle(
+      ToJson::to_json(bundle).stringify(),
+      b"source",
+    ),
     bundle,
   )
   assert_true(
@@ -85,7 +89,8 @@ test "SARIF selected findings become editable pending source-bound review eviden
     @review.export_review_html(bundle, b"source").contains("Fixture exception"),
   )
   assert_true(
-    @review.parse_review_agenda(imported.to_json().stringify()) == imported,
+    @review.parse_review_agenda(ToJson::to_json(imported).stringify()) ==
+    imported,
   )
   assert_true(
     @review.import_sarif_review(agenda_fixture(), plan, bytes, b"source") ==
@@ -128,7 +133,7 @@ test "SARIF stale or invalid plans and duplicate imports fail atomically" {
   let bytes = @utf8.encode(sarif_fixture_text())
   let plan = sarif_plan_fixture(bytes)
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
   for
     bad in [
       { ..plan, format: "v2", },
@@ -147,7 +152,7 @@ test "SARIF stale or invalid plans and duplicate imports fail atomically" {
         @review.import_sarif_review(agenda, bad, bytes, b"source") |> ignore
       }),
     )
-    assert_eq(agenda.to_json().stringify(), before)
+    assert_eq(ToJson::to_json(agenda).stringify(), before)
   }
   let imported = @review.import_sarif_review(agenda, plan, bytes, b"source")
   assert_true(
@@ -161,7 +166,7 @@ test "SARIF stale or invalid plans and duplicate imports fail atomically" {
   assert_true(
     authoring_fails(() => {
       @review.parse_sarif_review_import_plan(
-        { ..plan, format: "v2", }.to_json().stringify(),
+        ToJson::to_json({ ..plan, format: "v2", }).stringify(),
       )
       |> ignore
     }),
@@ -388,7 +393,7 @@ test "SARIF input and result count limits include their exact boundary" {
 test "SARIF plan numeric coordinates reject fractional values instead of rounding" {
   let bytes = @utf8.encode(sarif_fixture_text())
   let plan = sarif_plan_fixture(bytes)
-  let text = plan.to_json().stringify()
+  let text = ToJson::to_json(plan).stringify()
   for
     (old, replacement) in [
       ("\"run_index\":0", "\"run_index\":0.5"),

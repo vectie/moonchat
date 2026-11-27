@@ -63,7 +63,7 @@ test "notebook import preserves source cell provenance and rich data as pending 
   let bytes = @utf8.encode(notebook_fixture_text())
   let plan = notebook_plan_fixture(bytes)
   assert_true(
-    @review.parse_notebook_review_import_plan(plan.to_json().stringify()) ==
+    @review.parse_notebook_review_import_plan(ToJson::to_json(plan).stringify()) ==
     plan,
   )
   let agenda = agenda_fixture()
@@ -85,7 +85,7 @@ test "notebook import preserves source cell provenance and rich data as pending 
   assert_eq(bundle.decision_receipts.length(), 0)
   assert_eq(@review.review_status(bundle), "pending_review")
   assert_eq(
-    @review.reimport_review_bundle(bundle.to_json().stringify(), bytes),
+    @review.reimport_review_bundle(ToJson::to_json(bundle).stringify(), bytes),
     bundle,
   )
   assert_true(
@@ -95,7 +95,8 @@ test "notebook import preserves source cell provenance and rich data as pending 
   assert_true(html.contains("&lt;script&gt;do_not_execute()&lt;/script&gt;"))
   assert_false(html.contains("<script>do_not_execute()"))
   assert_true(
-    @review.parse_review_agenda(imported.to_json().stringify()) == imported,
+    @review.parse_review_agenda(ToJson::to_json(imported).stringify()) ==
+    imported,
   )
   assert_true(@review.import_notebook_review(agenda, plan, bytes) == imported)
 }
@@ -105,7 +106,7 @@ test "notebook selected order and authoring arrays remain independently editable
   let bytes = @utf8.encode(notebook_fixture_text())
   let plan = notebook_plan_fixture(bytes)
   let agenda = agenda_fixture()
-  let original = agenda.to_json().stringify()
+  let original = ToJson::to_json(agenda).stringify()
   let selections = [
     {
       ..plan.cells[0],
@@ -151,7 +152,7 @@ test "notebook selected order and authoring arrays remain independently editable
   imported.items[0].decisions.clear()
   imported.items[7].decisions.clear()
   imported.participants.clear()
-  assert_eq(agenda.to_json().stringify(), original)
+  assert_eq(ToJson::to_json(agenda).stringify(), original)
   assert_eq(plan.cells[0].decisions.length(), 1)
 }
 
@@ -160,7 +161,7 @@ test "notebook plans reject stale bytes duplicate imports and late invalid selec
   let bytes = @utf8.encode(notebook_fixture_text())
   let plan = notebook_plan_fixture(bytes)
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
   for
     bad in [
       { ..plan, format: "v2", },
@@ -182,7 +183,7 @@ test "notebook plans reject stale bytes duplicate imports and late invalid selec
         @review.import_notebook_review(agenda, bad, bytes) |> ignore
       }),
     )
-    assert_eq(agenda.to_json().stringify(), before)
+    assert_eq(ToJson::to_json(agenda).stringify(), before)
   }
   let imported = @review.import_notebook_review(agenda, plan, bytes)
   assert_true(
@@ -200,8 +201,7 @@ test "notebook plans reject stale bytes duplicate imports and late invalid selec
       |> ignore
     }),
   )
-  let fractional = plan
-    .to_json()
+  let fractional = ToJson::to_json(plan)
     .stringify()
     .replace(old="\"cell_index\":1", new="\"cell_index\":1.5")
   assert_true(

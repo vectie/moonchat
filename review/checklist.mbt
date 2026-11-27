@@ -32,10 +32,10 @@ pub fn catalog_review_checklist(checklist : ReviewChecklist) -> String raise {
       .filter(item => item.decisions.any(d => d.reviewer_role == role))
       .map(item => item.key)
     {
-      "role": role.to_json(),
-      "authors_items": authors.to_json(),
-      "decides_items": decisions.to_json(),
-      "requires_human": (!decisions.is_empty()).to_json(),
+      "role": ToJson::to_json(role),
+      "authors_items": ToJson::to_json(authors),
+      "decides_items": ToJson::to_json(decisions),
+      "requires_human": ToJson::to_json(!decisions.is_empty()),
     }
   })
   let variables : Array[Json] = []
@@ -56,19 +56,19 @@ pub fn catalog_review_checklist(checklist : ReviewChecklist) -> String raise {
       }
     }
     variables.push({
-      "variable": name.to_json(),
-      "used_in": locations.to_json(),
+      "variable": ToJson::to_json(name),
+      "used_in": ToJson::to_json(locations),
     })
   }
   (
     {
-      "format": "moonchat.review-checklist-catalog.v1".to_json(),
-      "checklist_id": checklist.checklist_id.to_json(),
-      "title": checklist.title.to_json(),
-      "roles": roles.to_json(),
-      "variables": variables.to_json(),
-      "items": checklist.items.to_json(),
-      "status": "preparation_only".to_json(),
+      "format": ToJson::to_json("moonchat.review-checklist-catalog.v1"),
+      "checklist_id": ToJson::to_json(checklist.checklist_id),
+      "title": ToJson::to_json(checklist.title),
+      "roles": ToJson::to_json(roles),
+      "variables": ToJson::to_json(variables),
+      "items": ToJson::to_json(checklist.items),
+      "status": ToJson::to_json("preparation_only"),
     } : Json).stringify(indent=2)
 }
 

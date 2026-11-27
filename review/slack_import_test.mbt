@@ -90,12 +90,13 @@ test "Slack import composes pending quoted evidence through existing APIs" {
   let bytes = slack_fixture()
   let plan = slack_plan(bytes)
   assert_true(
-    @review.parse_slack_review_import_plan(plan.to_json().stringify()) == plan,
+    @review.parse_slack_review_import_plan(ToJson::to_json(plan).stringify()) ==
+    plan,
   )
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
   let imported = @review.import_slack_review(agenda, plan, bytes)
-  assert_eq(agenda.to_json().stringify(), before)
+  assert_eq(ToJson::to_json(agenda).stringify(), before)
   assert_eq(imported.items.length(), 4)
   let item = imported.items[3]
   assert_eq(item.author, "editor")
@@ -109,7 +110,8 @@ test "Slack import composes pending quoted evidence through existing APIs" {
   }
   assert_false(item.body.contains("Who owns rollback?"))
   assert_true(
-    @review.parse_review_agenda(imported.to_json().stringify()) == imported,
+    @review.parse_review_agenda(ToJson::to_json(imported).stringify()) ==
+    imported,
   )
   let bundle = @review.compile_review_agenda(imported, bytes)
   assert_eq(bundle.source_digest, plan.source_digest)
@@ -152,7 +154,9 @@ test "Slack supported snapshots include bot action file and edited records with 
       slack_plan(bytes),
       bytes,
     )
-    assert_true(imported.items[3].body.contains(raw.to_json().stringify()))
+    assert_true(
+      imported.items[3].body.contains(ToJson::to_json(raw).stringify()),
+    )
     if raw.contains("edited snapshot") {
       assert_true(imported.items[3].body.contains("ordinary_edited_snapshot"))
     }
@@ -192,11 +196,15 @@ test "Slack rejects archival or unsupported selected records without dropping ca
   let plan = slack_plan(bytes)
   for ordinal in [3, 4, 5] {
     assert_true(
-      (try? @review.import_slack_review(
-        agenda_fixture(),
-        { ..plan, selections: [{ ..plan.selections[0], ordinal, }], },
-        bytes,
-      ))
+      (Ok(
+        @review.import_slack_review(
+          agenda_fixture(),
+          { ..plan, selections: [{ ..plan.selections[0], ordinal, }], },
+          bytes,
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -215,11 +223,11 @@ test "Slack rejects archival or unsupported selected records without dropping ca
     )
     assert_true(slack_rows(bytes)[0] is { "selectable": False, .. }, msg=extra)
     assert_true(
-      (try? @review.import_slack_review(
-        agenda_fixture(),
-        slack_plan(bytes),
-        bytes,
-      ))
+      (Ok(
+        @review.import_slack_review(agenda_fixture(), slack_plan(bytes), bytes),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -263,7 +271,9 @@ test "Slack malformed containers duplicate decoded keys depth bytes and record l
         "[{\"nested\":" + "[".repeat(65) + "0" + "]".repeat(65) + "}]",
       ),
     ] {
-    assert_true((try? @review.catalog_slack_review(bytes)) is Err(_))
+    assert_true(
+      (Ok(@review.catalog_slack_review(bytes)) catch { e => Err(e) }) is Err(_),
+    )
   }
   assert_eq(slack_rows(b"[]").length(), 0)
   assert_eq(
@@ -290,13 +300,17 @@ test "Slack stale and invalid selections reject atomically with ordinary authori
   let bytes = slack_fixture()
   let plan = slack_plan(bytes)
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
   assert_true(
-    (try? @review.import_slack_review(
-      agenda,
-      plan,
-      @utf8.encode(@utf8.decode(bytes) + "\n"),
-    ))
+    (Ok(
+      @review.import_slack_review(
+        agenda,
+        plan,
+        @utf8.encode(@utf8.decode(bytes) + "\n"),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   for
@@ -319,11 +333,15 @@ test "Slack stale and invalid selections reject atomically with ordinary authori
       },
     ] {
     assert_true(
-      (try? @review.import_slack_review(
-        agenda,
-        { ..plan, selections: [selection], },
-        bytes,
-      ))
+      (Ok(
+        @review.import_slack_review(
+          agenda,
+          { ..plan, selections: [selection], },
+          bytes,
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -335,11 +353,13 @@ test "Slack stale and invalid selections reject atomically with ordinary authori
       Array::make(101, plan.selections[0]),
     ] {
     assert_true(
-      (try? @review.import_slack_review(agenda, { ..plan, selections, }, bytes))
+      (Ok(@review.import_slack_review(agenda, { ..plan, selections, }, bytes)) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
-  assert_eq(agenda.to_json().stringify(), before)
+  assert_eq(ToJson::to_json(agenda).stringify(), before)
 }
 
 ///|
@@ -348,31 +368,48 @@ test "Slack plan schema duplicate keys size and selected evidence bounds are exp
   let plan = slack_plan(bytes)
   let wrong = { ..plan, format: "moonchat.review-slack.v2", }
   assert_true(
-    (try? @review.parse_slack_review_import_plan(wrong.to_json().stringify()))
+    (Ok(
+      @review.parse_slack_review_import_plan(ToJson::to_json(wrong).stringify()),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   assert_true(
-    (try? @review.import_slack_review(agenda_fixture(), wrong, bytes)) is Err(_),
-  )
-  assert_true(
-    (try? @review.parse_slack_review_import_plan("{\"format\":1,\"format\":2}"))
+    (Ok(@review.import_slack_review(agenda_fixture(), wrong, bytes)) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   assert_true(
-    (try? @review.parse_slack_review_import_plan(
-      plan.to_json().stringify() + " ".repeat(1048576),
-    ))
+    (Ok(@review.parse_slack_review_import_plan("{\"format\":1,\"format\":2}")) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   assert_true(
-    (try? @review.import_slack_review(
-      agenda_fixture(),
-      {
-        ..plan,
-        selections: [{ ..plan.selections[0], note: "x".repeat(8388608), }],
-      },
-      bytes,
-    ))
+    (Ok(
+      @review.parse_slack_review_import_plan(
+        ToJson::to_json(plan).stringify() + " ".repeat(1048576),
+      ),
+    ) catch {
+      e => Err(e)
+    })
+    is Err(_),
+  )
+  assert_true(
+    (Ok(
+      @review.import_slack_review(
+        agenda_fixture(),
+        {
+          ..plan,
+          selections: [{ ..plan.selections[0], note: "x".repeat(8388608), }],
+        },
+        bytes,
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }
@@ -382,13 +419,13 @@ test "Slack output mutation cannot change agenda or plan arrays" {
   let bytes = slack_fixture()
   let agenda = agenda_fixture()
   let plan = slack_plan(bytes)
-  let before = agenda.to_json().stringify()
-  let plan_before = plan.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
+  let plan_before = ToJson::to_json(plan).stringify()
   let imported = @review.import_slack_review(agenda, plan, bytes)
   imported.items[0].evidence_refs.push("other/evidence")
   imported.items[0].decisions.clear()
   imported.items[3].decisions.clear()
   imported.participants.clear()
-  assert_eq(agenda.to_json().stringify(), before)
-  assert_eq(plan.to_json().stringify(), plan_before)
+  assert_eq(ToJson::to_json(agenda).stringify(), before)
+  assert_eq(ToJson::to_json(plan).stringify(), plan_before)
 }

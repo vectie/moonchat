@@ -1,12 +1,14 @@
 ///|
 /// Select cells from one exact notebook snapshot. Cell indexes are zero-based.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct NotebookReviewImportPlan {
   format : String
   notebook_digest : String
   cells : Array[NotebookReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct NotebookReviewSelection {
   cell_index : Int32
   key : String
@@ -14,7 +16,7 @@ pub(all) struct NotebookReviewSelection {
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// A static JSON reading catalog. Rich MIME payloads stay in the original file;
@@ -22,13 +24,15 @@ pub(all) struct NotebookReviewSelection {
 pub fn catalog_notebook_review(notebook_bytes : Bytes) -> String raise {
   let document = notebook_document(notebook_bytes)
   Json::object({
-    "format": "moonchat.notebook-catalog.v1".to_json(),
-    "notebook_digest": review_source_digest(notebook_bytes).to_json(),
-    "nbformat": (4).to_json(),
-    "nbformat_minor": document.minor.to_json(),
-    "notice": "Static saved evidence only. Outputs may be stale; nothing was executed or rendered.".to_json(),
+    "format": ToJson::to_json("moonchat.notebook-catalog.v1"),
+    "notebook_digest": ToJson::to_json(review_source_digest(notebook_bytes)),
+    "nbformat": ToJson::to_json(4),
+    "nbformat_minor": ToJson::to_json(document.minor),
+    "notice": ToJson::to_json(
+      "Static saved evidence only. Outputs may be stale; nothing was executed or rendered.",
+    ),
     "metadata": document.metadata,
-    "cells": document.cells.map(notebook_cell_summary).to_json(),
+    "cells": ToJson::to_json(document.cells.map(notebook_cell_summary)),
   }).stringify(indent=2)
 }
 
@@ -91,11 +95,11 @@ pub fn import_notebook_review(
       fail("Notebook selection requires an operator note")
     }
     let evidence = Json::object({
-      "notebook_ref": agenda.source_artifact_ref.to_json(),
-      "notebook_digest": plan.notebook_digest.to_json(),
-      "cell_pointer": "/cells/\{cell.index}".to_json(),
-      "nbformat": (4).to_json(),
-      "nbformat_minor": document.minor.to_json(),
+      "notebook_ref": ToJson::to_json(agenda.source_artifact_ref),
+      "notebook_digest": ToJson::to_json(plan.notebook_digest),
+      "cell_pointer": ToJson::to_json("/cells/\{cell.index}"),
+      "nbformat": ToJson::to_json(4),
+      "nbformat_minor": ToJson::to_json(document.minor),
       "notebook_metadata": document.metadata,
       "decoded_cell": notebook_cell_summary(cell),
       "original_cell": cell.original,

@@ -1,5 +1,6 @@
 ///|
 /// Editable preparation input, not an approval or a serialized review bundle.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewAgenda {
   review_id : String
   conversation_id : String
@@ -10,10 +11,11 @@ pub(all) struct ReviewAgenda {
   recorded_at : String
   participants : Array[ReviewParticipant]
   items : Array[ReviewAgendaItem]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Keep each key stable when editing or reordering an agenda.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewAgendaItem {
   key : String
   kind : String
@@ -21,13 +23,14 @@ pub(all) struct ReviewAgendaItem {
   body : String
   evidence_refs : Array[String]
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewAgendaDecision {
   reviewer : String
   prompt : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Compile an editable agenda against actual source bytes. IDs are derived from
@@ -39,7 +42,7 @@ pub fn compile_review_agenda(
   validate_agenda_source_constraint(agenda, source_bytes)
   let entries : Array[ReviewEntry] = []
   let decisions : Array[RequiredDecision] = []
-  let keys : Map[String, Bool] = {}
+  let keys : Map[String, Bool] = Map([])
   for item in agenda.items {
     if !safe_identifier(item.key) || keys.contains(item.key) {
       fail("agenda item keys must be unique safe identifiers: " + item.key)
@@ -100,7 +103,7 @@ pub fn parse_review_agenda(text : String) -> ReviewAgenda raise {
   json_review_unique_keys(text)
   guard value is Object(fields) else { fail("review agenda must be an object") }
   if !fields.contains("source_digest_constraint") {
-    fields["source_digest_constraint"] = "".to_json()
+    fields["source_digest_constraint"] = ToJson::to_json("")
   }
   @json.from_json(value)
 }

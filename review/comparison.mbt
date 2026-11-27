@@ -8,8 +8,8 @@ fn[T : Eq] compare_review_section(
   render : (T) -> String,
 ) -> Unit {
   out.write_string("## " + title + "\n\n")
-  let old : Map[String, T] = {}
-  let next : Map[String, T] = {}
+  let old : Map[String, T] = Map([])
+  let next : Map[String, T] = Map([])
   for item in before {
     old[identity(item)] = item
   }

@@ -7,7 +7,7 @@ pub fn serialize_review_bundle(
   observed_source_digest : String,
 ) -> String raise {
   require_valid_bundle(bundle, observed_source_digest)
-  bundle.to_json().stringify(indent=2) + "\n"
+  ToJson::to_json(bundle).stringify(indent=2) + "\n"
 }
 
 ///|
@@ -61,7 +61,7 @@ pub fn supersede_review_bundle(
     previous_bundle_ref == next_bundle.source_artifact_ref {
     fail("previous bundle and both source versions must be separate artifacts")
   }
-  let detached = decode_review_bundle(next_bundle.to_json())
+  let detached = decode_review_bundle(ToJson::to_json(next_bundle))
   {
     ..detached,
     previous_bundle_ref,

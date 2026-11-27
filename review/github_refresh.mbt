@@ -2,6 +2,7 @@
 /// A local three-way refresh report. Left values are the current edited agenda;
 /// right values are regenerated from the newer snapshot. Conflicts suppress the
 /// entire candidate agenda; snapshot references remain ordinary provenance.
+#derive(Eq)
 pub(all) struct GitHubReviewRefresh {
   format : String
   review_id : String
@@ -14,23 +15,23 @@ pub(all) struct GitHubReviewRefresh {
   changed_comment_ids : Array[String]
   conflicts : Array[ReviewSheetConflict]
   merged_agenda : ReviewAgenda?
-} derive(Eq)
+}
 
 ///|
 pub impl ToJson for GitHubReviewRefresh with fn to_json(
   self : GitHubReviewRefresh,
 ) -> Json {
   {
-    "format": self.format.to_json(),
-    "review_id": self.review_id.to_json(),
-    "source_digest": self.source_digest.to_json(),
-    "previous_export_ref": self.previous_export_ref.to_json(),
-    "previous_export_digest": self.previous_export_digest.to_json(),
-    "next_export_ref": self.next_export_ref.to_json(),
-    "next_export_digest": self.next_export_digest.to_json(),
-    "added_comment_ids": self.added_comment_ids.to_json(),
-    "changed_comment_ids": self.changed_comment_ids.to_json(),
-    "conflicts": self.conflicts.to_json(),
+    "format": ToJson::to_json(self.format),
+    "review_id": ToJson::to_json(self.review_id),
+    "source_digest": ToJson::to_json(self.source_digest),
+    "previous_export_ref": ToJson::to_json(self.previous_export_ref),
+    "previous_export_digest": ToJson::to_json(self.previous_export_digest),
+    "next_export_ref": ToJson::to_json(self.next_export_ref),
+    "next_export_digest": ToJson::to_json(self.next_export_digest),
+    "added_comment_ids": ToJson::to_json(self.added_comment_ids),
+    "changed_comment_ids": ToJson::to_json(self.changed_comment_ids),
+    "conflicts": ToJson::to_json(self.conflicts),
     "merged_agenda": sheet_merge_optional_json(self.merged_agenda),
   }
 }

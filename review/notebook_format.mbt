@@ -91,8 +91,8 @@ fn notebook_outputs(values : Array[Json]) -> Array[Json] raise {
       "output_type",
     )
     let summary : Map[String, Json] = {
-      "output_index": index.to_json(),
-      "output_type": kind.to_json(),
+      "output_index": ToJson::to_json(index),
+      "output_type": ToJson::to_json(kind),
     }
     match kind {
       "stream" => {
@@ -103,23 +103,25 @@ fn notebook_outputs(values : Array[Json]) -> Array[Json] raise {
         if name != "stdout" && name != "stderr" {
           fail("Notebook stream name must be stdout or stderr")
         }
-        summary["name"] = name.to_json()
-        summary["text"] = notebook_multiline(
-          notebook_required(fields, "text"),
-          "stream text",
-        ).to_json()
+        summary["name"] = ToJson::to_json(name)
+        summary["text"] = ToJson::to_json(
+          notebook_multiline(notebook_required(fields, "text"), "stream text"),
+        )
       }
       "error" => {
         for key in ["ename", "evalue"] {
-          summary[key] = notebook_string(notebook_required(fields, key), key).to_json()
+          summary[key] = ToJson::to_json(
+            notebook_string(notebook_required(fields, key), key),
+          )
         }
         let frames = notebook_array(
           notebook_required(fields, "traceback"),
           "traceback",
         )
-        summary["traceback"] = frames
-          .map(frame => notebook_string(frame, "traceback frame"))
-          .to_json()
+        summary["traceback"] = frames.map(frame => {
+            notebook_string(frame, "traceback frame")
+          })
+          |> ToJson::to_json
       }
       "display_data" | "execute_result" => {
         notebook_object(
@@ -132,15 +134,19 @@ fn notebook_outputs(values : Array[Json]) -> Array[Json] raise {
         for name, _ in data {
           types.push(name)
         }
-        summary["mime_types"] = types.to_json()
+        summary["mime_types"] = ToJson::to_json(types)
         if data.get("text/plain") is Some(text) {
-          summary["text_plain"] = notebook_multiline(text, "text/plain").to_json()
+          summary["text_plain"] = ToJson::to_json(
+            notebook_multiline(text, "text/plain"),
+          )
         }
         if kind == "execute_result" {
-          summary["execution_count"] = notebook_index(
-            notebook_required(fields, "execution_count"),
-            "output execution_count",
-          ).to_json()
+          summary["execution_count"] = ToJson::to_json(
+            notebook_index(
+              notebook_required(fields, "execution_count"),
+              "output execution_count",
+            ),
+          )
         }
       }
       _ => fail("Notebook has an unsupported output_type")
@@ -257,12 +263,12 @@ fn notebook_document(bytes : Bytes) -> NotebookReviewDocument raise {
 ///|
 fn notebook_cell_summary(cell : NotebookReviewCell) -> Json {
   Json::object({
-    "cell_index": cell.index.to_json(),
-    "cell_id": cell.id.to_json(),
-    "cell_type": cell.kind.to_json(),
-    "source": cell.source.to_json(),
+    "cell_index": ToJson::to_json(cell.index),
+    "cell_id": ToJson::to_json(cell.id),
+    "cell_type": ToJson::to_json(cell.kind),
+    "source": ToJson::to_json(cell.source),
     "execution_count": cell.execution_count,
-    "saved_outputs": cell.outputs.to_json(),
+    "saved_outputs": ToJson::to_json(cell.outputs),
   })
 }
 

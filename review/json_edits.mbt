@@ -1,6 +1,7 @@
 ///|
 /// Explicit typed replacements in one retained JSON artifact, linked to its
 /// review discussion. This is authoring data, never a reviewer receipt.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewJsonEditPlan {
   format : String
   base_bundle_digest : String
@@ -9,18 +10,19 @@ pub(all) struct ReviewJsonEditPlan {
   next_source_revision_id : String
   recorded_at : String
   edits : Array[ReviewJsonEdit]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Pointers name existing canonical locations. Expected and replacement values
 /// retain JSON types and parser-preserved numeric precision; no interpolation.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewJsonEdit {
   key : String
   entry_id : String
   pointer : String
   expected_value : Json
   replacement : Json
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Begin a bound blank plan. The editor selects changes and new source identity.
@@ -92,7 +94,7 @@ fn json_edit_rebuild(
   }
   match value {
     Object(fields) => {
-      let result : Map[String, Json] = {}
+      let result : Map[String, Json] = Map([])
       for key, child in fields {
         let escaped = key.replace(old="~", new="~0").replace(old="/", new="~1")
         result[key] = json_edit_rebuild(child, pointer + "/" + escaped, edits)
@@ -136,8 +138,8 @@ pub fn apply_review_json_edits(
     fail("JSON edit plan must contain 1..100 edits")
   }
   let nodes = json_review_nodes(previous_source_bytes)
-  let keys : Map[String, Bool] = {}
-  let edits : Map[String, Json] = {}
+  let keys : Map[String, Bool] = Map([])
+  let edits : Map[String, Json] = Map([])
   let mut compact_bytes = @utf8.encode(nodes[""].stringify()).length()
   for edit in plan.edits {
     if !safe_identifier(edit.key) || keys.contains(edit.key) {

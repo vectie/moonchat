@@ -26,7 +26,7 @@ test "selected source text reaches an editable pending agenda and portable bundl
   let agenda = agenda_fixture()
   let plan = excerpt_plan_fixture(transcript)
   assert_true(
-    @review.parse_review_excerpt_plan(plan.to_json().stringify()) == plan,
+    @review.parse_review_excerpt_plan(ToJson::to_json(plan).stringify()) == plan,
   )
   let imported = @review.import_review_excerpts(
     agenda, plan, transcript, b"artifact A",
@@ -57,7 +57,8 @@ test "selected source text reaches an editable pending agenda and portable bundl
     ),
   )
   assert_true(
-    @review.parse_review_agenda(imported.to_json().stringify()) == imported,
+    @review.parse_review_agenda(ToJson::to_json(imported).stringify()) ==
+    imported,
   )
   assert_true(
     @review.import_review_excerpts(agenda, plan, transcript, b"artifact A") ==
@@ -115,7 +116,7 @@ test "failed batches and repeated imports leave existing agenda untouched" {
   let transcript = b"one\ntwo\nthree\n"
   let plan = excerpt_plan_fixture(transcript)
   let agenda = agenda_fixture()
-  let snapshot = agenda.to_json().stringify()
+  let snapshot = ToJson::to_json(agenda).stringify()
   let bad = { ..plan.excerpts[0], key: "bad", end_line: 4, }
   assert_true(
     authoring_fails(() => {
@@ -128,18 +129,18 @@ test "failed batches and repeated imports leave existing agenda untouched" {
       |> ignore
     }),
   )
-  assert_eq(agenda.to_json().stringify(), snapshot)
+  assert_eq(ToJson::to_json(agenda).stringify(), snapshot)
   let imported = @review.import_review_excerpts(
     agenda, plan, transcript, b"artifact",
   )
-  let imported_snapshot = imported.to_json().stringify()
+  let imported_snapshot = ToJson::to_json(imported).stringify()
   assert_true(
     authoring_fails(() => {
       @review.import_review_excerpts(imported, plan, transcript, b"artifact")
       |> ignore
     }),
   )
-  assert_eq(imported.to_json().stringify(), imported_snapshot)
+  assert_eq(ToJson::to_json(imported).stringify(), imported_snapshot)
 }
 
 ///|
@@ -209,7 +210,7 @@ test "unsupported stale malformed and excessive inputs fail without output" {
   assert_true(
     authoring_fails(() => {
       @review.parse_review_excerpt_plan(
-        { ..plan, format: "v2", }.to_json().stringify(),
+        ToJson::to_json({ ..plan, format: "v2", }).stringify(),
       )
       |> ignore
     }),

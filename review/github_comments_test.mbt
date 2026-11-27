@@ -8,15 +8,17 @@ fn github_comment_fixture(
 ) -> Json raise {
   let fields : Map[String, Json] = {
     "id": @json.parse(id),
-    "user": { "login": login.to_json() },
-    "body": body.to_json(),
+    "user": { "login": ToJson::to_json(login) },
+    "body": ToJson::to_json(body),
     "path": "src/café.mbt",
     "diff_hunk": "@@ -1,2 +1,2 @@\n-old\n+new",
     "commit_id": "2222222222222222222222222222222222222222",
     "original_commit_id": "1111111111111111111111111111111111111111",
-    "html_url": ("https://github.com/example/synthetic/pull/7#discussion_r" + id).to_json(),
+    "html_url": ToJson::to_json(
+      "https://github.com/example/synthetic/pull/7#discussion_r" + id,
+    ),
     "pull_request_url": "https://api.github.com/repos/example/synthetic/pulls/7",
-    "created_at": created_at.to_json(),
+    "created_at": ToJson::to_json(created_at),
     "updated_at": "2026-10-10T01:00:00Z",
     "line": null,
     "original_line": 12,
@@ -51,8 +53,8 @@ fn github_export_fixture() -> Bytes raise {
       ),
       github_comment_fixture("100", body="Unselected thread"),
     ]
-    .to_json()
-    .stringify(),
+    |> ToJson::to_json
+    |> Json::stringify(),
   )
 }
 
@@ -83,7 +85,8 @@ test "GitHub thread import preserves external context and produces pending porta
   let bytes = github_export_fixture()
   let plan = github_plan_fixture(bytes)
   assert_true(
-    @review.parse_github_review_import_plan(plan.to_json().stringify()) == plan,
+    @review.parse_github_review_import_plan(ToJson::to_json(plan).stringify()) ==
+    plan,
   )
   let agenda = agenda_fixture()
   let imported = @review.import_github_review_comments(
@@ -131,7 +134,8 @@ test "GitHub thread import preserves external context and produces pending porta
     ),
   )
   assert_true(
-    @review.parse_review_agenda(imported.to_json().stringify()) == imported,
+    @review.parse_review_agenda(ToJson::to_json(imported).stringify()) ==
+    imported,
   )
   assert_true(
     @review.import_github_review_comments(agenda, plan, bytes, b"artifact") ==
@@ -161,8 +165,8 @@ test "GitHub grouping resolves nested replies and stable timestamp ties" {
       github_comment_fixture("1"),
       github_comment_fixture("10", parent="1"),
     ]
-    .to_json()
-    .stringify(),
+    |> ToJson::to_json
+    |> Json::stringify(),
   )
   let text = @review.catalog_github_review_comments(bytes)
   assert_true(text.contains("Root 1 | comments: 4"))
@@ -175,7 +179,7 @@ test "GitHub grouping resolves nested replies and stable timestamp ties" {
 test "GitHub import preserves selected root order and detaches all mutable arrays" {
   let bytes = github_export_fixture()
   let agenda = agenda_fixture()
-  let original = agenda.to_json().stringify()
+  let original = ToJson::to_json(agenda).stringify()
   let plan = github_plan_fixture(bytes)
   let second = {
     ..plan.threads[0],
@@ -194,7 +198,7 @@ test "GitHub import preserves selected root order and detaches all mutable array
   imported.items[0].decisions.clear()
   imported.items[4].decisions.clear()
   imported.participants.clear()
-  assert_eq(agenda.to_json().stringify(), original)
+  assert_eq(ToJson::to_json(agenda).stringify(), original)
   assert_eq(plan.threads[0].decisions.length(), 1)
 }
 
@@ -225,9 +229,13 @@ test "GitHub imports require complete explicit attribution and valid discussion 
   ]
   for candidate in invalid {
     assert_true(
-      (try? @review.import_github_review_comments(
-        agenda, candidate, bytes, b"artifact",
-      ))
+      (Ok(
+        @review.import_github_review_comments(
+          agenda, candidate, bytes, b"artifact",
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -254,9 +262,13 @@ test "GitHub import rejects changed snapshots duplicate selections and colliding
   ]
   for candidate in invalid {
     assert_true(
-      (try? @review.import_github_review_comments(
-        agenda, candidate, bytes, b"artifact",
-      ))
+      (Ok(
+        @review.import_github_review_comments(
+          agenda, candidate, bytes, b"artifact",
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -264,12 +276,17 @@ test "GitHub import rejects changed snapshots duplicate selections and colliding
     agenda, plan, bytes, b"artifact",
   )
   assert_true(
-    (try? @review.import_github_review_comments(
-      imported, plan, bytes, b"artifact",
-    ))
+    (Ok(
+      @review.import_github_review_comments(imported, plan, bytes, b"artifact"),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
-  assert_true((try? @review.parse_github_review_import_plan("{}")) is Err(_))
+  assert_true(
+    (Ok(@review.parse_github_review_import_plan("{}")) catch { e => Err(e) })
+    is Err(_),
+  )
 }
 
 ///|
@@ -285,9 +302,13 @@ test "GitHub parser rejects missing parents cycles mixed pull requests and dupli
   ]
   for items in bad {
     assert_true(
-      (try? @review.catalog_github_review_comments(
-        @utf8.encode(items.to_json().stringify()),
-      ))
+      (Ok(
+        @review.catalog_github_review_comments(
+          @utf8.encode(ToJson::to_json(items).stringify()),
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -297,9 +318,13 @@ test "GitHub parser rejects missing parents cycles mixed pull requests and dupli
   fields["pull_request_url"] = "https://api.github.com/repos/example/synthetic/pulls/8"
   let mixed = [github_comment_fixture("1"), Json::object(fields)]
   assert_true(
-    (try? @review.catalog_github_review_comments(
-      @utf8.encode(mixed.to_json().stringify()),
-    ))
+    (Ok(
+      @review.catalog_github_review_comments(
+        @utf8.encode(ToJson::to_json(mixed).stringify()),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }
@@ -307,11 +332,19 @@ test "GitHub parser rejects missing parents cycles mixed pull requests and dupli
 ///|
 test "GitHub parser refuses unsupported exports and noninteger identities" {
   for bytes in [b"{}", b"[]", b"[[{}]]", b"not json", b"[1]", b"[\xff]"] {
-    assert_true((try? @review.catalog_github_review_comments(bytes)) is Err(_))
+    assert_true(
+      (Ok(@review.catalog_github_review_comments(bytes)) catch { e => Err(e) })
+      is Err(_),
+    )
   }
   for id in ["0", "-1", "1.2", "100000000000000000000", "\"1\""] {
-    let bytes = @utf8.encode([github_comment_fixture(id)].to_json().stringify())
-    assert_true((try? @review.catalog_github_review_comments(bytes)) is Err(_))
+    let bytes = @utf8.encode(
+      ToJson::to_json([github_comment_fixture(id)]).stringify(),
+    )
+    assert_true(
+      (Ok(@review.catalog_github_review_comments(bytes)) catch { e => Err(e) })
+      is Err(_),
+    )
   }
   for
     key in [
@@ -322,9 +355,13 @@ test "GitHub parser refuses unsupported exports and noninteger identities" {
     }
     fields[key] = null
     assert_true(
-      (try? @review.catalog_github_review_comments(
-        @utf8.encode([Json::object(fields)].to_json().stringify()),
-      ))
+      (Ok(
+        @review.catalog_github_review_comments(
+          @utf8.encode(ToJson::to_json([Json::object(fields)]).stringify()),
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -339,7 +376,7 @@ test "GitHub parser supports file comments and enforces bounded snapshots" {
   fields["diff_hunk"] = ""
   fields["start_side"] = null
   fields["unrelated_api_field"] = { "ignored": true }
-  let text = [Json::object(fields)].to_json().stringify()
+  let text = ToJson::to_json([Json::object(fields)]).stringify()
   assert_true(
     @review.catalog_github_review_comments(@utf8.encode("\u{FEFF}" + text)).contains(
       "Root 1 | comments: 1",
@@ -348,14 +385,20 @@ test "GitHub parser supports file comments and enforces bounded snapshots" {
   let exact = text + String::make(1048576 - @utf8.encode(text).length(), ' ')
   @review.catalog_github_review_comments(@utf8.encode(exact)) |> ignore
   assert_true(
-    (try? @review.catalog_github_review_comments(@utf8.encode(exact + " ")))
+    (Ok(@review.catalog_github_review_comments(@utf8.encode(exact + " "))) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   let many = Array::makei(1001, i => github_comment_fixture((i + 1).to_string()))
   assert_true(
-    (try? @review.catalog_github_review_comments(
-      @utf8.encode(many.to_json().stringify()),
-    ))
+    (Ok(
+      @review.catalog_github_review_comments(
+        @utf8.encode(ToJson::to_json(many).stringify()),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }
@@ -365,7 +408,7 @@ test "GitHub exact comment and selection count boundaries remain usable" {
   let comments = Array::makei(1000, i => {
     github_comment_fixture((i + 1).to_string())
   })
-  let bytes = @utf8.encode(comments.to_json().stringify())
+  let bytes = @utf8.encode(ToJson::to_json(comments).stringify())
   let catalog = @review.catalog_github_review_comments(bytes)
   assert_true(catalog.contains("Root 1000 | comments: 1"))
   let base = github_plan_fixture(bytes)
@@ -390,12 +433,16 @@ test "GitHub exact comment and selection count boundaries remain usable" {
     key: "github-101",
   })
   assert_true(
-    (try? @review.import_github_review_comments(
-      agenda_fixture(),
-      plan,
-      bytes,
-      b"artifact",
-    ))
+    (Ok(
+      @review.import_github_review_comments(
+        agenda_fixture(),
+        plan,
+        bytes,
+        b"artifact",
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }

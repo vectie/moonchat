@@ -43,9 +43,9 @@ pub fn conversation_contract_id() -> String
 
 pub fn conversation_identity_fields() -> Array[String]
 
-pub fn decode_review_bundle(Json) -> ConversationReviewBundle raise
+pub fn decode_review_bundle(@json.Json) -> ConversationReviewBundle raise
 
-pub fn decode_review_record(Json) -> ConversationReviewRecord raise
+pub fn decode_review_record(@json.Json) -> ConversationReviewRecord raise
 
 pub fn draft_required_decision(decision_id~ : String, subject_entry_id~ : String, reviewer~ : ReviewParticipant, prompt~ : String) -> RequiredDecision raise
 
@@ -57,7 +57,7 @@ pub fn event_contract_id() -> String
 
 pub fn explore_review(ConversationReviewBundle, Bytes, text? : String, kind? : String, reviewer? : String, outcome? : String) -> String raise
 
-pub fn export_review_comparison(ConversationReviewBundle, Bytes, ConversationReviewBundle, Bytes, source_context? : Int) -> String raise
+pub fn export_review_comparison(ConversationReviewBundle, Bytes, ConversationReviewBundle, Bytes, source_context? : Int32) -> String raise
 
 pub fn export_review_html(ConversationReviewBundle, Bytes, locations? : ReviewSourceLocations) -> String raise
 
@@ -162,13 +162,15 @@ pub fn supersede_review_bundle(String, previous_bundle_ref~ : String, previous_s
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct ConversationBinding {
   contract_id : String
   protocol : String
   product_id : String
   conversation_id : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct ConversationReviewBundle {
   contract_id : String
   review_id : String
@@ -183,12 +185,13 @@ pub(all) struct ConversationReviewBundle {
   required_decisions : Array[RequiredDecision]
   decision_receipts : Array[HumanDecisionReceipt]
   recorded_at : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct ConversationReviewEvent {
   contract_id : String
   review_id : String
-  sequence : Int
+  sequence : Int32
   event_id : String
   event_kind : String
   actor_participant_id : String
@@ -200,8 +203,9 @@ pub(all) struct ConversationReviewEvent {
   body : String
   source_digest : String
   recorded_at : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct ConversationReviewRecord {
   contract_id : String
   operation_ref : String
@@ -225,27 +229,31 @@ pub(all) struct ConversationReviewRecord {
   rejected_decision_ids : Array[String]
   journal_evidence : Array[ReviewEvidence]
   recorded_at : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct ConversationTurnIdentity {
   turn_id : String
   client_turn_id : String
   command_id : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct GitHubReviewAuthor {
   login : String
   participant_id : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct GitHubReviewImportPlan {
   format : String
   export_ref : String
   export_digest : String
   authors : Array[GitHubReviewAuthor]
   threads : Array[GitHubReviewThread]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq)
 pub(all) struct GitHubReviewRefresh {
   format : String
   review_id : String
@@ -258,17 +266,19 @@ pub(all) struct GitHubReviewRefresh {
   changed_comment_ids : Array[String]
   conflicts : Array[ReviewSheetConflict]
   merged_agenda : ReviewAgenda?
-} derive(Eq)
-pub impl ToJson for GitHubReviewRefresh
+}
+pub impl @json.ToJson for GitHubReviewRefresh
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct GitHubReviewThread {
   root_comment_id : String
   key : String
   kind : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct HumanDecisionReceipt {
   receipt_id : String
   decision_id : String
@@ -279,14 +289,16 @@ pub(all) struct HumanDecisionReceipt {
   source_digest : String
   decided_at : String
   evidence_refs : Array[String]
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct JsonReviewImportPlan {
   format : String
   source_digest : String
   selections : Array[JsonReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct JsonReviewSelection {
   pointer : String
   key : String
@@ -294,46 +306,52 @@ pub(all) struct JsonReviewSelection {
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct NotebookReviewImportPlan {
   format : String
   notebook_digest : String
   cells : Array[NotebookReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct NotebookReviewSelection {
-  cell_index : Int
+  cell_index : Int32
   key : String
   kind : String
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct PatchReviewImportPlan {
   format : String
   source_digest : String
   selections : Array[PatchReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct PatchReviewSelection {
-  file : Int
-  hunk : Int
+  file : Int32
+  hunk : Int32
   key : String
   kind : String
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct RequiredDecision {
   decision_id : String
   subject_entry_id : String
   reviewer_participant_id : String
   prompt : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewAgenda {
   review_id : String
   conversation_id : String
@@ -343,13 +361,15 @@ pub(all) struct ReviewAgenda {
   recorded_at : String
   participants : Array[ReviewParticipant]
   items : Array[ReviewAgendaItem]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewAgendaDecision {
   reviewer : String
   prompt : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewAgendaItem {
   key : String
   kind : String
@@ -357,8 +377,9 @@ pub(all) struct ReviewAgendaItem {
   body : String
   evidence_refs : Array[String]
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewChecklist {
   format : String
   checklist_id : String
@@ -366,13 +387,15 @@ pub(all) struct ReviewChecklist {
   roles : Array[String]
   variables : Array[String]
   items : Array[ReviewChecklistItem]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewChecklistDecision {
   reviewer_role : String
   prompt : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewChecklistInput {
   format : String
   checklist_id : String
@@ -385,26 +408,30 @@ pub(all) struct ReviewChecklistInput {
   participants : Array[ReviewParticipant]
   role_assignments : Array[ReviewChecklistRole]
   values : Array[ReviewChecklistValue]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewChecklistItem {
   key : String
   kind : String
   author_role : String
   body : String
   decisions : Array[ReviewChecklistDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewChecklistRole {
   role : String
   participant_id : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewChecklistValue {
   variable : String
   value : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewDecisionChoice {
   decision_id : String
   subject_entry_id : String
@@ -414,8 +441,9 @@ pub(all) struct ReviewDecisionChoice {
   receipt_id : String
   decided_at : String
   evidence_refs : Array[String]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewDecisionForm {
   format : String
   base_bundle_digest : String
@@ -427,8 +455,9 @@ pub(all) struct ReviewDecisionForm {
   reviewer_name : String
   entries : Array[ReviewEntry]
   choices : Array[ReviewDecisionChoice]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewEntry {
   entry_id : String
   entry_kind : String
@@ -436,38 +465,43 @@ pub(all) struct ReviewEntry {
   turn : ConversationTurnIdentity
   body : String
   evidence_refs : Array[String]
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewEvidence {
   artifact_ref : String
   digest : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewExcerptPlan {
   format : String
   transcript_ref : String
   transcript_digest : String
   excerpts : Array[ReviewExcerptSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewExcerptSelection {
   key : String
   kind : String
   author : String
   note : String
-  start_line : Int
-  end_line : Int
+  start_line : Int32
+  end_line : Int32
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewJsonEdit {
   key : String
   entry_id : String
   pointer : String
-  expected_value : Json
-  replacement : Json
-} derive(Eq, ToJson, @json.FromJson)
+  expected_value : @json.Json
+  replacement : @json.Json
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewJsonEditPlan {
   format : String
   base_bundle_digest : String
@@ -476,26 +510,30 @@ pub(all) struct ReviewJsonEditPlan {
   next_source_revision_id : String
   recorded_at : String
   edits : Array[ReviewJsonEdit]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.ToJson)
 pub(all) struct ReviewLocationCandidate {
-  start_line : Int
-  end_line : Int
-} derive(Eq, ToJson)
+  start_line : Int32
+  end_line : Int32
+}
 
+#derive(Eq, @json.ToJson)
 pub(all) struct ReviewLocationRelocation {
   original : ReviewSourceLocation
   status : String
-  candidate_count : Int
+  candidate_count : Int32
   candidates : Array[ReviewLocationCandidate]
-} derive(Eq, ToJson)
+}
 
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewParticipant {
   participant_id : String
   display_name : String
   participant_kind : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewRevisionDraft {
   format : String
   base_bundle_digest : String
@@ -507,37 +545,42 @@ pub(all) struct ReviewRevisionDraft {
   participants : Array[ReviewParticipant]
   entries : Array[ReviewEntry]
   required_decisions : Array[RequiredDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.ToJson)
 pub(all) struct ReviewSheetConflict {
   item_key : String
   field : String
-  base : Json
-  left : Json
-  right : Json
-} derive(Eq, ToJson)
+  base : @json.Json
+  left : @json.Json
+  right : @json.Json
+}
 
+#derive(Eq)
 pub(all) struct ReviewSheetMerge {
   format : String
   conflicts : Array[ReviewSheetConflict]
   merged_agenda : ReviewAgenda?
-} derive(Eq)
-pub impl ToJson for ReviewSheetMerge
+}
+pub impl @json.ToJson for ReviewSheetMerge
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewSourceLocation {
   entry_id : String
-  start_line : Int
-  end_line : Int
+  start_line : Int32
+  end_line : Int32
   quote : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewSourceLocations {
   format : String
   review_id : String
   source_digest : String
   locations : Array[ReviewSourceLocation]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.ToJson)
 pub(all) struct ReviewSourceRelocation {
   format : String
   source_artifact_ref : String
@@ -547,22 +590,24 @@ pub(all) struct ReviewSourceRelocation {
   next_review_id : String
   next_source_revision_id : String
   next_source_digest : String
-  mapped_count : Int
-  unresolved_count : Int
+  mapped_count : Int32
+  unresolved_count : Int32
   results : Array[ReviewLocationRelocation]
   suggested_locations : ReviewSourceLocations
-} derive(Eq, ToJson)
+}
 pub fn ReviewSourceRelocation::to_markdown(Self) -> String
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewTextEdit {
   key : String
   entry_id : String
-  start_line : Int
-  end_line : Int
+  start_line : Int32
+  end_line : Int32
   quote : String
   replacement : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct ReviewTextEditPlan {
   format : String
   base_bundle_digest : String
@@ -571,44 +616,49 @@ pub(all) struct ReviewTextEditPlan {
   next_source_revision_id : String
   recorded_at : String
   edits : Array[ReviewTextEdit]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.ToJson)
 pub(all) struct ReviewTextEditResult {
   source_text : String
   bundle : ConversationReviewBundle
-} derive(Eq, ToJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct SarifReviewImportPlan {
   format : String
   export_ref : String
   export_digest : String
   findings : Array[SarifReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct SarifReviewSelection {
-  run_index : Int
-  result_index : Int
+  run_index : Int32
+  result_index : Int32
   key : String
   kind : String
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct SlackReviewImportPlan {
   format : String
   source_digest : String
   selections : Array[SlackReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
+#derive(Eq, @json.FromJson, @json.ToJson)
 pub(all) struct SlackReviewSelection {
-  ordinal : Int
+  ordinal : Int32
   key : String
   kind : String
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 // Type aliases
 

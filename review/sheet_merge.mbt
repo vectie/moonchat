@@ -1,20 +1,22 @@
 ///|
 /// A conflicting edit retains all three values. Null means the item or decision
 /// was absent. No candidate agenda is returned until all conflicts are resolved.
+#derive(Eq, ToJson)
 pub(all) struct ReviewSheetConflict {
   item_key : String
   field : String
   base : Json
   left : Json
   right : Json
-} derive(Eq, ToJson)
+}
 
 ///|
+#derive(Eq)
 pub(all) struct ReviewSheetMerge {
   format : String
   conflicts : Array[ReviewSheetConflict]
   merged_agenda : ReviewAgenda?
-} derive(Eq)
+}
 
 ///|
 fn[T : ToJson] sheet_merge_optional_json(value : T?) -> Json {
@@ -27,8 +29,8 @@ fn[T : ToJson] sheet_merge_optional_json(value : T?) -> Json {
 ///|
 pub impl ToJson for ReviewSheetMerge with fn to_json(self : ReviewSheetMerge) -> Json {
   {
-    "format": self.format.to_json(),
-    "conflicts": self.conflicts.to_json(),
+    "format": ToJson::to_json(self.format),
+    "conflicts": ToJson::to_json(self.conflicts),
     "merged_agenda": sheet_merge_optional_json(self.merged_agenda),
   }
 }
@@ -79,9 +81,9 @@ fn[T : Eq + ToJson] sheet_merge_value(
     conflicts.push({
       item_key: key,
       field,
-      base: base.to_json(),
-      left: left.to_json(),
-      right: right.to_json(),
+      base: @moonbitlang/core/json.ToJson::to_json(base),
+      left: @moonbitlang/core/json.ToJson::to_json(left),
+      right: @moonbitlang/core/json.ToJson::to_json(right),
     })
     // Internal placeholder only. Any conflict suppresses the whole output agenda.
     base
@@ -94,7 +96,7 @@ fn sheet_merge_keys(
   left : Array[String],
   right : Array[String],
 ) -> Array[String] {
-  let seen : Map[String, Bool] = {}
+  let seen : Map[String, Bool] = Map([])
   let keys : Array[String] = []
   for group in [base, left, right] {
     for key in group {
@@ -157,7 +159,7 @@ fn sheet_merge_decisions(
   let bk = base.map(d => d.reviewer)
   let lk = left.map(d => d.reviewer)
   let rk = right.map(d => d.reviewer)
-  let merged : Map[String, String] = {}
+  let merged : Map[String, String] = Map([])
   let retained : Array[String] = []
   for reviewer in sheet_merge_keys(bk, lk, rk) {
     match
@@ -278,7 +280,7 @@ fn merge_agenda_items(
   let lk = left.items.map(item => item.key)
   let rk = right.items.map(item => item.key)
   let conflicts : Array[ReviewSheetConflict] = []
-  let merged : Map[String, ReviewAgendaItem] = {}
+  let merged : Map[String, ReviewAgendaItem] = Map([])
   let retained : Array[String] = []
   for key in sheet_merge_keys(bk, lk, rk) {
     let item = match (b.get(key), l.get(key), r.get(key)) {

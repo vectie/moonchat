@@ -1,6 +1,7 @@
 ///|
 /// Explicit source replacements selected by an editor, not review decisions.
 /// Both digests bind the exact retained input, including serialization/newlines.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewTextEditPlan {
   format : String
   base_bundle_digest : String
@@ -9,11 +10,12 @@ pub(all) struct ReviewTextEditPlan {
   next_source_revision_id : String
   recorded_at : String
   edits : Array[ReviewTextEdit]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// One-based inclusive physical LF-delimited lines, including their terminators.
 /// An empty replacement deletes the selected range. No fuzzy matching occurs.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewTextEdit {
   key : String
   entry_id : String
@@ -21,14 +23,15 @@ pub(all) struct ReviewTextEdit {
   end_line : Int32
   quote : String
   replacement : String
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Candidate content and its linked pending review. Neither is saved by this API.
+#derive(Eq, ToJson)
 pub(all) struct ReviewTextEditResult {
   source_text : String
   bundle : ConversationReviewBundle
-} derive(Eq, ToJson)
+}
 
 ///|
 fn editable_source_lines(bytes : Bytes) -> Array[String] raise {
@@ -123,7 +126,7 @@ pub fn apply_review_text_edits(
   let lines = editable_source_lines(previous_source_bytes)
   let edits = plan.edits.copy()
   edits.sort_by((a, b) => a.start_line.compare(b.start_line))
-  let keys : Map[String, Bool] = {}
+  let keys : Map[String, Bool] = Map([])
   let mut cursor = 0
   let mut size = previous_source_bytes.length()
   for edit in edits {
@@ -230,12 +233,12 @@ pub fn preview_review_text_edits(
     review_markdown_field(
       out,
       "Before (JSON string, exact terminators)",
-      edit.quote.to_json().stringify(),
+      ToJson::to_json(edit.quote).stringify(),
     )
     review_markdown_field(
       out,
       "After (JSON string, exact terminators)",
-      edit.replacement.to_json().stringify(),
+      ToJson::to_json(edit.replacement).stringify(),
     )
   }
   review_markdown_field(out, "Complete candidate source", result.source_text)

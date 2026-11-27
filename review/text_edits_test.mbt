@@ -158,7 +158,7 @@ test "text edit plan preparation is empty and binds exact input" {
     @review.review_source_digest(@utf8.encode(text)),
   )
   assert_true(
-    @review.parse_review_text_edits(blank.to_json().stringify()) == blank,
+    @review.parse_review_text_edits(ToJson::to_json(blank).stringify()) == blank,
   )
   assert_true(authoring_fails(() => ignore(apply_text_fixture(text, blank))))
 }
@@ -277,7 +277,7 @@ test "text edit preview keeps all discussion and explicit before after source" {
 ///|
 test "text edit parser refuses malformed unsupported and authority-bearing plans" {
   let (text, plan) = text_edit_fixture()
-  let encoded = plan.to_json().stringify()
+  let encoded = ToJson::to_json(plan).stringify()
   for
     invalid in [
       "{",

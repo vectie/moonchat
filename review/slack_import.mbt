@@ -1,15 +1,17 @@
 ///|
 /// Curated selections from one exact local Slack daily JSON array. Participants
 /// describe the curator and requested reviewers, never inferred Slack identity.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct SlackReviewImportPlan {
   format : String
   source_digest : String
   selections : Array[SlackReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Ordinals are one-based positions in the complete array, including unsupported
 /// records. Every selection must use the catalog's exact source digest.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct SlackReviewSelection {
   ordinal : Int32
   key : String
@@ -17,7 +19,7 @@ pub(all) struct SlackReviewSelection {
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 priv struct SlackReviewMessage {
@@ -48,7 +50,7 @@ fn slack_string(value : Json?) -> Bool {
 
 ///|
 fn slack_classify(fields : Map[String, Json]) -> (String, String) {
-  if fields.get("type") != Some("message".to_json()) {
+  if fields.get("type") != Some(ToJson::to_json("message")) {
     return ("unsupported", "record type must be message")
   }
   let subtype = match fields.get("subtype") {
@@ -165,7 +167,7 @@ fn slack_messages(bytes : Bytes) -> Array[SlackReviewMessage] raise {
     fail("Slack export exceeds 1 MiB")
   }
   let text = @utf8.decode(bytes, ignore_bom=false)
-  guard @json.parse(text, max_nesting_depth=64) is Array(values) else {
+  guard @json.parse(text) is Array(values) else {
     fail(
       "expected one local Slack daily JSON array, not ZIP, TXT or API envelope",
     )
@@ -185,7 +187,7 @@ fn slack_messages(bytes : Bytes) -> Array[SlackReviewMessage] raise {
   for index, value in values {
     guard value is Object(fields) else { fail("expected object") }
     let (classification, reason) = slack_classify(fields)
-    let recorded : Map[String, Json] = {}
+    let recorded : Map[String, Json] = Map([])
     for
       key in [
         "type", "subtype", "ts", "thread_ts", "user", "bot_id", "text", "edited",
@@ -214,20 +216,22 @@ pub fn catalog_slack_review(bytes : Bytes) -> String raise {
   for index, message in slack_messages(bytes) {
     rows.push(
       Json::object({
-        "ordinal": (index + 1).to_json(),
-        "selectable": message.reason.is_empty().to_json(),
-        "classification": message.classification.to_json(),
-        "reason": message.reason.to_json(),
+        "ordinal": ToJson::to_json(index + 1),
+        "selectable": ToJson::to_json(message.reason.is_empty()),
+        "classification": ToJson::to_json(message.classification),
+        "reason": ToJson::to_json(message.reason),
         "recorded": message.recorded,
-        "raw_message": message.raw.to_json(),
+        "raw_message": ToJson::to_json(message.raw),
       }),
     )
   }
   Json::object({
-    "format": "moonchat.slack-catalog.v1".to_json(),
-    "source_digest": review_source_digest(bytes).to_json(),
-    "scope": "Local daily snapshot only; no current-state, completeness or identity verification".to_json(),
-    "messages": rows.to_json(),
+    "format": ToJson::to_json("moonchat.slack-catalog.v1"),
+    "source_digest": ToJson::to_json(review_source_digest(bytes)),
+    "scope": ToJson::to_json(
+      "Local daily snapshot only; no current-state, completeness or identity verification",
+    ),
+    "messages": ToJson::to_json(rows),
   }).stringify(indent=2)
 }
 
@@ -238,7 +242,7 @@ pub fn parse_slack_review_import_plan(
   if @utf8.encode(text).length() > 1048576 {
     fail("Slack import plan exceeds 1 MiB")
   }
-  let value = @json.parse(text, max_nesting_depth=64)
+  let value = @json.parse(text)
   json_review_unique_keys(text)
   slack_validate_ordinal_tokens(text)
   let plan : SlackReviewImportPlan = @json.from_json(value)
@@ -268,7 +272,7 @@ pub fn import_slack_review(
     fail("Slack plan must select 1–100 messages")
   }
   let messages = slack_messages(bytes)
-  let selected : Map[Int32, Bool] = {}
+  let selected : Map[Int32, Bool] = Map([])
   let items = agenda.items.map(item => {
     ..item,
     evidence_refs: item.evidence_refs.copy(),
@@ -296,12 +300,12 @@ pub fn import_slack_review(
       fail("Slack selection requires a curator note")
     }
     let evidence = Json::object({
-      "source_ref": agenda.source_artifact_ref.to_json(),
-      "source_digest": plan.source_digest.to_json(),
-      "ordinal": selection.ordinal.to_json(),
-      "classification": message.classification.to_json(),
+      "source_ref": ToJson::to_json(agenda.source_artifact_ref),
+      "source_digest": ToJson::to_json(plan.source_digest),
+      "ordinal": ToJson::to_json(selection.ordinal),
+      "classification": ToJson::to_json(message.classification),
       "recorded": message.recorded,
-      "raw_message": message.raw.to_json(),
+      "raw_message": ToJson::to_json(message.raw),
     })
     let body = "Curator note:\n" +
       selection.note +

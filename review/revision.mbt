@@ -2,6 +2,7 @@
 /// Editable preparation data for an imported review, never a decision receipt.
 /// The base digest covers exact predecessor JSON bytes, including whitespace.
 /// Keep existing host entry, turn and decision identities when editing a point.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewRevisionDraft {
   format : String
   base_bundle_digest : String
@@ -13,7 +14,7 @@ pub(all) struct ReviewRevisionDraft {
   participants : Array[ReviewParticipant]
   entries : Array[ReviewEntry]
   required_decisions : Array[RequiredDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Reopen a valid received review without its original authoring agenda.

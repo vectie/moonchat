@@ -15,9 +15,11 @@ test "Slack ordinal parsing rejects exact fractions including binary64 rounded i
       "true", "null", "\"1\"",
     ] {
     assert_true(
-      (try? @review.parse_slack_review_import_plan(
-        slack_ordinal_plan_text(token),
-      ))
+      (Ok(
+        @review.parse_slack_review_import_plan(slack_ordinal_plan_text(token)),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
       msg=token,
     )
@@ -26,7 +28,10 @@ test "Slack ordinal parsing rejects exact fractions including binary64 rounded i
     old="\"ordinal\":",
     new="\"ord\\u0069nal\":",
   )
-  assert_true((try? @review.parse_slack_review_import_plan(escaped)) is Err(_))
+  assert_true(
+    (Ok(@review.parse_slack_review_import_plan(escaped)) catch { e => Err(e) })
+    is Err(_),
+  )
 }
 
 ///|
@@ -63,7 +68,9 @@ test "Slack source constraint survives serialized agenda wording edits and block
     imported.source_digest_constraint,
     @review.review_source_digest(bytes),
   )
-  let parsed = @review.parse_review_agenda(imported.to_json().stringify())
+  let parsed = @review.parse_review_agenda(
+    ToJson::to_json(imported).stringify(),
+  )
   let edited_items = parsed.items.copy()
   edited_items[3] = {
     ..edited_items[3],
@@ -79,18 +86,33 @@ test "Slack source constraint survives serialized agenda wording edits and block
       new="Do not release. The rollback check failed. café",
     ),
   )
-  assert_true((try? @review.compile_review_agenda(parsed, changed)) is Err(_))
-  assert_true((try? @review.compile_review_agenda(edited, changed)) is Err(_))
   assert_true(
-    (try? @review.import_slack_review(parsed, slack_plan(changed), changed))
+    (Ok(@review.compile_review_agenda(parsed, changed)) catch { e => Err(e) })
     is Err(_),
   )
-  assert_true((try? @review.export_review_html(bundle, changed)) is Err(_))
   assert_true(
-    (try? @review.compile_review_agenda(
-      { ..parsed, source_digest_constraint: "malformed", },
-      bytes,
-    ))
+    (Ok(@review.compile_review_agenda(edited, changed)) catch { e => Err(e) })
+    is Err(_),
+  )
+  assert_true(
+    (Ok(@review.import_slack_review(parsed, slack_plan(changed), changed)) catch {
+      e => Err(e)
+    })
+    is Err(_),
+  )
+  assert_true(
+    (Ok(@review.export_review_html(bundle, changed)) catch { e => Err(e) })
+    is Err(_),
+  )
+  assert_true(
+    (Ok(
+      @review.compile_review_agenda(
+        { ..parsed, source_digest_constraint: "malformed", },
+        bytes,
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }
@@ -98,19 +120,26 @@ test "Slack source constraint survives serialized agenda wording edits and block
 ///|
 test "Legacy agenda JSON remains unbound while explicit constraints and duplicate keys validate" {
   let agenda = agenda_fixture()
-  let value = agenda.to_json()
+  let value = ToJson::to_json(agenda)
   guard value is Object(fields) else { fail("object") }
   fields.remove("source_digest_constraint")
   let legacy = @review.parse_review_agenda(value.stringify())
   assert_eq(legacy.source_digest_constraint, "")
   @review.compile_review_agenda(legacy, b"first") |> ignore
   @review.compile_review_agenda(legacy, b"second") |> ignore
-  fields["source_digest_constraint"] = (1 : Int32).to_json()
-  assert_true((try? @review.parse_review_agenda(value.stringify())) is Err(_))
+  fields["source_digest_constraint"] = ToJson::to_json((1 : Int32))
   assert_true(
-    (try? @review.parse_review_agenda(
-      "{\"source_digest_constraint\":\"a\",\"source_digest_constraint\":\"\"}",
-    ))
+    (Ok(@review.parse_review_agenda(value.stringify())) catch { e => Err(e) })
+    is Err(_),
+  )
+  assert_true(
+    (Ok(
+      @review.parse_review_agenda(
+        "{\"source_digest_constraint\":\"a\",\"source_digest_constraint\":\"\"}",
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }

@@ -1,16 +1,18 @@
 ///|
 /// Explicit operator selections from one retained UTF-8 transcript. Speaker
 /// labels in the transcript never establish a participant or decision identity.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewExcerptPlan {
   format : String
   transcript_ref : String
   transcript_digest : String
   excerpts : Array[ReviewExcerptSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// Line numbers are one-based and inclusive. The author is the person/agent
 /// curating this review item, not an inferred speaker in the selected text.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct ReviewExcerptSelection {
   key : String
   kind : String
@@ -19,7 +21,7 @@ pub(all) struct ReviewExcerptSelection {
   start_line : Int32
   end_line : Int32
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 fn transcript_lines(bytes : Bytes) -> Array[String] raise {
@@ -32,7 +34,7 @@ fn transcript_lines(bytes : Bytes) -> Array[String] raise {
   }
   // Retain every original line terminator. A final LF terminates the last
   // physical line; it does not introduce a phantom selectable empty line.
-  let parts = text.split("\n").map(part => part.to_string()).collect()
+  let parts = text.split("\n").map(part => part.to_owned()).collect()
   let lines : Array[String] = []
   for index, part in parts {
     if index < parts.length() - 1 {
@@ -61,7 +63,9 @@ pub fn catalog_review_transcript(transcript_bytes : Bytes) -> String raise {
     "Lines: \{lines.length()} (one-based, inclusive; text is JSON-escaped)\n\n",
   )
   for index, line in lines {
-    out.write_string("\{index + 1} | " + line.to_json().stringify() + "\n")
+    out.write_string(
+      "\{index + 1} | " + ToJson::to_json(line).stringify() + "\n",
+    )
   }
   out.to_string()
 }

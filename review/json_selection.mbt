@@ -1,12 +1,14 @@
 ///|
 /// Explicit JSON Pointer selections from one exact UTF-8 JSON artifact.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct JsonReviewImportPlan {
   format : String
   source_digest : String
   selections : Array[JsonReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct JsonReviewSelection {
   pointer : String
   key : String
@@ -14,7 +16,7 @@ pub(all) struct JsonReviewSelection {
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 // Parsing has already validated syntax. Scan string tokens to reject duplicate
@@ -99,7 +101,7 @@ fn json_review_nodes(bytes : Bytes) -> Map[String, Json] raise {
   let text = @utf8.decode(bytes, ignore_bom=false)
   let value = review_parse_exact_json(text)
   json_review_unique_keys(text)
-  let nodes : Map[String, Json] = {}
+  let nodes : Map[String, Json] = Map([])
   json_review_walk(value, "", nodes)
   nodes
 }
@@ -114,24 +116,24 @@ pub fn catalog_json_review(bytes : Bytes) -> String raise {
     let summary = match value {
       Object(fields) =>
         Json::object({
-          "type": "object".to_json(),
-          "children": fields.length().to_json(),
+          "type": ToJson::to_json("object"),
+          "children": ToJson::to_json(fields.length()),
         })
       Array(values) =>
         Json::object({
-          "type": "array".to_json(),
-          "children": values.length().to_json(),
+          "type": ToJson::to_json("array"),
+          "children": ToJson::to_json(values.length()),
         })
-      _ => Json::object({ "type": "value".to_json(), "value": value })
+      _ => Json::object({ "type": ToJson::to_json("value"), "value": value })
     }
     rows.push(
-      Json::object({ "pointer": pointer.to_json(), "summary": summary }),
+      Json::object({ "pointer": ToJson::to_json(pointer), "summary": summary }),
     )
   }
   Json::object({
-    "format": "moonchat.json-catalog.v1".to_json(),
-    "source_digest": review_source_digest(bytes).to_json(),
-    "nodes": rows.to_json(),
+    "format": ToJson::to_json("moonchat.json-catalog.v1"),
+    "source_digest": ToJson::to_json(review_source_digest(bytes)),
+    "nodes": ToJson::to_json(rows),
   }).stringify(indent=2)
 }
 
@@ -164,7 +166,7 @@ pub fn import_json_review(
     fail("JSON plan must select 1–100 pointers")
   }
   let nodes = json_review_nodes(bytes)
-  let selected : Map[String, Bool] = {}
+  let selected : Map[String, Bool] = Map([])
   let items = agenda.items.map(item => {
     ..item,
     evidence_refs: item.evidence_refs.copy(),
@@ -183,9 +185,9 @@ pub fn import_json_review(
       fail("JSON selection requires an operator note")
     }
     let evidence = Json::object({
-      "source_ref": agenda.source_artifact_ref.to_json(),
-      "source_digest": plan.source_digest.to_json(),
-      "pointer": selection.pointer.to_json(),
+      "source_ref": ToJson::to_json(agenda.source_artifact_ref),
+      "source_digest": ToJson::to_json(plan.source_digest),
+      "pointer": ToJson::to_json(selection.pointer),
       "value": value,
     })
     let body = "Operator note:\n" +

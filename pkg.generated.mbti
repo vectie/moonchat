@@ -38,6 +38,7 @@ pub fn product_name() -> String
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug, @json.FromJson, @json.ToJson)
 pub(all) struct MoonChatMoonSuiteProductHome {
   product_id : String
   state_path : String
@@ -45,7 +46,7 @@ pub(all) struct MoonChatMoonSuiteProductHome {
   cache_path : String
   tmp_path : String
   accepted_output_path : String
-} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+}
 
 // Type aliases
 

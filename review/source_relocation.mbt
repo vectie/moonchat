@@ -1,22 +1,25 @@
 ///|
 /// A complete display-line match. Reports retain the first 20 candidates per
 /// original range; candidate_count always counts all matches, including overlaps.
+#derive(Eq, ToJson)
 pub(all) struct ReviewLocationCandidate {
   start_line : Int32
   end_line : Int32
-} derive(Eq, ToJson)
+}
 
 ///|
 /// A reader association is carried only when its entry is unchanged and its
 /// exact quote has one unambiguous destination, with no collapsed old ranges.
+#derive(Eq, ToJson)
 pub(all) struct ReviewLocationRelocation {
   original : ReviewSourceLocation
   status : String
   candidate_count : Int32
   candidates : Array[ReviewLocationCandidate]
-} derive(Eq, ToJson)
+}
 
 ///|
+#derive(Eq, ToJson)
 pub(all) struct ReviewSourceRelocation {
   format : String
   source_artifact_ref : String
@@ -30,7 +33,7 @@ pub(all) struct ReviewSourceRelocation {
   unresolved_count : Int32
   results : Array[ReviewLocationRelocation]
   suggested_locations : ReviewSourceLocations
-} derive(Eq, ToJson)
+}
 
 ///|
 /// KMP over whole display lines avoids a repeated-prefix quadratic scan. Every
@@ -99,7 +102,7 @@ pub fn relocate_review_source_locations(
   let next_lines = review_html_source_lines(next_source)
   ignore(index_source_locations(previous, old_lines, locations))
   let preliminary = []
-  let destinations : Map[(String, Int32, Int32), Int32] = {}
+  let destinations : Map[(String, Int32, Int32), Int32] = Map([])
   for original in locations.locations {
     let quote_lines = old_lines[original.start_line - 1:original.end_line].to_owned()
     let (candidate_count, candidates) = relocation_candidates(

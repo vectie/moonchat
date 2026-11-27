@@ -1,10 +1,11 @@
 ///|
+#derive(Eq)
 priv enum SheetCsvState {
   Start
   Bare
   Quoted
   Closed
-} derive(Eq)
+}
 
 ///|
 fn sheet_csv_rows(bytes : Bytes) -> Array[Array[String]] raise {

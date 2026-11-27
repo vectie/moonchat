@@ -44,12 +44,13 @@ test "JSON selection becomes editable portable pending evidence" {
   let bytes = json_fixture()
   let plan = json_plan(bytes)
   assert_true(
-    @review.parse_json_review_import_plan(plan.to_json().stringify()) == plan,
+    @review.parse_json_review_import_plan(ToJson::to_json(plan).stringify()) ==
+    plan,
   )
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
   let imported = @review.import_json_review(agenda, plan, bytes)
-  assert_eq(agenda.to_json().stringify(), before)
+  assert_eq(ToJson::to_json(agenda).stringify(), before)
   let item = imported.items[3]
   assert_true(item.body.contains("9007199254740993"))
   assert_true(item.body.contains("/budgets/0"))
@@ -58,11 +59,12 @@ test "JSON selection becomes editable portable pending evidence" {
   assert_eq(bundle.decision_receipts.length(), 0)
   assert_eq(@review.review_status(bundle), "pending_review")
   assert_eq(
-    @review.reimport_review_bundle(bundle.to_json().stringify(), bytes),
+    @review.reimport_review_bundle(ToJson::to_json(bundle).stringify(), bytes),
     bundle,
   )
   assert_true(
-    @review.parse_review_agenda(imported.to_json().stringify()) == imported,
+    @review.parse_review_agenda(ToJson::to_json(imported).stringify()) ==
+    imported,
   )
   imported.items[3] = {
     ..item,
@@ -107,9 +109,11 @@ test "JSON refuses stale invalid repeated and late missing pointers atomically" 
   let bytes = json_fixture()
   let plan = json_plan(bytes)
   let agenda = agenda_fixture()
-  let before = agenda.to_json().stringify()
+  let before = ToJson::to_json(agenda).stringify()
   assert_true(
-    (try? @review.import_json_review(agenda, plan, @utf8.encode("{}")))
+    (Ok(@review.import_json_review(agenda, plan, @utf8.encode("{}"))) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   for
@@ -117,29 +121,37 @@ test "JSON refuses stale invalid repeated and late missing pointers atomically" 
       "/budgets/01", "/budgets/-", "#/budgets/0", "/missing", "/a~2b", "/budgets/0/amount/x",
     ] {
     assert_true(
-      (try? @review.import_json_review(
-        agenda,
-        {
-          ..plan,
-          selections: [
-            plan.selections[0],
-            { ..plan.selections[0], key: "late", pointer, },
-          ],
-        },
-        bytes,
-      ))
+      (Ok(
+        @review.import_json_review(
+          agenda,
+          {
+            ..plan,
+            selections: [
+              plan.selections[0],
+              { ..plan.selections[0], key: "late", pointer, },
+            ],
+          },
+          bytes,
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
   assert_true(
-    (try? @review.import_json_review(
-      agenda,
-      { ..plan, selections: [plan.selections[0], plan.selections[0]], },
-      bytes,
-    ))
+    (Ok(
+      @review.import_json_review(
+        agenda,
+        { ..plan, selections: [plan.selections[0], plan.selections[0]], },
+        bytes,
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
-  assert_eq(agenda.to_json().stringify(), before)
+  assert_eq(ToJson::to_json(agenda).stringify(), before)
 }
 
 ///|
@@ -150,7 +162,10 @@ test "JSON duplicate decoded keys and malformed artifacts are refused" {
       "{", "[1,]",
     ] {
     assert_true(
-      (try? @review.catalog_json_review(@utf8.encode(text))) is Err(_),
+      (Ok(@review.catalog_json_review(@utf8.encode(text))) catch {
+        e => Err(e)
+      })
+      is Err(_),
     )
   }
   // Keys in separate objects and escaped string content are not duplicates.
@@ -159,7 +174,10 @@ test "JSON duplicate decoded keys and malformed artifacts are refused" {
   )
   @review.catalog_json_review(valid) |> ignore
   assert_true(
-    (try? @review.catalog_json_review(Bytes::from_array([0xff]))) is Err(_),
+    (Ok(@review.catalog_json_review(Bytes::from_array([0xff]))) catch {
+      e => Err(e)
+    })
+    is Err(_),
   )
 }
 
@@ -175,11 +193,15 @@ test "JSON selections still require valid operator and item semantics" {
       { ..plan.selections[0], key: "", },
     ] {
     assert_true(
-      (try? @review.import_json_review(
-        agenda_fixture(),
-        { ..plan, selections: [selection], },
-        bytes,
-      ))
+      (Ok(
+        @review.import_json_review(
+          agenda_fixture(),
+          { ..plan, selections: [selection], },
+          bytes,
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
@@ -201,21 +223,33 @@ test "JSON resource limits and markup remain bounded literal evidence" {
   assert_true(html.contains("&lt;script&gt;bad()&lt;/script&gt;"))
   assert_false(html.contains("<script>bad()</script>"))
   assert_true(
-    (try? @review.catalog_json_review(
-      @utf8.encode("[" + Array::make(10000, "0").join(",") + "]"),
-    ))
+    (Ok(
+      @review.catalog_json_review(
+        @utf8.encode("[" + Array::make(10000, "0").join(",") + "]"),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   assert_true(
-    (try? @review.catalog_json_review(
-      @utf8.encode("[".repeat(65) + "0" + "]".repeat(65)),
-    ))
+    (Ok(
+      @review.catalog_json_review(
+        @utf8.encode("[".repeat(65) + "0" + "]".repeat(65)),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   assert_true(
-    (try? @review.catalog_json_review(
-      @utf8.encode("\"" + "x".repeat(1048576) + "\""),
-    ))
+    (Ok(
+      @review.catalog_json_review(
+        @utf8.encode("\"" + "x".repeat(1048576) + "\""),
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }

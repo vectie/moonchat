@@ -1,14 +1,16 @@
 ///|
 /// Explicit hunk selections from an exact UTF-8 unified diff. The patch is
 /// evidence, never an instruction to apply files or an authenticated decision.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct PatchReviewImportPlan {
   format : String
   source_digest : String
   selections : Array[PatchReviewSelection]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
 /// File and hunk numbers are one-based, as shown by catalog_patch_review.
+#derive(Eq, ToJson, @json.FromJson)
 pub(all) struct PatchReviewSelection {
   file : Int32
   hunk : Int32
@@ -17,9 +19,10 @@ pub(all) struct PatchReviewSelection {
   author : String
   note : String
   decisions : Array[ReviewAgendaDecision]
-} derive(Eq, ToJson, @json.FromJson)
+}
 
 ///|
+#derive(ToJson)
 priv struct PatchHunk {
   old_start : Int32
   old_count : Int32
@@ -28,7 +31,7 @@ priv struct PatchHunk {
   added : Int32
   removed : Int32
   text : String
-} derive(ToJson)
+}
 
 ///|
 priv struct PatchFile {
@@ -304,25 +307,25 @@ pub fn catalog_patch_review(bytes : Bytes) -> String raise {
     for number, hunk in file.hunks {
       hunks.push(
         Json::object({
-          "hunk": (number + 1).to_json(),
+          "hunk": ToJson::to_json(number + 1),
           "change": ToJson::to_json(hunk),
         }),
       )
     }
     rows.push(
       Json::object({
-        "file": (index + 1).to_json(),
-        "old_path": file.old_path.to_json(),
-        "new_path": file.new_path.to_json(),
-        "headers": file.headers.to_json(),
-        "hunks": hunks.to_json(),
+        "file": ToJson::to_json(index + 1),
+        "old_path": ToJson::to_json(file.old_path),
+        "new_path": ToJson::to_json(file.new_path),
+        "headers": ToJson::to_json(file.headers),
+        "hunks": ToJson::to_json(hunks),
       }),
     )
   }
   Json::object({
-    "format": "moonchat.patch-catalog.v1".to_json(),
-    "source_digest": review_source_digest(bytes).to_json(),
-    "files": rows.to_json(),
+    "format": ToJson::to_json("moonchat.patch-catalog.v1"),
+    "source_digest": ToJson::to_json(review_source_digest(bytes)),
+    "files": ToJson::to_json(rows),
   }).stringify(indent=2)
 }
 
@@ -385,13 +388,13 @@ pub fn import_patch_review(
       selection.note +
       "\n\nSelected unified diff evidence (not applied; not a decision receipt):\n" +
       Json::object({
-        "source_ref": agenda.source_artifact_ref.to_json(),
-        "source_digest": plan.source_digest.to_json(),
-        "file": selection.file.to_json(),
-        "hunk": selection.hunk.to_json(),
-        "old_path": file.old_path.to_json(),
-        "new_path": file.new_path.to_json(),
-        "file_headers": file.headers.to_json(),
+        "source_ref": ToJson::to_json(agenda.source_artifact_ref),
+        "source_digest": ToJson::to_json(plan.source_digest),
+        "file": ToJson::to_json(selection.file),
+        "hunk": ToJson::to_json(selection.hunk),
+        "old_path": ToJson::to_json(file.old_path),
+        "new_path": ToJson::to_json(file.new_path),
+        "file_headers": ToJson::to_json(file.headers),
         "change": ToJson::to_json(hunk),
       }).stringify(indent=2)
     if @utf8.encode(body).length() > 8388608 - total {

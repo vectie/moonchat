@@ -29,8 +29,8 @@ fn github_refresh_next() -> Bytes raise {
       ),
       github_comment_fixture("100", body="Unselected thread changed."),
     ]
-    .to_json()
-    .stringify(),
+    |> ToJson::to_json
+    |> Json::stringify(),
   )
 }
 
@@ -62,7 +62,7 @@ test "GitHub refresh integrates new replies and changed comments with local deci
   current.items[0] = { ..current.items[0], body: "Locally edited proposal", }
   let item = current.items.remove(3)
   current.items.insert(0, item)
-  let unchanged = current.to_json().stringify()
+  let unchanged = ToJson::to_json(current).stringify()
   let result = @review.refresh_github_review_comments(
     current,
     github_plan_fixture(old),
@@ -86,7 +86,7 @@ test "GitHub refresh integrates new replies and changed comments with local deci
   let bundle = @review.compile_review_agenda(agenda, b"artifact")
   assert_true(bundle.decision_receipts.is_empty())
   assert_eq(@review.review_status(bundle), "pending_review")
-  assert_eq(current.to_json().stringify(), unchanged)
+  assert_eq(ToJson::to_json(current).stringify(), unchanged)
   assert_eq(
     @review.reimport_review_bundle(
       @review.serialize_review_bundle(bundle, bundle.source_digest),
@@ -116,7 +116,10 @@ test "GitHub refresh reports every overlapping field conflict and supports expli
   )
   assert_true(result.merged_agenda is None)
   assert_eq(result.conflicts.map(c => c.field), ["body", "evidence_refs"])
-  assert_eq(result.conflicts[0].left, "Local rewritten objection".to_json())
+  assert_eq(
+    result.conflicts[0].left,
+    ToJson::to_json("Local rewritten objection"),
+  )
   assert_true(result.conflicts[0].right.stringify().contains("New reply"))
   assert_true(
     result.conflicts[0].base.stringify().contains("Please keep café"),
@@ -203,16 +206,20 @@ test "GitHub refresh refuses incomplete snapshots without dropping earlier disse
   let old = github_export_fixture()
   let current = github_refresh_current()
   let next = @utf8.encode(
-    [github_comment_fixture("9007199254740993")].to_json().stringify(),
+    ToJson::to_json([github_comment_fixture("9007199254740993")]).stringify(),
   )
-  let result = try? @review.refresh_github_review_comments(
-    current,
-    github_plan_fixture(old),
-    old,
-    github_refresh_plan(next),
-    next,
-    b"artifact",
-  )
+  let result = Ok(
+    @review.refresh_github_review_comments(
+      current,
+      github_plan_fixture(old),
+      old,
+      github_refresh_plan(next),
+      next,
+      b"artifact",
+    ),
+  ) catch {
+    e => Err(e)
+  }
   guard result is Err(Failure(message)) else {
     fail("expected omitted comment error")
   }
@@ -244,21 +251,29 @@ test "GitHub refresh rejects stale snapshots reused references changed selection
   ]
   for candidate in invalid {
     assert_true(
-      (try? @review.refresh_github_review_comments(
-        current, previous_plan, old, candidate, next, b"artifact",
-      ))
+      (Ok(
+        @review.refresh_github_review_comments(
+          current, previous_plan, old, candidate, next, b"artifact",
+        ),
+      ) catch {
+        e => Err(e)
+      })
       is Err(_),
     )
   }
   assert_true(
-    (try? @review.refresh_github_review_comments(
-      current,
-      { ..previous_plan, export_digest: "bad", },
-      old,
-      plan,
-      next,
-      b"artifact",
-    ))
+    (Ok(
+      @review.refresh_github_review_comments(
+        current,
+        { ..previous_plan, export_digest: "bad", },
+        old,
+        plan,
+        next,
+        b"artifact",
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }
@@ -276,25 +291,29 @@ test "GitHub refresh requires explicit attribution for a new reply author and de
       login="carol",
     ),
   )
-  let next = @utf8.encode(values.to_json().stringify())
+  let next = @utf8.encode(ToJson::to_json(values).stringify())
   let current = github_refresh_current()
   let plan = github_refresh_plan(next)
   assert_true(
-    (try? @review.refresh_github_review_comments(
-      current,
-      github_plan_fixture(old),
-      old,
-      plan,
-      next,
-      b"artifact",
-    ))
+    (Ok(
+      @review.refresh_github_review_comments(
+        current,
+        github_plan_fixture(old),
+        old,
+        plan,
+        next,
+        b"artifact",
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   let mapped = {
     ..plan,
     authors: plan.authors + [{ login: "carol", participant_id: "editor", }],
   }
-  let before = current.to_json().stringify()
+  let before = ToJson::to_json(current).stringify()
   let result = @review.refresh_github_review_comments(
     current,
     github_plan_fixture(old),
@@ -307,7 +326,7 @@ test "GitHub refresh requires explicit attribution for a new reply author and de
   agenda.participants.clear()
   agenda.items[0].evidence_refs.push("more/evidence.txt")
   agenda.items[3].decisions.clear()
-  assert_eq(current.to_json().stringify(), before)
+  assert_eq(ToJson::to_json(current).stringify(), before)
   assert_eq(mapped.threads[0].decisions.length(), 1)
 }
 
@@ -323,16 +342,20 @@ test "GitHub refresh refuses cross pull requests and moved comment membership" {
     fields["pull_request_url"] = "https://api.github.com/repos/example/synthetic/pulls/9"
     Json::object(fields)
   })
-  let next = @utf8.encode(other_pr.to_json().stringify())
+  let next = @utf8.encode(ToJson::to_json(other_pr).stringify())
   assert_true(
-    (try? @review.refresh_github_review_comments(
-      current,
-      github_plan_fixture(old),
-      old,
-      github_refresh_plan(next),
-      next,
-      b"artifact",
-    ))
+    (Ok(
+      @review.refresh_github_review_comments(
+        current,
+        github_plan_fixture(old),
+        old,
+        github_refresh_plan(next),
+        next,
+        b"artifact",
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
   guard @json.parse(@utf8.decode(github_refresh_next())) is Array(moved) else {
@@ -340,16 +363,20 @@ test "GitHub refresh refuses cross pull requests and moved comment membership" {
   }
   guard moved[1] is Object(fields) else { fail("fixture object") }
   fields["in_reply_to_id"] = 100
-  let moved_bytes = @utf8.encode(moved.to_json().stringify())
+  let moved_bytes = @utf8.encode(ToJson::to_json(moved).stringify())
   assert_true(
-    (try? @review.refresh_github_review_comments(
-      current,
-      github_plan_fixture(old),
-      old,
-      github_refresh_plan(moved_bytes),
-      moved_bytes,
-      b"artifact",
-    ))
+    (Ok(
+      @review.refresh_github_review_comments(
+        current,
+        github_plan_fixture(old),
+        old,
+        github_refresh_plan(moved_bytes),
+        moved_bytes,
+        b"artifact",
+      ),
+    ) catch {
+      e => Err(e)
+    })
     is Err(_),
   )
 }

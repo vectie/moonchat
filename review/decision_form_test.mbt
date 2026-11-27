@@ -30,7 +30,7 @@ test "decision form has no default decision and preserves full discussion" {
   assert_eq(form.entries.length(), 3)
   assert_true(form.choices.all(c => c.outcome == ""))
   assert_true(
-    @review.parse_review_decisions(form.to_json().stringify()) == form,
+    @review.parse_review_decisions(ToJson::to_json(form).stringify()) == form,
   )
   assert_true(
     authoring_fails(() => {
@@ -226,7 +226,7 @@ test "partial submission keeps blank requirements pending and detaches form stor
 ///|
 test "decision parser refuses unknown top level and choice fields" {
   let (_, form) = decision_form_fixture()
-  let raw = form.to_json().stringify()
+  let raw = ToJson::to_json(form).stringify()
   assert_true(
     authoring_fails(() => {
       @review.parse_review_decisions(

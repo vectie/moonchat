@@ -43,7 +43,7 @@ fn ReviewJsonReader::value(self : ReviewJsonReader) -> Json raise {
     '{' => {
       self.position += 1
       self.space()
-      let fields : Map[String, Json] = {}
+      let fields : Map[String, Json] = Map([])
       if self.chars[self.position] != '}' {
         while true {
           let key = self.string()
@@ -102,7 +102,7 @@ fn ReviewJsonReader::value(self : ReviewJsonReader) -> Json raise {
 
 ///|
 fn review_parse_exact_json(text : String) -> Json raise {
-  ignore(@json.parse(text, max_nesting_depth=64))
+  ignore(@json.parse(text))
   let reader : ReviewJsonReader = { chars: text.iter().collect(), position: 0, }
   reader.value()
 }

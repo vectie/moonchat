@@ -43,9 +43,9 @@ test "reopen arbitrary host identities and duplicate reviewer requests without o
     draft.base_bundle_digest,
     @review.review_source_digest(@utf8.encode(text)),
   )
-  assert_true(!draft.to_json().stringify().contains("decision_receipts"))
+  assert_true(!ToJson::to_json(draft).stringify().contains("decision_receipts"))
   let parsed = @review.parse_review_revision(
-    draft.to_json().stringify(indent=2),
+    ToJson::to_json(draft).stringify(indent=2),
   )
   assert_true(parsed == draft)
   let revised = compile_revision_fixture(parsed, text)
@@ -236,7 +236,7 @@ test "revision rejects changed host scope and incomplete edited discussion" {
 test "revision parsing rejects invalid format missing fields and receipt fields" {
   let (text, _) = revision_fixture()
   let draft = @review.prepare_review_revision(text, b"revision one\n")
-  let encoded = draft.to_json().stringify()
+  let encoded = ToJson::to_json(draft).stringify()
   for
     invalid in [
       "{",
@@ -282,7 +282,7 @@ test "revision validates predecessor receipt evidence even with a matching draft
       { ..previous, decision_receipts: [invalid_receipt], },
       { ..previous, contract_id: "moonchat.conversation-review-bundle.v99", },
     ] {
-    let invalid_text = invalid.to_json().stringify()
+    let invalid_text = ToJson::to_json(invalid).stringify()
     assert_true(
       authoring_fails(() => {
         ignore(@review.prepare_review_revision(invalid_text, b"revision one\n"))

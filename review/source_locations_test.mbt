@@ -39,8 +39,8 @@ test "source locations connect overlapping ranges and multiple excerpts without 
       quote: "Rollback before expansion.",
     },
   ])
-  let original = bundle.to_json().stringify()
-  let original_locations = locations.to_json().stringify()
+  let original = ToJson::to_json(bundle).stringify()
+  let original_locations = ToJson::to_json(locations).stringify()
   let html = @review.export_review_html(bundle, source, locations~)
   assert_true(html.contains("3 ranges across 2 of 3 entries"))
   assert_true(html.contains("Discussion for source line 3"))
@@ -58,8 +58,8 @@ test "source locations connect overlapping ranges and multiple excerpts without 
   )
   assert_true(html.contains("fixture-approve"))
   assert_eq(html, @review.export_review_html(bundle, source, locations~))
-  assert_eq(original, bundle.to_json().stringify())
-  assert_eq(original_locations, locations.to_json().stringify())
+  assert_eq(original, ToJson::to_json(bundle).stringify())
+  assert_eq(original_locations, ToJson::to_json(locations).stringify())
   for part in html.split("href=\"").drop(1) {
     assert_true(part.has_prefix("#"))
     let target = part.split("\"").collect()[0]
@@ -115,7 +115,9 @@ test "source locations parser round trips portable map and rejects wrong shapes"
   ])
   assert_true(
     locations ==
-    @review.parse_review_source_locations(locations.to_json().stringify()),
+    @review.parse_review_source_locations(
+      ToJson::to_json(locations).stringify(),
+    ),
   )
   for
     text in [
